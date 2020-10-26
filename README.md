@@ -13,3 +13,7 @@ use python --version to check version
 
 install with:
 	pip3 install -U pytest
+
+
+then run with pytest
+will create __pycache__ folder, just ignore this.
