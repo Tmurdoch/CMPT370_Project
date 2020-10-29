@@ -15,5 +15,6 @@ install with:
 	pip3 install -U pytest
 
 
-then run with pytest
+then run with "pytest"
+if wish to see passed tests, use "pytest -rpP"
 will create __pycache__ folder, just ignore this.
