@@ -18,11 +18,11 @@ def equals(x, y):
 def test_fail():
 
     # fail the test
-    assert equals(3, 4) == True
+    assert equals(3, 4)
 
 
 def test_pass():
 
     # pass the test
     assert add_two(1) == 3
-    assert equals(2, 2) == True
+    assert equals(2, 2)
