@@ -89,3 +89,25 @@ class PieceSet:
         :return: The list of live (non-captured) pieces
         """
         return self.__livePieces
+
+    def get_number_of_live_pieces(self):
+        """
+        :return: The number of live (non-captured) pieces
+        """
+        return len(self.__livePieces)
+
+    def get_number_of_captured_pieces(self):
+        """
+        :return: The number captured pieces
+        """
+        return len(self.__capturedPieces)
+
+    def get_colour(self):
+        """
+        :return: The colour of the piece set
+        """
+        # All pieces will be the same colour, so just look at one
+        if len(self.__livePieces) >= 0:
+            return self.__livePieces[0].get_colour()
+        else:
+            return self.__capturedPieces[0].get_colour()

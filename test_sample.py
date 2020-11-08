@@ -96,9 +96,10 @@ def test_piece_set():
 
     # Test initial conditions
     assert not piece_set1.get_castled()
-    assert len(piece_set1.get_captured_pieces()) == 0
+    assert piece_set1.get_number_of_captured_pieces() == 0
     assert piece_set1.get_piece_set_type() == "Checkers"
-    assert len(piece_set1.get_live_pieces()) == 12
+    assert piece_set1.get_colour() == piece_set_colour
+    assert piece_set1.get_number_of_live_pieces() == 12
     assert (piece_set1.get_live_pieces()[0]).get_colour() == piece_set_colour
     assert piece_set1.get_live_pieces()[5].get_colour() == piece_set_colour
     assert piece_set1.get_live_pieces()[11].get_colour() == piece_set_colour
@@ -108,19 +109,29 @@ def test_piece_set():
 
     # Captured a piece
     assert piece_set1.capture_piece(piece_set1.get_live_pieces()[0])
-    assert len(piece_set1.get_live_pieces()) == 11
-    assert len(piece_set1.get_captured_pieces()) == 1
+    assert piece_set1.get_number_of_live_pieces() == 11
+    assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Fail to capture pieces, nothing should change
     assert not piece_set1.capture_piece(Rook(piece_set_colour))
     assert not piece_set1.capture_piece("Apple")
-    assert len(piece_set1.get_live_pieces()) == 11
-    assert len(piece_set1.get_captured_pieces()) == 1
+    assert piece_set1.get_number_of_live_pieces() == 11
+    assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Captured the last piece in the list of live pieces
     assert piece_set1.capture_piece(piece_set1.get_live_pieces()[len(piece_set1.get_live_pieces())-1])
-    assert len(piece_set1.get_live_pieces()) == 10
-    assert len(piece_set1.get_captured_pieces()) == 2
+    assert piece_set1.get_number_of_live_pieces() == 10
+    assert piece_set1.get_number_of_captured_pieces() == 2
 
     # Make sure colour is preserved
-    assert piece_set1.get_captured_pieces()[0].get_colour() == piece_set_colour
+    assert piece_set1.get_colour() == piece_set_colour
+
+    piece_set_colour = "Black"
+    piece_set2 = PieceSet("Chess", piece_set_colour)
+
+    # Test initial conditions
+    assert not piece_set2.get_castled()
+    assert piece_set2.get_number_of_captured_pieces() == 0
+    assert piece_set2.get_piece_set_type() == "Chess"
+    assert piece_set2.get_colour() == piece_set_colour
+    assert piece_set2.get_number_of_live_pieces() == 16
