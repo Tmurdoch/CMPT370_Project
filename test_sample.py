@@ -1,28 +1,126 @@
+# Board Game Simulator
+# CMPT 370 Group 4, Fall 2020
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import pytest
-# CMPT 370
-# Group 4, Fall 2020
+from PieceSet import PieceSet
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 
 
-def add_two(x):
-    return x + 2
+def test_pieces():
+    piece_set_colour1 = "Red"
+    piece_set_colour2 = "White"
+    piece_set_colour3 = "Black"
+
+    # Test the king
+    king1 = King(piece_set_colour1)
+    assert king1.get_colour() == piece_set_colour1
+    king1.set_colour(piece_set_colour2)
+    assert king1.get_colour() == piece_set_colour2
+
+    # Test the queen
+    queen1 = Queen(piece_set_colour3)
+    assert queen1.get_colour() == piece_set_colour3
+    queen1.set_colour(piece_set_colour2)
+    assert queen1.get_colour() == piece_set_colour2
+
+    # Test the knight
+    knight1 = Knight(piece_set_colour1)
+    assert knight1.get_colour() == piece_set_colour1
+    knight1.set_colour(piece_set_colour3)
+    assert knight1.get_colour() == piece_set_colour3
+
+    # Test the bishop
+    bishop1 = Bishop(piece_set_colour1)
+    assert bishop1.get_colour() == piece_set_colour1
+    bishop1.set_colour(piece_set_colour2)
+    assert bishop1.get_colour() == piece_set_colour2
+
+    # Test the rook
+    rook1 = Rook(piece_set_colour3)
+    assert rook1.get_colour() == piece_set_colour3
+    rook1.set_colour(piece_set_colour2)
+    assert rook1.get_colour() == piece_set_colour2
+
+    # Test the pawn
+    pawn1 = Pawn(piece_set_colour3)
+    assert pawn1.get_colour() == piece_set_colour3
+    assert not pawn1.get_promotion_status()
+    assert not pawn1.get_moved_yet_status()
+    assert pawn1.get_promoted_to() is None
+    pawn1.set_colour(piece_set_colour2)
+    assert pawn1.get_colour() == piece_set_colour2
+    pawn1.move()
+    assert pawn1.get_moved_yet_status()
+
+    assert pawn1.promote("Knight")
+    assert pawn1.get_promotion_status()
+    assert isinstance(pawn1.get_promoted_to(), Knight)
+    assert not pawn1.promote("Queen")
+
+    pawn2 = Pawn(piece_set_colour1)
+    assert pawn2.get_colour() == piece_set_colour1
+    assert not pawn2.get_promotion_status()
+    assert pawn2.promote("Queen")
+    assert pawn2.get_promotion_status()
+    assert isinstance(pawn2.get_promoted_to(), Queen)
+
+    pawn3 = Pawn(piece_set_colour2)
+    assert pawn3.get_colour() == piece_set_colour2
+    assert not pawn3.get_promotion_status()
+    assert pawn3.promote("Bishop")
+    assert pawn3.get_promotion_status()
+    assert isinstance(pawn3.get_promoted_to(), Bishop)
+
+    pawn4 = Pawn(piece_set_colour2)
+    assert not pawn4.promote("King")
+    assert pawn4.get_colour() == piece_set_colour2
+    assert not pawn4.get_promotion_status()
+    assert pawn4.promote("Rook")
+    assert pawn4.get_promotion_status()
+    assert isinstance(pawn4.get_promoted_to(), Rook)
+
+    # Test the checkers coin
+    checkers_coin1 = CheckersCoin(piece_set_colour3)
+    assert checkers_coin1.get_colour() == piece_set_colour3
+    assert not checkers_coin1.get_promotion_status()
+    checkers_coin1.promote()
+    assert checkers_coin1.get_promotion_status()
+    checkers_coin1.set_colour(piece_set_colour1)
+    assert checkers_coin1.get_colour() == piece_set_colour1
 
 
-def equals(x, y):
-    if x == y:
-        return True
-    else:
-        return False
+def test_piece_set():
+    piece_set_colour = "White"
+    piece_set1 = PieceSet("Checkers", piece_set_colour)
 
+    # Test initial conditions
+    assert not piece_set1.get_castled()
+    assert len(piece_set1.get_captured_pieces()) == 0
+    assert piece_set1.get_piece_set_type() == "Checkers"
+    assert len(piece_set1.get_live_pieces()) == 12
+    assert (piece_set1.get_live_pieces()[0]).get_colour() == piece_set_colour
+    assert piece_set1.get_live_pieces()[5].get_colour() == piece_set_colour
+    assert piece_set1.get_live_pieces()[11].get_colour() == piece_set_colour
 
-def test_fail():
+    piece_set1.castle()
+    assert piece_set1.get_castled()
 
-    # fail the test
-    assert equals(3, 4)
+    # Captured a piece
+    assert piece_set1.capture_piece(piece_set1.get_live_pieces()[0])
+    assert len(piece_set1.get_live_pieces()) == 11
+    assert len(piece_set1.get_captured_pieces()) == 1
 
+    # Fail to capture pieces, nothing should change
+    assert not piece_set1.capture_piece(Rook(piece_set_colour))
+    assert not piece_set1.capture_piece("Apple")
+    assert len(piece_set1.get_live_pieces()) == 11
+    assert len(piece_set1.get_captured_pieces()) == 1
 
-def test_pass():
+    # Captured the last piece in the list of live pieces
+    assert piece_set1.capture_piece(piece_set1.get_live_pieces()[len(piece_set1.get_live_pieces())-1])
+    assert len(piece_set1.get_live_pieces()) == 10
+    assert len(piece_set1.get_captured_pieces()) == 2
 
-    # pass the test
-    assert add_two(1) == 3
-    assert equals(2, 2)
+    # Make sure colour is preserved
+    assert piece_set1.get_captured_pieces()[0].get_colour() == piece_set_colour
