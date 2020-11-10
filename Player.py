@@ -22,12 +22,12 @@ class Player(object):
         :param: timer: The Timer object for a Player
         :param castled: A boolean to see if the player has been castled or not.
         """
-        #elf.piece_set = piece_set
-        #self.colour = colour
-        self.name = name
-        self.player_type = player_type
-        self.timer = timer
-        self.castled = castled
+        #self.__piece_set = piece_set
+        #self.__colour = colour
+        self.__name = name
+        self.__player_type = player_type
+        self.__timer = timer
+        self.__castled = castled
 
     def make_move(self):
         """Allows a Player to move a piece???"""
