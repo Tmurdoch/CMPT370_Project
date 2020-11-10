@@ -4,7 +4,7 @@
 
 from group4.PlayerType import PlayerType
 from group4.Timer import Timer
-#from PieceSet import PieceSet
+from group4.PieceSet import PieceSet
 
 
 class Player(object):
@@ -22,8 +22,8 @@ class Player(object):
         :param: timer: The Timer object for a Player
         :param castled: A boolean to see if the player has been castled or not.
         """
-        #self.__piece_set = piece_set
-        #self.__colour = colour
+        self.__piece_set = PieceSet
+        self.__colour = PieceSet
         self.__name = name
         self.__player_type = player_type
         self.__timer = timer
@@ -35,51 +35,51 @@ class Player(object):
 
     def get_piece_set(self):
         """Returns the PieceSet object of a Player"""
-        return self.piece_set
+        return self.__piece_set
 
     def set_piece_set(self, piece_set):
         """Sets a Player's piece set to a PieceSet object"""
-        self.piece_set = piece_set
+        self.__piece_set = piece_set
 
     def get_colour(self):
         """Returns the PieceSet object colour of a Player"""
-        return self.colour
+        return self.__colour.get_colour()
 
     def set_colour(self, colour):
         """Sets a Player's piece colour to a PieceSet object's colour"""
-        self.colour = colour
+        self.__colour = colour
 
     def get_name(self):
         """Returns the name of a Player"""
-        return self.name
+        return self.__name
 
     def set_name(self, name):
         """Sets a Player's name"""
-        self.name = name
+        self.__name = name
 
     def get_player_type(self):
         """Returns the type of PlayerType object for a Player, AI(0) or Human(1)"""
-        return self.player_type.value
+        return self.__player_type.value
 
     def set_player_type(self, player_type):
         """Sets a Player's PlayerType object to either AI(0) or Human(1)"""
-        self.player_type = player_type
+        self.__player_type = player_type
 
     def get_timer(self):
         """Returns the Timer object of a Player"""
-        return self.timer
+        return self.__timer
 
     def set_timer(self, timer):
         """Sets a Player's timer to a Timer object"""
-        self.timer = timer
+        self.__timer = timer
 
     def get_castled(self):
         """Checks if the Player has castled or not"""
-        return self.castled
+        return self.__castled
 
     def set_castled(self,castled):
         """Sets the Player's castled to True or False based on if they have been castled or not"""
-        self.castled = castled
+        self.__castled = castled
 
 
 def test_player():
