@@ -14,7 +14,7 @@ class PieceSet:
 
     Attributes:
         __castled: A bool indicating whether or not the piece set has castled.  A piece set can only castle once per game.
-        __pieceSetType: A string indicating whether the hand is a "Chess" hand or a "Checkers" hand.
+        __pieceSetType: A string indicating whether the Game type for the set is a "Chess" type or a "Checkers" type.
                         Has no setter method and therefore can't be changed
         __capturedPieces: A list of the pieces that have been captured.  Pieces captured most recently are towards the
                         end of the list.
@@ -61,9 +61,9 @@ class PieceSet:
 
     def capture_piece(self, captured_piece):
         """
-        Removes the piece from the list of live peices are appends it to the end of the list of captured pieces
+        Removes the piece from the list of live peices and appends it to the end of the list of captured pieces
         :param captured_piece: a piece to capture
-        :return: bool: True is the piece was successfully captured, False otherwise
+        :return: bool: If the piece was succesfully captured, return True, False otherwise
         """
         if captured_piece in self.__livePieces:
             self.__livePieces.remove(captured_piece)
@@ -98,7 +98,7 @@ class PieceSet:
 
     def get_number_of_captured_pieces(self):
         """
-        :return: The number captured pieces
+        :return: The number of captured pieces
         """
         return len(self.__capturedPieces)
 

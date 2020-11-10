@@ -94,7 +94,7 @@ def test_piece_set():
     piece_set_colour = "White"
     piece_set1 = PieceSet("Checkers", piece_set_colour)
 
-    # Test initial conditions
+    # Test initial conditions for Checkers
     assert not piece_set1.get_castled()
     assert piece_set1.get_number_of_captured_pieces() == 0
     assert piece_set1.get_piece_set_type() == "Checkers"
@@ -129,7 +129,7 @@ def test_piece_set():
     piece_set_colour = "Black"
     piece_set2 = PieceSet("Chess", piece_set_colour)
 
-    # Test initial conditions
+    # Test initial conditions for Chess
     assert not piece_set2.get_castled()
     assert piece_set2.get_number_of_captured_pieces() == 0
     assert piece_set2.get_piece_set_type() == "Chess"
