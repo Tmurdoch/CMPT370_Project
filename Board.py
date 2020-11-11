@@ -4,7 +4,6 @@
 
 from enum import Enum
 import GameSquare as Gs
-import random
 from unittest import mock
 
 
@@ -113,30 +112,6 @@ class BoardTheme(Enum):
     BlackWhite = 1
     GreenYellow = 2
     DarkBrownLightBrown = 3
-
-
-def test_board():
-    for x in range(1, 101):
-        my_board = Board(x)
-        row = random.randint(0, x-1)
-        col = random.randint(0, x-1)
-        # test size of the board
-        assert my_board.get_size() == x
-        # test if row and col are correct
-        assert len(my_board.get_game_board()) == x
-        assert len(my_board.get_game_board()[x-1]) == x
-        # test if a random game square that is within the bounds of the board is
-        # in the right row and right col
-        assert my_board.get_game_square(row, col) in my_board.get_game_board()[row]
-        assert my_board.get_game_square(row, col) in [r for r in my_board.get_game_board()[row]]
-        # test if the initialized board square in board has None for occupying_piece
-        assert my_board.get_game_square(row, col).get_occupying_piece() is None
-        # test theme is black white at default
-        assert my_board.get_board_theme() is BoardTheme.BlackWhite
-        # test if changing theme of board works
-        new_board_theme = random.choice(list(BoardTheme))
-        my_board.set_board_theme(new_board_theme)
-        assert my_board.get_board_theme() is new_board_theme
 
 
 if __name__ == '__main__':

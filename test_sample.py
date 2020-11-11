@@ -3,10 +3,15 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import pytest
+import random
+from unittest import mock
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Move import CheckersMove, ChessMove
 from PossibleMoves import PossibleMoves
+from GameSquare import GameSquare
+from Board import Board
+from Board import BoardTheme
 
 
 def test_pieces():
@@ -164,3 +169,76 @@ def test_move():
         chess_move.set_castled()
     except RuntimeError:
         assert True
+
+
+def test_board():
+    for x in range(1, 101):
+        my_board = Board(x)
+        row = random.randint(0, x-1)
+        col = random.randint(0, x-1)
+        # test size of the board
+        assert my_board.get_size() == x
+        # test if row and col are correct
+        assert len(my_board.get_game_board()) == x
+        assert len(my_board.get_game_board()[x-1]) == x
+        # test if a random game square that is within the bounds of the board is
+        # in the right row and right col
+        assert my_board.get_game_square(row, col) in my_board.get_game_board()[row]
+        assert my_board.get_game_square(row, col) in [r for r in my_board.get_game_board()[row]]
+        # test if the initialized board square in board has None for occupying_piece
+        assert my_board.get_game_square(row, col).get_occupying_piece() is None
+        # test theme is black white at default
+        assert my_board.get_board_theme() is BoardTheme.BlackWhite
+        # test if changing theme of board works
+        new_board_theme = random.choice(list(BoardTheme))
+        my_board.set_board_theme(new_board_theme)
+        assert my_board.get_board_theme() is new_board_theme
+
+
+def test_game_square():
+
+    # initial testing for 8by8 board
+    gs_test_1 = GameSquare(8, 8)
+
+    assert gs_test_1.get_col() == 8
+    assert gs_test_1.get_row() == 8
+    assert gs_test_1.get_occupying_piece() is None
+
+    for x in range(1000):
+        row = random.randint(0, 1000)
+        col = random.randint(0, 1000)
+        gsq = GameSquare(row, col)
+        # test if row and col are correctly placed
+        assert gsq.get_row() == row
+        assert gsq.get_col() == col
+        # test for occupying piece to be None when initialized
+        assert gsq.get_occupying_piece() is None
+
+        # test if replacing the occupying piece with a mock piece
+        mock_piece = mock.Mock()
+        mock_piece.method = mock.MagicMock(name="Piece")
+        gsq.put_piece_here(mock_piece)
+        assert gsq.get_occupying_piece() is mock_piece
+        # test for removing occupying piece to be None
+        gsq.remove_occupying_piece()
+        assert gsq.get_occupying_piece() is None
+        # test setting new row and col
+        gsq.set_row(x)
+        gsq.set_col(x)
+        assert gsq.get_row() == x
+        assert gsq.get_col() == x
+
+        # test for put piece in a not None scenario
+        gsq.put_piece_here(mock_piece)
+        assert gsq.get_occupying_piece() is mock_piece
+        mock_piece2 = mock.Mock()
+        mock_piece2.method = mock.MagicMock(name="Piece2")
+        result = gsq.put_piece_here(mock_piece2)
+        assert gsq.get_occupying_piece() is mock_piece2
+        assert result is mock_piece
+        gsq.remove_occupying_piece()
+        assert gsq.get_occupying_piece() is None
+
+    # gs_test = [[GameSquare(row, col) for col in range(100)] for row in range(100)]
+    # gs_test_result = [[GameSquare(row, col) for col in gs_test] for row in range(100)]
+    # assert equals(gs_test[random.randrange(100)].get_occupying_piece(), None)
