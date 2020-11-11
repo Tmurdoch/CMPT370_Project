@@ -242,3 +242,33 @@ def test_game_square():
     # gs_test = [[GameSquare(row, col) for col in range(100)] for row in range(100)]
     # gs_test_result = [[GameSquare(row, col) for col in gs_test] for row in range(100)]
     # assert equals(gs_test[random.randrange(100)].get_occupying_piece(), None)
+
+
+def test_show_board():
+    # Test mock board and adding pieces and moving them
+    my_board = Board(8)
+
+    black_set = PieceSet("Chess", "Black")
+    black_pieces = black_set.get_live_pieces()
+    spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+    for i in range(8):
+        my_board.get_game_square(0, spec_piece[i]).put_piece_here(type(black_pieces[i]).__name__)
+    for i in range(8):
+        my_board.get_game_square(1, i).put_piece_here(type(black_pieces[i+8]).__name__+' ')
+    white_set = PieceSet("Chess", "White")
+    white_pieces = white_set.get_live_pieces()
+    for i in range(8):
+        my_board.get_game_square(7, spec_piece[i]).put_piece_here(type(white_pieces[i]).__name__)
+    for i in range(8):
+        my_board.get_game_square(6, i).put_piece_here(type(white_pieces[i+8]).__name__+' ')
+    my_board.print_game_board()
+
+    print("\n\nMoving Pawn(6, 3) to (4,3)")
+    pawn = my_board.get_game_square(6, 3).get_occupying_piece()
+    my_board.get_game_square(6, 3).remove_occupying_piece()
+    my_board.get_game_square(4, 3).put_piece_here(pawn)
+    my_board.print_game_board()
+
+
+if __name__ == '__main__':
+    test_show_board()

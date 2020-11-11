@@ -4,7 +4,6 @@
 
 from enum import Enum
 import GameSquare as Gs
-from unittest import mock
 
 
 class Board:
@@ -26,7 +25,15 @@ class Board:
             raise TypeError("Size must be a Positive Integer")
 
         self.__size = size
-        self.__gameBoard = [[Gs.GameSquare(row, col) for col in range(size)] for row in range(size)]
+        # list comprehension of building board
+        # self.__gameBoard = [[Gs.GameSquare(row, col) for col in range(size)] for row in range(size)]
+        # for list building board
+        self.__gameBoard = []
+        for r in range(size):
+            row = []
+            for c in range(size):
+                row.append(Gs.GameSquare(r, c))
+            self.__gameBoard.append(row)
         self.__boardTheme = BoardTheme.BlackWhite
 
     # not in the domain model. from get_game_squares() which returns multiple game squares
@@ -89,19 +96,39 @@ class Board:
         For visual representation of the board. prints the coordinates of the board square
         and current pieces in the board.
         """
-        board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
-        board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
-        print("Board Initialized")
+        # separating row and column to be able to print legibly
+        # shows coordinates in tuples and shows pieces occupying the game squares
+        # list comp
+        # board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
+        # board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
+        # for list
+        board_row_col = []
+        for r in self.__gameBoard:
+            column = []
+            for c in r:
+                column.append((c.get_row(), c.get_col()))
+            board_row_col.append(column)
+
+        board_pieces = []
+        for r in self.__gameBoard:
+            column = []
+            for c in r:
+                if c.get_occupying_piece() is None:
+                    column.append(["Empty"])
+                else:
+                    column.append([(c.get_occupying_piece())])
+            board_pieces.append(column)
+
+        print("\nBoard Initialized\n\nBoard Squares Coordinates:")
         [print(row) for row in board_row_col]
+        print("\nBoard Squares Occupied_Pieces")
         [print(row) for row in board_pieces]
-        mock_piece = mock.Mock()
-        mock_piece.method = mock.MagicMock(name="Piece")
         
-        board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
-        board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
-        print("\nBoard added mock piece")
-        [print(row) for row in board_row_col]
-        [print(row) for row in board_pieces]
+        # board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
+        # board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
+        # print("\nBoard added mock piece")
+        # [print(row) for row in board_row_col]
+        # [print(row) for row in board_pieces]
 
 
 class BoardTheme(Enum):
@@ -113,7 +140,3 @@ class BoardTheme(Enum):
     GreenYellow = 2
     DarkBrownLightBrown = 3
 
-
-if __name__ == '__main__':
-    myBoard = Board(5)
-    myBoard.print_game_board()
