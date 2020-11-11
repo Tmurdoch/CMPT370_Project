@@ -141,6 +141,7 @@ class Pawn(PieceInterface):
             Options are "Queen", "Knight", "Bishop", and "Rook"
         :return: True is the piece was successfully promoted, false otherwise
         """
+        # TODO: actually make the piece the type of the new object
         if not self.__promoted and class_promoted_to == "Queen":
             self.__promotedTo = Queen(self.__colour)
             self.__promoted = True

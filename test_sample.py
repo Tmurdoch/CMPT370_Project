@@ -7,6 +7,8 @@ from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Move import CheckersMove, ChessMove
 from PossibleMoves import PossibleMoves
+from Timer import Timer
+import time  # For testing the timer
 
 
 def test_pieces():
@@ -157,6 +159,26 @@ def test_move():
     checkers_move = CheckersMove()
     checkers_move.set_piece(piece1)
     assert checkers_move.get_piece() == piece1
+
+def test_timer():
+    timer1_that_is_enabled = Timer(90, True)
+    assert 89.9 < timer1_that_is_enabled.get_time_remaining_s() < 90.1
+    assert timer1_that_is_enabled.get_enabled()
+    timer1_that_is_enabled.start()
+    time.sleep(1)
+    assert 88.9 < timer1_that_is_enabled.get_time_remaining_s() < 89.1
+    timer1_that_is_enabled.stop()
+    time.sleep(1)  # Should not have changed here
+    assert 88.9 < timer1_that_is_enabled.get_time_remaining_s() < 89.1
+
+    timer2_that_is_enabled = Timer(59, True)
+    assert timer2_that_is_enabled.little_time_left()
+
+    timer3_that_is_disabled = Timer(90, False)
+    assert not timer3_that_is_disabled.get_enabled()
+
+    timer4_that_is_enabled = Timer(-1, True)
+    assert timer4_that_is_enabled.timed_out()
 
     chess_move = ChessMove()
     chess_move.set_castled()
