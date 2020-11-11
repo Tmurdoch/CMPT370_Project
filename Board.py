@@ -97,7 +97,7 @@ class Board:
         [print(row) for row in board_pieces]
         mock_piece = mock.Mock()
         mock_piece.method = mock.MagicMock(name="Piece")
-        self.__gameBoard[int(self.__size/2)][int(self.__size/2)].put_piece_here(mock_piece)
+        
         board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
         board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
         print("\nBoard added mock piece")

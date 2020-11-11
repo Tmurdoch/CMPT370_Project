@@ -1,8 +1,19 @@
 import Colours
-import PlayerType
+from PlayerType import PlayerType
+from Player import Player
+from Board import Board
+import pytest
+from PieceSet import PieceSet
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
+from Move import CheckersMove, ChessMove
+from PossibleMoves import PossibleMoves
+from Timer import Timer
+import struct
 
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
+FILENAME = "test_save.bin"
+
 # assuming 8 bits/timer and 2 timers
 # TODO verify these assumptions
 FILE_VER_ZERO_HEADER_SIZE = 31
@@ -20,7 +31,7 @@ SEEK_END = 2
 class Game:
 
     def __init__(self, game_type, colour_mode):
-        self.__board = board
+        
         # I think based on PieceSet.py and the domain model
         # that this is going to be a string but i'm not
         # sure
@@ -34,7 +45,7 @@ class Game:
             # object will probably crash now
             raise GameTypeErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk
         # common for both chess and checkers
-        if (colour_mode >= len(Colours.COLOUR_STRING_LOOK_UP_TABLE)):
+        if ((colour_mode) >= len(Colours.COLOUR_STRING_LOOK_UP_TABLE)):
             raise wrongColourOrSomethingFigurOutLAter
         self.__colour_mode = colour_mode
         self.__board = Board(8)
@@ -46,7 +57,7 @@ class Game:
 
     def build_light_player(self,name,player_type,timer,castled):
         self.__light_player = Player(name,player_type,timer,castled)
-        __light_player.set_piece_set(
+        self.__light_player.set_piece_set(
             PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
                      Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
                      [Colours.Colour_Offset.OFFSET_LIGHT]))
@@ -54,7 +65,7 @@ class Game:
 
     def build_dark_player(self,name,player_type,timer,castled):
         self.__dark_player = Player(name,player_type,timer,castled)
-        __light_player.set_piece_set(
+        self.__light_player.set_piece_set(
             PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
                      Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
                      [Colours.Colour_Offset.OFFSET_DARK]))
@@ -95,8 +106,8 @@ class Game:
         game_mode = self.__game_type  # good
         ai_in_game = 0 # TODO
         dark_player_is_ai = not (self.__dark_player.get_player_type())  # good
-        dark_player_turn = self.__dark_player_turn  # TODO
-        board_height = self.getBoard().get_size()  # good
+        dark_player_turn = 1  # TODO
+        board_height = self.get_board().get_size()  # good
         board_width = board_height  # good
         colours = self.__colour_mode  # good
         # TODO decode timer_mode
@@ -113,11 +124,14 @@ class Game:
         # board_width, colours, timer_mode, player_a_timer, player_b_time)
         # work on board
         row = 0
+
         while (row != board_height):
+            col = 0
             while (col != board_width):
                 cur_piece = self.__board.get_game_square(row,col).get_occupying_piece()
                 if (cur_piece is None):
                     fp.write((0).to_bytes(1, byteorder="big"))
+                    col +=1
                     continue
                 # check if it is dark and set the dark bit
                 if (cur_piece.get_colour() == Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][Colours.Colour_Offset.OFFSET_DARK]):
@@ -126,17 +140,17 @@ class Game:
                     output_piece = 0
                 # decode object to char
                 if (self.__game_type == GAME_TYPE_CHESS):
-                    if (isinstance(output_piece,Pieces.King)):
+                    if (isinstance(cur_piece, King)):
                         output_piece += ord("K")
-                    elif (isinstance(output_piece,Pieces.Queen)):
+                    elif (isinstance(cur_piece, Queen)):
                         output_piece += ord("Q")
-                    elif (isinstance(output_piece,Pieces.Knight)):
+                    elif (isinstance(cur_piece, Knight)):
                         output_piece += ord("N")
-                    elif (isinstance(output_piece,Pieces.Bishop)):
+                    elif (isinstance(cur_piece, Bishop)):
                         output_piece += ord("B")
-                    elif (isinstance(output_piece,Pieces.Rook)):
+                    elif (isinstance(cur_piece, Rook)):
                         output_piece += ord("R")
-                    elif (isinstance(output_piece,Pieces.Pawn)):
+                    elif (isinstance(cur_piece, Pawn)):
                         output_piece += ord("P")
                     else:
                         # oh no
@@ -150,6 +164,7 @@ class Game:
                     assert(0)
                 # write data
                 fp.write(output_piece.to_bytes(1, byteorder="big"))
+                print(row, col)
                 col += 1
             row += 1
         fp.close()
@@ -249,6 +264,19 @@ class Game:
 
 
 if (__name__ == "__main__"):
+	"""
     uio = UI()
     uio.doStuff()
     print("done")
+	"""
+	game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
+
+	piece_obj = King("Red")	
+
+	game_obj.get_board().get_game_square(0, 0).put_piece_here(piece_obj)
+	game_obj.get_board().print_game_board()
+	timer_obj = Timer(10, 20, 0) 
+	game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
+	game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
+	game_obj.save_to_file()
+
