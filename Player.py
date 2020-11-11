@@ -2,9 +2,9 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-from group4.PlayerType import PlayerType
-from group4.Timer import Timer
-from group4.PieceSet import PieceSet
+from PlayerType import PlayerType
+from Timer import Timer
+from PieceSet import PieceSet
 
 
 class Player(object):
