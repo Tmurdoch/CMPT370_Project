@@ -3,8 +3,6 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import pytest
-import random
-from unittest import mock
 
 
 class GameSquare:
@@ -108,55 +106,6 @@ class GameSquare:
         Sets the occupyingPiece to None
         """
         self.__occupyingPiece = None
-
-
-def test_game_square():
-
-    # initial testing for 8by8 board
-    gs_test_1 = GameSquare(8, 8)
-
-    assert gs_test_1.get_col() == 8
-    assert gs_test_1.get_row() == 8
-    assert gs_test_1.get_occupying_piece() is None
-
-    for x in range(1000):
-        row = random.randint(0, 1000)
-        col = random.randint(0, 1000)
-        gsq = GameSquare(row, col)
-        # test if row and col are correctly placed
-        assert gsq.get_row() == row
-        assert gsq.get_col() == col
-        # test for occupying piece to be None when initialized
-        assert gsq.get_occupying_piece() is None
-
-        # test if replacing the occupying piece with a mock piece
-        mock_piece = mock.Mock()
-        mock_piece.method = mock.MagicMock(name="Piece")
-        gsq.put_piece_here(mock_piece)
-        assert gsq.get_occupying_piece() is mock_piece
-        # test for removing occupying piece to be None
-        gsq.remove_occupying_piece()
-        assert gsq.get_occupying_piece() is None
-        # test setting new row and col
-        gsq.set_row(x)
-        gsq.set_col(x)
-        assert gsq.get_row() == x
-        assert gsq.get_col() == x
-
-        # test for put piece in a not None scenario
-        gsq.put_piece_here(mock_piece)
-        assert gsq.get_occupying_piece() is mock_piece
-        mock_piece2 = mock.Mock()
-        mock_piece2.method = mock.MagicMock(name="Piece2")
-        result = gsq.put_piece_here(mock_piece2)
-        assert gsq.get_occupying_piece() is mock_piece2
-        assert result is mock_piece
-        gsq.remove_occupying_piece()
-        assert gsq.get_occupying_piece() is None
-
-    # gs_test = [[GameSquare(row, col) for col in range(100)] for row in range(100)]
-    # gs_test_result = [[GameSquare(row, col) for col in gs_test] for row in range(100)]
-    # assert equals(gs_test[random.randrange(100)].get_occupying_piece(), None)
 
 
 """
