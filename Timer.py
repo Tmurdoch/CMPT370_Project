@@ -13,9 +13,9 @@ class Timer(object):
     def __init__(self, time_remaining, allotted_time, enabled):
         """
         Initializes a Timer object.
-        :param time_remaining: The time remaining for the Player.
-        :param allotted_time: The initial time given to a Player to make their moves.
-        :param: enabled: Determines if the timer is enabled or not
+        :param: int: time_remaining: The time remaining for the Player.
+        :param: int: allotted_time: The initial time given to a Player to make their moves.
+        :param: boolean: enabled: Determines if the timer is enabled or not
         """
         self.__time_remaining = time_remaining
         self.__allotted_time = allotted_time  # for 5 minutes per Player? should this be combined with time_remaining
