@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class PlayerType(Enum):
+class PlayerType(IntEnum):
     """Choose if a player is an AI or a Human Player"""
-    computer_engine = 0
-    human = 1
+    AI = 0
+    HUMAN = 1
