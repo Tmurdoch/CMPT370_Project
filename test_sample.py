@@ -5,6 +5,8 @@
 import pytest
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
+from Move import CheckersMove, ChessMove
+from PossibleMoves import PossibleMoves
 
 
 def test_pieces():
@@ -119,7 +121,8 @@ def test_piece_set():
     assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Captured the last piece in the list of live pieces
-    assert piece_set1.capture_piece(piece_set1.get_live_pieces()[len(piece_set1.get_live_pieces())-1])
+    assert piece_set1.capture_piece(piece_set1.get_live_pieces()[
+                                    len(piece_set1.get_live_pieces())-1])
     assert piece_set1.get_number_of_live_pieces() == 10
     assert piece_set1.get_number_of_captured_pieces() == 2
 
@@ -135,3 +138,29 @@ def test_piece_set():
     assert piece_set2.get_piece_set_type() == "Chess"
     assert piece_set2.get_colour() == piece_set_colour
     assert piece_set2.get_number_of_live_pieces() == 16
+
+
+def test_possible_moves():
+    piece1 = King("Black")
+    moves_for_piece = PossibleMoves(piece1)
+    try:
+        moves_for_piece.get_moves()
+    except AttributeError:
+        assert True
+    moves_for_piece.build_list_of_moves()
+    p = moves_for_piece.get_moves()
+    assert p == []
+
+
+def test_move():
+    piece1 = King("Black")
+    checkers_move = CheckersMove()
+    checkers_move.set_piece(piece1)
+    assert checkers_move.get_piece() == piece1
+
+    chess_move = ChessMove()
+    chess_move.set_castled()
+    try:
+        chess_move.set_castled()
+    except RuntimeError:
+        assert True
