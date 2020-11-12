@@ -1,8 +1,11 @@
-import Colours
+# Board Game Simulator
+# CMPT 370 Group 4, Fall 2020
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
+
+from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
 from PlayerType import PlayerType
 from Player import Player
 from Board import Board
-#import pytest
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Move import CheckersMove, ChessMove
@@ -19,8 +22,8 @@ FILENAME = "test_save.bin"
 FILE_VER_ZERO_HEADER_SIZE = 38
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
-GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess","Checkers"]
-# make the c-stdlib style deffinitions so
+GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess", "Checkers"]
+# make the c-stdlib style definitions so
 # the code is readable and not full
 # of magic numbers
 SEEK_SET = 0
@@ -29,71 +32,100 @@ SEEK_END = 2
 
 
 class Game:
+    """
+    The game object is ...
 
+    Attributes:
+        __game_type: string: Either "chess" or "checkers"
+        __colour_mode:
+        __light_player: Player: The light player object
+        __dark_player: Player: The dark player object
+    """
     def __init__(self, game_type, colour_mode):
         
         # I think based on PieceSet.py and the domain model
         # that this is going to be a string but i'm not
         # sure
-        if (game_type.lower() == "chess"):
+        self.__light_player = None  # Will be build later
+        self.__dark_player = None  # Will be build later
+        self.__current_player = None
+        if game_type.lower() == "chess":
             self.__game_type = GAME_TYPE_CHESS
-        elif (game_type.lower() == "checkers"):
+        elif game_type.lower() == "checkers":
             self.__game_type = GAME_TYPE_CHECKERS
         else:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
-            raise GameTypeErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk
+            raise Exception("GameTypeErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
         # common for both chess and checkers
-        if ((colour_mode) >= len(Colours.COLOUR_STRING_LOOK_UP_TABLE)):
-            raise wrongColourOrSomethingFigurOutLAter
+        if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
+            raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
         self.__board = Board(8)
         return
 
     def get_light_player(self):
-        """Return the light player object"""
+        """:return: Player: The light player object"""
         return self.__light_player
 
-    def build_light_player(self,name,player_type,timer,castled):
-        self.__light_player = Player(name,player_type,timer,castled)
-        self.__light_player.set_piece_set(
-            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-                     Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-                     [Colours.Colour_Offset.OFFSET_LIGHT]))
-        return
-
-    def build_dark_player(self,name,player_type,timer,castled):
-        self.__dark_player = Player(name,player_type,timer,castled)
-        self.__light_player.set_piece_set(
-            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-                     Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-                     [Colours.Colour_Offset.OFFSET_DARK]))
-        return
-
     def get_dark_player(self):
-        """Return the dark player object"""
+        """:return: Player: The dark player object"""
         return self.__dark_player
 
+    def build_light_player(self, name, player_type, timer, castled):
+        """
+        Build the light coloured object.
+        :param name: string: Player name
+        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
+        :param timer: Timer: The player's timer object
+        :param castled: Bool: True is the player has castled, False otherwise
+        """
+        self.__light_player = Player(name, player_type, timer, castled)
+        self.__light_player.set_piece_set(
+            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
+                     COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
+                     [ColourOffset.OFFSET_LIGHT]))
+        self.__current_player = self.__light_player  # Light colour goes first
+
+    def build_dark_player(self, name, player_type, timer, castled):
+        """
+        Build the light coloured object.
+        :param name: string: Player name
+        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
+        :param timer: Timer: The player's timer object
+        :param castled: Bool: True is the player has castled, False otherwise
+        """
+        self.__dark_player = Player(name, player_type, timer, castled)
+        self.__light_player.set_piece_set(
+            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
+                     COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
+                     [ColourOffset.OFFSET_DARK]))
+
     def start(self):
-        return
+        # TODO: Not sure what this is?
+        pass
 
     def abort(self):
-        return
+        # TODO: Not sure what this is?
+        pass
 
     def get_board(self):
-        """Return the board object"""
+        """:return: the board object"""
         return self.__board
 
     def get_current_player(self):
+        # TODO: The current player is the player whose turn it is.
         return
 
     def save_to_file(self):
-        """Save the current game state to a file"""
-        """TODO: The file location is unknown at this time"""
-        """expected *nix = ~/.cmpt370checkerschess/savegame.370checkerschess"""
-        """expected windows = ????"""
-        """Returns None"""
+        """
+        Save the current game state to a file
+        TODO: The file location is unknown at this time
+        expected *nix = ~/.cmpt370checkerschess/savegame.370checkerschess
+        expected windows = ????
+        :returns: None
+        """
         # caller of save_to_file()
         # is responsible for the try except
         # error handling
@@ -103,7 +135,7 @@ class Game:
         game_mode = self.__game_type  # good
         ai_in_game = not ((self.__light_player.get_player_type()) and (self.__dark_player.get_player_type())) # good
         dark_player_is_ai = not (self.__dark_player.get_player_type())  # good
-        dark_player_turn = self.__dark_play is self.__current_player  # good
+        dark_player_turn = self.__dark_player is self.__current_player  # good
         board_height = self.get_board().get_size()  # good
         board_width = board_height  # good
         colours = self.__colour_mode  # good
@@ -119,21 +151,21 @@ class Game:
                              light_player_castled, dark_player_castled,
                              light_player_time, dark_player_time))
         row = 0
-        while (row != board_height):
+        while row != board_height:
             col = 0
-            while (col != board_width):
+            while col != board_width:
                 cur_piece = self.__board.get_game_square(row,col).get_occupying_piece()
-                if (cur_piece is None):
+                if cur_piece is None:
                     fp.write((0).to_bytes(1, byteorder="big"))
                     col +=1
                     continue
                 # check if it is dark and set the dark bit
-                if (cur_piece.get_colour() == Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][Colours.Colour_Offset.OFFSET_DARK]):
+                if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][.Colour_Offset.OFFSET_DARK:
                     output_piece = 0b100000
                 else:
                     output_piece = 0
                 # decode object to char
-                if (self.__game_type == GAME_TYPE_CHESS):
+                if self.__game_type == GAME_TYPE_CHESS:
                     if (isinstance(cur_piece, King)):
                         output_piece += ord("K")
                     elif (isinstance(cur_piece, Queen)):
@@ -151,7 +183,7 @@ class Game:
                         # unidentified piece, shouldn't be possible
                         fp.close()
                         assert(0)
-                elif (self.__game_type == GAME_TYPE_CHECKERS):
+                elif self.__game_type == GAME_TYPE_CHECKERS:
                     output_piece += (1 + cur_piece.get_promotion_status())
                 else:
                     # unidentified game, shouldn't be possible
@@ -173,11 +205,11 @@ class Game:
         # error handling
         fp = open(FILENAME, "rb")
         read_magic = fp.read(20)
-        if (read_magic != MAGIC):
-            raise ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk
-        file_version = int.from_bytes(fp.read(1),
-                                      byteorder="big", signed=False)
-        if (file_version == 0):
+        if read_magic != MAGIC:
+            raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
+
+        file_version = int.from_bytes(fp.read(1), byteorder="big", signed=False)
+        if file_version == 0:
             # Do stuff for file version 0
             # if the file version changes
             # add an "elif" after this
@@ -186,27 +218,27 @@ class Game:
             file_size = fp.tell()
             fp.seek(0, SEEK_SET)
             # check if file is at least big enough to hold the header
-            if (file_size < FILE_VER_ZERO_HEADER_SIZE):
+            if file_size < FILE_VER_ZERO_HEADER_SIZE:
                 fp.close()
-                raise ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk
+                raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
             CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, board_width, colours, timer_enabled, light_player_castled, dark_player_castled, light_player_time, dark_player_time = struct.unpack(">BBBBBBBBBBff",fp.read(FILE_VER_ZERO_HEADER_SIZE))
-            if (file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height))):
+            if file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height)):
                 # file too small
                 fp.close()
-                raise somethign
+                raise Exception("something")
             board_data = fp.read(board_height*board_width)
             fp.close()
-            if (self.__game_type != game_mode):
+            if self.__game_type != game_mode:
                 # somebody set us up the bomb
                 # the game object was created with a different type than the
                 # file trying to be loaded
                 # my lord is that legal?
-                raise someExceptionIDK
-            if (board_height != board_width):
+                raise Exception("someExceptionIDK")
+            if board_height != board_width:
                 # should work according to domain model
                 # but won't work as built
                 fp.close()
-                raise BoardWrongOrSomethingIDK
+                raise Exception("BoardWrongOrSomethingIDK")
             # create board
             self.__board = Board(board_height)
             self.__colour_mode = colours
@@ -215,47 +247,47 @@ class Game:
                                     (not (ai_in_game and (not dark_player_is_ai))),
                                     Timer(light_player_time, timer_enabled), light_player_castled)
             self.build_dark_player("NotUsedInThisVersionOfSaves",
-                                   (not (ai_in_game and (dark_player_is_ai))),
-                                    Timer(dark_player_time, timer_enabled), dark_player_castled)
+                                   (not (ai_in_game and dark_player_is_ai)),
+                                   Timer(dark_player_time, timer_enabled), dark_player_castled)
             # setup board here
             board_data_index = 0
             row = 0
-            while (row != board_height):
+            while row != board_height:
                 col = 0
-                while (col != board_width):
+                while col != board_width:
                     cur_square = self.__board.get_game_square(row,col)
-                    if (board_data[board_data_index] == 0):
+                    if board_data[board_data_index] == 0:
                         cur_square.put_piece_here(None)
                         board_data_index += 1
                         col +=1
                         continue
                     # non-empty board square
                     # check if it is dark and set the dark bit
-                    if (board_data[board_data_index] & 0b100000):
+                    if board_data[board_data_index] & 0b100000:
                         is_dark = 1
                     else:
                         is_dark = 0
                         # decode object to char
-                    if (self.__game_type == GAME_TYPE_CHESS):
-                        if (board_data[board_data_index].lower()=="k"):
-                            cur_square.put_piece_here(King(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif (board_data[board_data_index].lower()=="q"):
-                            cur_square.put_piece_here(Queen(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif (board_data[board_data_index].lower()=="n"):
-                            cur_square.put_piece_here(Knight(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif (board_data[board_data_index].lower()=="b"):
-                            cur_square.put_piece_here(Bishop(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif (board_data[board_data_index].lower()=="r"):
-                            cur_square.put_piece_here(Rook(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif (board_data[board_data_index].lower()=="p"):
-                            cur_square.put_piece_here(Pawn(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                    if self.__game_type == GAME_TYPE_CHESS:
+                        if str(board_data[board_data_index]).lower() == "k":
+                            cur_square.put_piece_here(King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        elif str(board_data[board_data_index]).lower() == "q":
+                            cur_square.put_piece_here(Queen(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        elif str(board_data[board_data_index]).lower() == "n":
+                            cur_square.put_piece_here(Knight(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        elif str(board_data[board_data_index]).lower() == "b":
+                            cur_square.put_piece_here(Bishop(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        elif str(board_data[board_data_index]).lower() == "r":
+                            cur_square.put_piece_here(Rook(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        elif str(board_data[board_data_index]).lower() == "p":
+                            cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
                             # TODO see if this works (promotions)
                         else:
                             # unidentified piece, shouldn't be possible
-                                assert(0)
-                    elif (self.__game_type == GAME_TYPE_CHECKERS):
-                        cur_square.put_piece_here(CheckersCoin(Colours.COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        if (board_data[board_data_index] & 0b10):
+                                assert 0
+                    elif self.__game_type == GAME_TYPE_CHECKERS:
+                        cur_square.put_piece_here(CheckersCoin(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        if board_data[board_data_index] & 0b10:
                             cur_square.get_occupying_piece().promote()
                     else:
                         # unidentified game, shouldn't be possible
@@ -267,7 +299,7 @@ class Game:
             fp.close()
             ui.showError("File version " + str(file_version) +
                          " unsupported in this version, update the game")
-            raise ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk
+            raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
         return
@@ -285,14 +317,11 @@ class Game:
     def get_game_type(self):
         return
 
-    def set_game_type(self, game_type):
-        """this might be part of init() cant think of when you would"""
-        """need to change game partway through"""
-        """I expect UI would just dump this game object and make a new one"""
-        return
-
     def change_current_player(self):
-        return
+        if self.__current_player is self.__dark_player:
+            self.__current_player = self.__light_player
+        else:
+            self.__current_player = self.__dark_player
 
     def check_for_game_over(self):
         return
