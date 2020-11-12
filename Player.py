@@ -14,7 +14,7 @@ class Player(object):
 
     Attributes:
         __piece_set: PieceSet:
-        __colour: TODO: Not sure if we want this in player?
+        __colour: TODO: Not sure if we want this in player or we can just look at the players PieceSet?
         __name: String:
         __player_type:
         __timer: Timer:
