@@ -82,10 +82,10 @@ class Game:
         :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__light_player = Player(name, player_type, timer, castled)
-        self.__light_player.set_piece_set(
-            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-                     COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-                     [ColourOffset.OFFSET_LIGHT]))
+        self.__light_player.build_piece_set(
+            GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
+            COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
+            [ColourOffset.OFFSET_LIGHT])
         self.__current_player = self.__light_player  # Light colour goes first
 
     def build_dark_player(self, name, player_type, timer, castled):
@@ -97,10 +97,10 @@ class Game:
         :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__dark_player = Player(name, player_type, timer, castled)
-        self.__light_player.set_piece_set(
-            PieceSet(GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-                     COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-                     [ColourOffset.OFFSET_DARK]))
+        self.__light_player.build_piece_set(
+            GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
+            COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
+            [ColourOffset.OFFSET_DARK])
 
     def start(self):
         # TODO: Not sure what this is?
@@ -131,7 +131,7 @@ class Game:
         fp = open(FILENAME, "wb")
         # write magic
         fp.write(MAGIC)
-        game_mode = self.__game_type  # good
+        game_mode = self.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
         ai_in_game = not ((self.__light_player.get_player_type()) and (self.__dark_player.get_player_type())) # good
         dark_player_is_ai = not (self.__dark_player.get_player_type())  # good
         dark_player_turn = self.__dark_player is self.__current_player  # good
@@ -156,7 +156,7 @@ class Game:
                 cur_piece = self.__board.get_game_square(row,col).get_occupying_piece()
                 if cur_piece is None:
                     fp.write((0).to_bytes(1, byteorder="big"))
-                    col +=1
+                    col += 1
                     continue
                 # check if it is dark and set the dark bit
                 if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK]:
@@ -203,6 +203,7 @@ class Game:
         Load game state from file
         This is expected to be called from the ui object?
         Which has already checked for the existence of the save game
+        # TODO: Reconstruct piece set from the file
         """
         # caller of load_from_file()
         # is responsible for the try except
@@ -225,45 +226,60 @@ class Game:
             if file_size < FILE_VER_ZERO_HEADER_SIZE:
                 fp.close()
                 raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
-            CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, board_width, colours, timer_enabled, light_player_castled, dark_player_castled, light_player_time, dark_player_time = struct.unpack(">BBBBBBBBBBff",fp.read(FILE_VER_ZERO_HEADER_SIZE))
+
+            CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, \
+                board_width, colours, timer_enabled, light_player_castled, dark_player_castled, light_player_time, \
+                dark_player_time = struct.unpack(">BBBBBBBBBBff", fp.read(FILE_VER_ZERO_HEADER_SIZE))
+
             if file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height)):
                 # file too small
                 fp.close()
                 raise Exception("something")
             board_data = fp.read(board_height*board_width)
             fp.close()
+
             if self.__game_type != game_mode:
                 # somebody set us up the bomb
                 # the game object was created with a different type than the
                 # file trying to be loaded
                 # my lord is that legal?
                 raise Exception("someExceptionIDK")
+
             if board_height != board_width:
                 # should work according to domain model
                 # but won't work as built
                 fp.close()
                 raise Exception("BoardWrongOrSomethingIDK")
-            # create board
+
             self.__board = Board(board_height)
             self.__colour_mode = colours
-            # build player
+
             self.build_light_player("NotUsedInThisVersionOfSaves",
                                     (not (ai_in_game and (not dark_player_is_ai))),
                                     Timer(light_player_time, timer_enabled), light_player_castled)
             self.build_dark_player("NotUsedInThisVersionOfSaves",
                                    (not (ai_in_game and dark_player_is_ai)),
                                    Timer(dark_player_time, timer_enabled), dark_player_castled)
+
+            # For now assume they are ideal piece sets
+            self.__light_player.build_piece_set(game_mode, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][0])
+            self.__dark_player.build_piece_set(game_mode, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][1])
+            # TODO: Right now we are just putting random chess pieces on the board, we need to put on pieces from the
+            #  pieceset onto the board and then capture all the pieces that we didn't find on the board
+
             # setup board here
             board_data_index = 0
+            found_dark_checkers_pieces = 0
+            found_light_checkers_pieces = 0
             row = 0
             while row != board_height:
                 col = 0
                 while col != board_width:
-                    cur_square = self.__board.get_game_square(row,col)
+                    cur_square = self.__board.get_game_square(row, col)
                     if board_data[board_data_index] == 0:
                         cur_square.put_piece_here(None)
                         board_data_index += 1
-                        col +=1
+                        col += 1
                         continue
 
                     # If we get here we are looking at a non-empty board square
@@ -295,8 +311,19 @@ class Game:
                         else:
                             # unidentified piece, shouldn't be possible
                             assert 0
+
                     elif self.__game_type == GAME_TYPE_CHECKERS:
-                        cur_square.put_piece_here(CheckersCoin(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                        if is_dark:
+                            cur_square.put_piece_here(
+                                self.__dark_player.get_piece_set().get_live_pieces()[found_dark_checkers_pieces]
+                            )
+                            found_dark_checkers_pieces += 1
+                        else:
+                            cur_square.put_piece_here(
+                                self.__light_player.get_piece_set().get_live_pieces()[found_light_checkers_pieces]
+                            )
+                            found_light_checkers_pieces += 1
+
                         if board_data[board_data_index] & 0b10:
                             cur_square.get_occupying_piece().promote()
                     else:
@@ -305,6 +332,17 @@ class Game:
                     board_data_index += 1
                     col += 1
                 row += 1
+
+            # put all the pieces that were not placed on the board into the captured lists
+            if self.__game_type == GAME_TYPE_CHECKERS:
+                # Start at the back of the list of live pieces not placed on the board and capture them
+                for i in range(16-found_dark_checkers_pieces):
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[15-i]
+                    )
+            elif self.__game_type == GAME_TYPE_CHESS:
+                pass
+
         else:
             fp.close()
             # ui.showError("File version " + str(file_version) + " unsupported in this version, update the game")

@@ -151,6 +151,7 @@ def test_move():
     checkers_move.set_piece(piece1)
     assert checkers_move.get_piece() == piece1
 
+
 def test_timer():
     timer1_that_is_enabled = Timer(90, True)
     assert 89.9 < timer1_that_is_enabled.get_time_remaining_s() < 90.1

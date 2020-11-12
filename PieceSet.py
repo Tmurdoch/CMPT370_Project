@@ -24,7 +24,7 @@ class PieceSet:
     """
     def __init__(self, piece_set_type, colour):
         """
-        Purpose: Initialize a piece set.
+        Purpose: Initialize a piece set normally at the start of a game
         :param piece_set_type: string: either "Chess" or "Checkers"
         :param colour: string: piece set __colour
         """
@@ -43,7 +43,6 @@ class PieceSet:
                                  Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
-        # TODO: To we need a piece set class
 
     def capture_piece(self, captured_piece):
         """

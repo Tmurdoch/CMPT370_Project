@@ -22,8 +22,8 @@ class Player(object):
         :param: Timer: timer: The Timer object for a Player
         :param: Boolean: castled: A boolean to see if the player has been castled or not.
         """
-        self.__piece_set = PieceSet
-        self.__colour = PieceSet
+        self.__piece_set = None
+        self.__colour = None
         self.__name = name
         self.__player_type = player_type
         self.__timer = timer
@@ -31,15 +31,17 @@ class Player(object):
 
     def make_move(self):
         """Allows a Player to move a piece???"""
-        """TO DO"""
+        # TODO:
+        pass
 
     def get_piece_set(self):
         """Returns the PieceSet object of a Player"""
         return self.__piece_set
 
-    def set_piece_set(self, piece_set):
+    def build_piece_set(self, piece_set_type, colour):
         """Sets a Player's piece set to a PieceSet object"""
-        self.__piece_set = piece_set
+        self.__colour = colour
+        self.__piece_set = PieceSet(piece_set_type, colour)
 
     def get_colour(self):
         """Returns the PieceSet object colour of a Player"""
@@ -47,6 +49,7 @@ class Player(object):
 
     def set_colour(self, colour):
         """Sets a Player's piece colour to a PieceSet object's colour"""
+        # TODO: Not sure we need this one?
         self.__colour = colour
 
     def get_name(self):
