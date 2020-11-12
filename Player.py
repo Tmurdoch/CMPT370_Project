@@ -15,12 +15,12 @@ class Player(object):
     def __init__(self, name, player_type, timer, castled):
         """
         Initializes a Player object.
-        :param: piece_set: The piece set for a Player.
-        :param: colour: The colour of pieces for a Player.
-        :param name: The name of a Player.
-        :param: player_type: The type of Player the Player is, can be AI or Human
-        :param: timer: The Timer object for a Player
-        :param castled: A boolean to see if the player has been castled or not.
+        :param: PieceSet: piece_set: The piece set for a Player.
+        :param: PieceSet : colour: PieceSet:  The colour of pieces for a Player.
+        :param: string: name: The name of a Player.
+        :param: PlayerType: player_type: The type of Player the Player is, can be AI or Human
+        :param: Timer: timer: The Timer object for a Player
+        :param: Boolean: castled: A boolean to see if the player has been castled or not.
         """
         self.__piece_set = PieceSet
         self.__colour = PieceSet
