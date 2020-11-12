@@ -54,40 +54,31 @@ def test_pieces():
     # Test the pawn
     pawn1 = Pawn(piece_set_colour3)
     assert pawn1.get_colour() == piece_set_colour3
-    assert not pawn1.get_promotion_status()
     assert not pawn1.get_moved_yet_status()
-    assert pawn1.get_promoted_to() is None
     pawn1.set_colour(piece_set_colour2)
     assert pawn1.get_colour() == piece_set_colour2
     pawn1.move()
     assert pawn1.get_moved_yet_status()
 
-    assert pawn1.promote("Knight")
-    assert pawn1.get_promotion_status()
-    assert isinstance(pawn1.get_promoted_to(), Knight)
-    assert not pawn1.promote("Queen")
+    new_piece = pawn1.promote("Knight")
+    assert isinstance(new_piece, Knight)
 
     pawn2 = Pawn(piece_set_colour1)
     assert pawn2.get_colour() == piece_set_colour1
-    assert not pawn2.get_promotion_status()
-    assert pawn2.promote("Queen")
-    assert pawn2.get_promotion_status()
-    assert isinstance(pawn2.get_promoted_to(), Queen)
+    new_piece2 = pawn2.promote("Queen")
+    assert isinstance(new_piece2, Queen)
 
     pawn3 = Pawn(piece_set_colour2)
     assert pawn3.get_colour() == piece_set_colour2
-    assert not pawn3.get_promotion_status()
-    assert pawn3.promote("Bishop")
-    assert pawn3.get_promotion_status()
-    assert isinstance(pawn3.get_promoted_to(), Bishop)
+    new_piece3 = pawn3.promote("Bishop")
+    assert isinstance(new_piece3, Bishop)
 
     pawn4 = Pawn(piece_set_colour2)
-    assert not pawn4.promote("King")
+    new_piece4 = pawn4.promote("King")
+    assert new_piece4 is None
     assert pawn4.get_colour() == piece_set_colour2
-    assert not pawn4.get_promotion_status()
-    assert pawn4.promote("Rook")
-    assert pawn4.get_promotion_status()
-    assert isinstance(pawn4.get_promoted_to(), Rook)
+    new_piece4 = pawn4.promote("Bishop")
+    assert isinstance(new_piece4, Bishop)
 
     # Test the checkers coin
     checkers_coin1 = CheckersCoin(piece_set_colour3)
@@ -104,7 +95,6 @@ def test_piece_set():
     piece_set1 = PieceSet("Checkers", piece_set_colour)
 
     # Test initial conditions for Checkers
-    assert not piece_set1.get_castled()
     assert piece_set1.get_number_of_captured_pieces() == 0
     assert piece_set1.get_piece_set_type() == "Checkers"
     assert piece_set1.get_colour() == piece_set_colour
@@ -112,9 +102,6 @@ def test_piece_set():
     assert (piece_set1.get_live_pieces()[0]).get_colour() == piece_set_colour
     assert piece_set1.get_live_pieces()[5].get_colour() == piece_set_colour
     assert piece_set1.get_live_pieces()[11].get_colour() == piece_set_colour
-
-    piece_set1.castle()
-    assert piece_set1.get_castled()
 
     # Captured a piece
     assert piece_set1.capture_piece(piece_set1.get_live_pieces()[0])
@@ -140,7 +127,6 @@ def test_piece_set():
     piece_set2 = PieceSet("Chess", piece_set_colour)
 
     # Test initial conditions for Chess
-    assert not piece_set2.get_castled()
     assert piece_set2.get_number_of_captured_pieces() == 0
     assert piece_set2.get_piece_set_type() == "Chess"
     assert piece_set2.get_colour() == piece_set_colour
