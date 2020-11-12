@@ -19,7 +19,7 @@ FILENAME = "test_save.bin"
 
 # assuming 8 bits/timer and 2 timers
 # TODO verify these assumptions
-FILE_VER_ZERO_HEADER_SIZE = 38
+FILE_VER_ZERO_HEADER_SIZE = 39
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess", "Checkers"]
@@ -97,7 +97,7 @@ class Game:
         :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__dark_player = Player(name, player_type, timer, castled)
-        self.__light_player.build_piece_set(
+        self.__dark_player.build_piece_set(
             GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
             COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
             [ColourOffset.OFFSET_DARK])
@@ -116,7 +116,7 @@ class Game:
 
     def get_current_player(self):
         # TODO: The current player is the player whose turn it is.
-        return
+        return self.__current_player
 
     def save_to_file(self):
         """
@@ -144,7 +144,7 @@ class Game:
         light_player_castled = self.__light_player.get_castled()
         dark_player_castled = self.__dark_player.get_castled()
         # write the header struct
-        fp.write(struct.pack(">BBBBBBBBBBff", CURRENT_FILE_VERSION, game_mode,
+        fp.write(struct.pack(">BBBBBBBBBBBff", CURRENT_FILE_VERSION, game_mode,
                              ai_in_game, dark_player_is_ai, dark_player_turn,
                              board_height, board_width, colours, timer_enabled,
                              light_player_castled, dark_player_castled,
@@ -226,10 +226,11 @@ class Game:
             if file_size < FILE_VER_ZERO_HEADER_SIZE:
                 fp.close()
                 raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
-
+            fp.seek(20, SEEK_SET)
+            f = fp.read(FILE_VER_ZERO_HEADER_SIZE-20)
             CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, \
                 board_width, colours, timer_enabled, light_player_castled, dark_player_castled, light_player_time, \
-                dark_player_time = struct.unpack(">BBBBBBBBBBff", fp.read(FILE_VER_ZERO_HEADER_SIZE))
+                dark_player_time = struct.unpack(">BBBBBBBBBBBff", f)
 
             if file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height)):
                 # file too small
@@ -262,8 +263,8 @@ class Game:
                                    Timer(dark_player_time, timer_enabled), dark_player_castled)
 
             # For now assume they are ideal piece sets
-            self.__light_player.build_piece_set(game_mode, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][0])
-            self.__dark_player.build_piece_set(game_mode, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][1])
+            self.__light_player.build_piece_set(GAME_TYPE_STRING_LOOK_UP_TABLE[game_mode], COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][0])
+            self.__dark_player.build_piece_set(GAME_TYPE_STRING_LOOK_UP_TABLE[game_mode], COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][1])
             # TODO: Right now we are just putting random chess pieces on the board, we need to put on pieces from the
             #  pieceset onto the board and then capture all the pieces that we didn't find on the board
 
@@ -291,20 +292,20 @@ class Game:
 
                     # decode object to char
                     if self.__game_type == GAME_TYPE_CHESS:
-                        if str(board_data[board_data_index]).lower() == "k":
+                        if chr(board_data[board_data_index]).lower() == "k":
                             cur_square.put_piece_here(King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "q":
+                        elif chr(board_data[board_data_index]).lower() == "q":
                             cur_square.put_piece_here(Queen(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "n":
+                        elif chr(board_data[board_data_index]).lower() == "n":
                             cur_square.put_piece_here(Knight(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "b":
+                        elif chr(board_data[board_data_index]).lower() == "b":
                             cur_square.put_piece_here(Bishop(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "r":
+                        elif chr(board_data[board_data_index]).lower() == "r":
                             cur_square.put_piece_here(Rook(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "p":
+                        elif chr(board_data[board_data_index]).lower() == "p":
                             # The pawn is an unmoved pawn
                             cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "q":
+                        elif chr(board_data[board_data_index]).lower() == "q":
                             # The pawn is an moved pawn
                             cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
                             cur_square.get_occupying_piece().move()

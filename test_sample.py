@@ -14,8 +14,9 @@ import time  # For testing the timer
 from GameSquare import GameSquare
 from Board import Board
 from Board import BoardTheme
-
-
+from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
+from Game import Game
+from PlayerType import PlayerType
 def test_pieces():
     piece_set_colour1 = "Red"
     piece_set_colour2 = "White"
@@ -277,6 +278,40 @@ def test_show_board():
     my_board.get_game_square(6, 3).remove_occupying_piece()
     my_board.get_game_square(4, 3).put_piece_here(pawn)
     my_board.print_game_board()
+
+
+def test_game():
+    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    assert my_game.get_dark_player() is None
+    assert my_game.get_light_player() is None
+    assert my_game.get_current_player() is None
+    my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game.get_dark_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
+    my_game.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game.get_light_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+    assert my_game.get_current_player() is my_game.get_light_player()
+    my_game.change_current_player()
+    assert my_game.get_current_player() is my_game.get_dark_player()
+    assert my_game.get_board().get_size() == 8
+
+    dark_set = my_game.get_dark_player().get_piece_set().get_live_pieces()
+    light_set = my_game.get_light_player().get_piece_set().get_live_pieces()
+    spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+
+    board = my_game.get_board()
+    i = 0
+    for r in board.get_game_board():
+        r[7].put_piece_here(light_set[i])
+        r[0].put_piece_here(dark_set[i])
+        i += 1
+    board.print_game_board()
+    my_game.save_to_file()
+
+    load_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    load_game.load_from_file()
+    load_game.get_board().print_game_board()
 
 
 if __name__ == '__main__':
