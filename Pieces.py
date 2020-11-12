@@ -115,16 +115,12 @@ class Pawn(PieceInterface):
     Initially the pawn has not moved and has not been promoted
 
     Pawn Specific Attributes:
-        __promoted: A bool representing promotion status, True if the pawn has been promoted
-        __promotedTo: The piece that the pawn has been promoted to
-        movedYet: A bool indicating if the pawn has moved yet, True if it has
+        __movedYet: A bool indicating if the pawn has moved yet, True if it has
                 (Pawns can move twice only on their first move)
     """
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
-        self.__promoted = False
-        self.__promotedTo = None
         self.__movedYet = False
 
     def set_colour(self, colour):
@@ -135,43 +131,24 @@ class Pawn(PieceInterface):
 
     def promote(self, class_promoted_to):
         """
-        Promote a pawn to a different type of chess piece
-        Pawns can only be promoted once
+        Promote a pawn to a different type of chess piece.
+        MAKE SURE TO CATCH AND USE THE NEW PIECE!
+        Pawns can only be promoted once because afterwards you should discard the pawn
         :param class_promoted_to: String: The type of piece you would like to promote to, first letter capitalized
-            Options are "Queen", "Knight", "Bishop", and "Rook"
-        :return: True is the piece was successfully promoted, false otherwise
+            Options are "queen", "knight", "bishop", and "rook"
+        :return: If the promotion was successful: A new piece object
+                 If the promotion was unsuccessful: None
         """
-        # TODO: actually make the piece the type of the new object
-        if not self.__promoted and class_promoted_to == "Queen":
-            self.__promotedTo = Queen(self.__colour)
-            self.__promoted = True
-            return True
-        elif class_promoted_to == "Knight":
-            self.__promotedTo = Knight(self.__colour)
-            self.__promoted = True
-            return True
-        elif class_promoted_to == "Bishop":
-            self.__promotedTo = Bishop(self.__colour)
-            self.__promoted = True
-            return True
-        elif class_promoted_to == "Rook":
-            self.__promotedTo = Rook(self.__colour)
-            self.__promoted = True
-            return True
+        if class_promoted_to.lower() == "queen":
+            return Queen(self.__colour)
+        elif class_promoted_to.lower() == "knight":
+            return Knight(self.__colour)
+        elif class_promoted_to.lower() == "bishop":
+            return Bishop(self.__colour)
+        elif class_promoted_to.lower() == "rook":
+            return Rook(self.__colour)
         else:
-            return False
-
-    def get_promotion_status(self):
-        """
-        :return: Promotion statues, True if the pawn has been promoted, False otherwise
-        """
-        return self.__promoted
-
-    def get_promoted_to(self):
-        """
-        :return: The piece the pawn has been promoted to
-        """
-        return self.__promotedTo
+            return None
 
     def move(self):
         """

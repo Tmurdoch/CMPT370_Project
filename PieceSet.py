@@ -13,7 +13,6 @@ class PieceSet:
     Initially, a piece set will not have castled, and the list of captured pieces will be an empty list.
 
     Attributes:
-        __castled: A bool indicating whether or not the piece set has castled.  A piece set can only castle once per game.
         __pieceSetType: A string indicating whether the Game type for the set is a "Chess" type or a "Checkers" type.
                         Has no setter method and therefore can't be changed
         __capturedPieces: A list of the pieces that have been captured.  Pieces captured most recently are towards the
@@ -25,11 +24,10 @@ class PieceSet:
     """
     def __init__(self, piece_set_type, colour):
         """
-        Purpose: Initialize a piece set.
+        Purpose: Initialize a piece set normally at the start of a game
         :param piece_set_type: string: either "Chess" or "Checkers"
         :param colour: string: piece set __colour
         """
-        self.__castled = False  # TODO: Remove this from PieceSet
         self.__capturedPieces = []
         if piece_set_type == "Checkers" or piece_set_type == "checkers":
             self.__pieceSetType = "Checkers"
@@ -45,20 +43,6 @@ class PieceSet:
                                  Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
-        # TODO: To we need a piece set class
-
-    def castle(self):
-        """
-        Mark that the piece set has __castled
-        Castle is a special chess move that can only be done once
-        """
-        self.__castled = True
-
-    def get_castled(self):
-        """
-        :return: bool: True if this piece set has not __castled, false otherwise
-        """
-        return self.__castled
 
     def capture_piece(self, captured_piece):
         """

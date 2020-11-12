@@ -11,19 +11,26 @@ class Player(object):
     """
     A Player is an object that has a name, a colour and controls pieces inside a piece set by making moves
     to play a game of Chess or Checkers. ????
+
+    Attributes:
+        __piece_set: PieceSet:
+        __colour: TODO: Not sure if we want this in player or we can just look at the players PieceSet?
+        __name: String:
+        __player_type:
+        __timer: Timer:
+        __castled: Bool:
     """
     def __init__(self, name, player_type, timer, castled):
         """
         Initializes a Player object.
-        :param: PieceSet: piece_set: The piece set for a Player.
-        :param: PieceSet : colour: PieceSet:  The colour of pieces for a Player.
         :param: string: name: The name of a Player.
         :param: PlayerType: player_type: The type of Player the Player is, can be AI or Human
+            TODO: Not sure what type this is? ^
         :param: Timer: timer: The Timer object for a Player
         :param: Boolean: castled: A boolean to see if the player has been castled or not.
         """
-        self.__piece_set = PieceSet
-        self.__colour = PieceSet
+        self.__piece_set = None
+        self.__colour = None
         self.__name = name
         self.__player_type = player_type
         self.__timer = timer
@@ -31,15 +38,17 @@ class Player(object):
 
     def make_move(self):
         """Allows a Player to move a piece???"""
-        """TO DO"""
+        # TODO:
+        pass
 
     def get_piece_set(self):
-        """Returns the PieceSet object of a Player"""
+        """:return: The players PieceSet"""
         return self.__piece_set
 
-    def set_piece_set(self, piece_set):
+    def build_piece_set(self, piece_set_type, colour):
         """Sets a Player's piece set to a PieceSet object"""
-        self.__piece_set = piece_set
+        self.__colour = colour
+        self.__piece_set = PieceSet(piece_set_type, colour)
 
     def get_colour(self):
         """Returns the PieceSet object colour of a Player"""
@@ -47,18 +56,15 @@ class Player(object):
 
     def set_colour(self, colour):
         """Sets a Player's piece colour to a PieceSet object's colour"""
+        # TODO: Not sure we need this one?
         self.__colour = colour
 
     def get_name(self):
-        """Returns the name of a Player"""
+        """:return: The players name"""
         return self.__name
 
-    def set_name(self, name):
-        """Sets a Player's name"""
-        self.__name = name
-
     def get_player_type(self):
-        """Returns the type of PlayerType object for a Player, AI(0) or Human(1)"""
+        """":return: type of PlayerType object for a Player, AI(0) or Human(1)"""
         return self.__player_type.value
 
     def set_player_type(self, player_type):
@@ -66,26 +72,22 @@ class Player(object):
         self.__player_type = player_type
 
     def get_timer(self):
-        """Returns the Timer object of a Player"""
+        """:return: Timer object of a Player"""
         return self.__timer
 
-    def set_timer(self, timer):
-        """Sets a Player's timer to a Timer object"""
-        self.__timer = timer
-
     def get_castled(self):
-        """Checks if the Player has castled or not"""
+        """:return: Bool, True if the player has already castled, False otherwise"""
         return self.__castled
 
-    def set_castled(self,castled):
-        """Sets the Player's castled to True or False based on if they have been castled or not"""
-        self.__castled = castled
+    def castle(self):
+        """Marks that the player has castled so we can make sure they don't castle again"""
+        self.__castled = True
 
 
 def test_player():
     pt = PlayerType.computer_engine
-    t = Timer(300, 300, False)
-    t1 = Timer(30, 30, False)
+    t = Timer(1, False)
+    t1 = Timer(30, False)
     p = Player("Joel", pt, t, False)
     assert(p.get_name() == 'Joel')
     p.set_name("Brian")
