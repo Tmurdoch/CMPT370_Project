@@ -124,7 +124,6 @@ class Game:
         TODO: The file location is unknown at this time
         expected *nix = ~/.cmpt370checkerschess/savegame.370checkerschess
         expected windows = ????
-        :returns: None
         """
         # caller of save_to_file()
         # is responsible for the try except
@@ -160,35 +159,39 @@ class Game:
                     col +=1
                     continue
                 # check if it is dark and set the dark bit
-                if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][.Colour_Offset.OFFSET_DARK:
+                if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK]:
                     output_piece = 0b100000
                 else:
                     output_piece = 0
                 # decode object to char
                 if self.__game_type == GAME_TYPE_CHESS:
-                    if (isinstance(cur_piece, King)):
+                    if isinstance(cur_piece, King):
                         output_piece += ord("K")
-                    elif (isinstance(cur_piece, Queen)):
+                    elif isinstance(cur_piece, Queen):
                         output_piece += ord("Q")
-                    elif (isinstance(cur_piece, Knight)):
+                    elif isinstance(cur_piece, Knight):
                         output_piece += ord("N")
-                    elif (isinstance(cur_piece, Bishop)):
+                    elif isinstance(cur_piece, Bishop):
                         output_piece += ord("B")
-                    elif (isinstance(cur_piece, Rook)):
+                    elif isinstance(cur_piece, Rook):
                         output_piece += ord("R")
-                    elif (isinstance(cur_piece, Pawn)):
-                        # TODO see if this works (promotions)
-                        output_piece += ord("P")
+                    elif isinstance(cur_piece, Pawn):
+                        if cur_piece.get_moved_yet_status():
+                            # The pawn is a moved pawn
+                            output_piece += ord("Q")
+                        else:
+                            # The pawn is an unmoved pawn
+                            output_piece += ord("P")
                     else:
                         # unidentified piece, shouldn't be possible
                         fp.close()
-                        assert(0)
+                        assert 0
                 elif self.__game_type == GAME_TYPE_CHECKERS:
                     output_piece += (1 + cur_piece.get_promotion_status())
                 else:
                     # unidentified game, shouldn't be possible
                     fp.close()
-                    assert(0)
+                    assert 0
                 # write data
                 fp.write(output_piece.to_bytes(1, byteorder="big"))
                 col += 1
@@ -196,10 +199,11 @@ class Game:
         fp.close()
 
     def load_from_file(self):
-        """Load game state from file"""
-        """This is expected to be called from the ui object"""
-        """Which has already checked for the existance of the save game"""
-        """Return None"""
+        """
+        Load game state from file
+        This is expected to be called from the ui object?
+        Which has already checked for the existence of the save game
+        """
         # caller of load_from_file()
         # is responsible for the try except
         # error handling
@@ -261,13 +265,15 @@ class Game:
                         board_data_index += 1
                         col +=1
                         continue
-                    # non-empty board square
+
+                    # If we get here we are looking at a non-empty board square
                     # check if it is dark and set the dark bit
                     if board_data[board_data_index] & 0b100000:
                         is_dark = 1
                     else:
                         is_dark = 0
-                        # decode object to char
+
+                    # decode object to char
                     if self.__game_type == GAME_TYPE_CHESS:
                         if str(board_data[board_data_index]).lower() == "k":
                             cur_square.put_piece_here(King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
@@ -280,25 +286,28 @@ class Game:
                         elif str(board_data[board_data_index]).lower() == "r":
                             cur_square.put_piece_here(Rook(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
                         elif str(board_data[board_data_index]).lower() == "p":
+                            # The pawn is an unmoved pawn
                             cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                            # TODO see if this works (promotions)
+                        elif str(board_data[board_data_index]).lower() == "q":
+                            # The pawn is an moved pawn
+                            cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            cur_square.get_occupying_piece().move()
                         else:
                             # unidentified piece, shouldn't be possible
-                                assert 0
+                            assert 0
                     elif self.__game_type == GAME_TYPE_CHECKERS:
                         cur_square.put_piece_here(CheckersCoin(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
                         if board_data[board_data_index] & 0b10:
                             cur_square.get_occupying_piece().promote()
                     else:
                         # unidentified game, shouldn't be possible
-                        assert(0)
-                    board_index_data += 1
+                        assert 0
+                    board_data_index += 1
                     col += 1
                 row += 1
         else:
             fp.close()
-            ui.showError("File version " + str(file_version) +
-                         " unsupported in this version, update the game")
+            # ui.showError("File version " + str(file_version) + " unsupported in this version, update the game")
             raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
@@ -327,7 +336,7 @@ class Game:
         return
 
 
-#if (__name__ == "__main__"):
+# if (__name__ == "__main__"):
 #    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
 #
 #    piece_obj = King("Red")	
@@ -338,4 +347,3 @@ class Game:
 #    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
 #    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
 #    game_obj.save_to_file()
-
