@@ -292,20 +292,20 @@ class Game:
 
                     # decode object to char
                     if self.__game_type == GAME_TYPE_CHESS:
-                        if str(board_data[board_data_index]).lower() == "k":
+                        if board_data[board_data_index].lower() == b"k":
                             cur_square.put_piece_here(King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "q":
+                        elif board_data[board_data_index].lower() == b"q":
                             cur_square.put_piece_here(Queen(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "n":
+                        elif board_data[board_data_index].lower() == b"n":
                             cur_square.put_piece_here(Knight(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "b":
+                        elif board_data[board_data_index].lower() == b"b":
                             cur_square.put_piece_here(Bishop(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "r":
+                        elif board_data[board_data_index].lower() == b"r":
                             cur_square.put_piece_here(Rook(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "p":
+                        elif board_data[board_data_index].lower() == b"p":
                             # The pawn is an unmoved pawn
                             cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif str(board_data[board_data_index]).lower() == "q":
+                        elif board_data[board_data_index].lower() == b"q":
                             # The pawn is an moved pawn
                             cur_square.put_piece_here(Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
                             cur_square.get_occupying_piece().move()
