@@ -311,12 +311,7 @@ def test_game():
 
     load_game = Game("Chess", ColourCodes.WHITE_BLACK)
     load_game.load_from_file()
-    load_game.print_game_board()
-
-
-
-
-
+    load_game.get_board().print_game_board()
 
 
 if __name__ == '__main__':
