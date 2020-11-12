@@ -29,7 +29,7 @@ class PieceSet:
         :param piece_set_type: string: either "Chess" or "Checkers"
         :param colour: string: piece set __colour
         """
-        self.__castled = False
+        self.__castled = False  # TODO: Remove this from PieceSet
         self.__capturedPieces = []
         if piece_set_type == "Checkers" or piece_set_type == "checkers":
             self.__pieceSetType = "Checkers"
@@ -45,6 +45,7 @@ class PieceSet:
                                  Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
+        # TODO: To we need a piece set class
 
     def castle(self):
         """
