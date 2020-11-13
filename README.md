@@ -8,6 +8,7 @@ Joel Berryere
 Michael Luciuk  
 Thomas Murdoch  
 
+Our program will not work with Python less than version 3.7
 Pytest does not work with versions less than 3.5
 use python --version to check version
 
