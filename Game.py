@@ -401,6 +401,7 @@ class Game:
                     lc += 1
         elif self.__game_type == GAME_TYPE_CHESS:
             # TODO CHESS
+            print("do stuff")
         else:
             # unknown game
             assert 0
