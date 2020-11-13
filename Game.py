@@ -397,7 +397,8 @@ class Game:
                                         self.__game_status = GameStatus.LIGHT_VICTORIOUS
                                     return
                             col += 1
-                        row+=1
+                        row += 1
+                    lc += 1
         elif self.__game_type == GAME_TYPE_CHESS:
             # TODO CHESS
         else:
