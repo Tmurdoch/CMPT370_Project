@@ -22,3 +22,6 @@ will create __pycache__ folder, just ignore this.
 
 to install PyGObject on Ubuntu:
 sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0
+
+to install PyGObject on Gentoo:
+emerge --ask dev-python/pygobject
