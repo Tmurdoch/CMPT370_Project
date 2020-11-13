@@ -1,11 +1,12 @@
 import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf
 from Player import Player
 from PlayerType import PlayerType
 from Game import Game
 from PieceSet import PieceSet
 from Timer import Timer
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk, GdkPixbuf
+
 resume = True
 checkers = False
 chess = False
@@ -31,9 +32,10 @@ class MainMenuWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
         self.modify_bg(Gtk.StateType.NORMAL, col)
-
+        b = Button()
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(main_box)
+        self.add(b)
         chess_button = Gtk.Button.new_with_label("Play")
         chess_button.connect("clicked", self.play_clicked)
         chess_button.set_property("width-request", 300)
@@ -142,6 +144,46 @@ class PlayerTypeWindow(Gtk.Window):
 
     def single_clicked(self, button):
         print('Single Player was chosen')  # put next window here
+        customization = BoardWindow(self.__game, "Single-Player")
+        customization.show_all()
+        self.hide()
+
+    def multi_clicked(self, button):
+        print('Multi Player was chosen')  # put next window here
+        customization = BoardWindow(self.__game, "Multi-Player")
+        customization.show_all()
+        self.hide()
+
+    def back_clicked(self, button):
+        print("This should go back to Game Choice Window")
+        game_type = GameChoiceWindow()
+        game_type.show_all()
+        self.hide()
+
+
+class BoardWindow(Gtk.Window):
+    def __init__(self, game, game_type):
+        Gtk.Window.__init__(self, title=game + " " + game_type)
+        self.__game = game
+        self.set_border_width(70)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.modify_bg(Gtk.StateType.NORMAL, col)
+        grid = Gtk.grid()
+        self.add(grid)
+
+        row_1_0 = Gtk.Button(label=" ")
+        row_1_0 = Gtk.Button(label=" ")
+
+        single_button = Gtk.Button.new_with_label("Single-Player")
+        single_button.connect("clicked", self.single_clicked)
+        single_button.set_property("width-request", 300)
+        single_button.set_property("height-request", 100)
+        #flowbox.pack_start(single_button, True, True, 0)
+
+
+    def single_clicked(self, button):
+        print('Single Player was chosen')  # put next window here
         customization = CustomizationWindow(self.__game, "Single-Player")
         customization.show_all()
         self.hide()
@@ -166,7 +208,7 @@ class CustomizationWindow(Gtk.Window):
         self.__game_type = game_type
         self.set_border_width(100)
         self.set_default_size(200,200)
-        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_position(Gtk.WindowPosition.MOUSE)
         customization = Gtk.Box(spacing=6)
         self.add(customization)
 
@@ -199,6 +241,11 @@ class CustomizationWindow(Gtk.Window):
         player_type.show_all()
         self.hide()
 
+
+"""class Button(Gtk.Button):
+    def __init__(self):
+        super().Gtk.Button.new_with_label("Play")
+        print("b")"""
 
 if __name__ == "__main__":
     win = MainMenuWindow()
