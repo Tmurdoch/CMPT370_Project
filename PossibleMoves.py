@@ -29,6 +29,16 @@ class PossibleMoves:
         self.__game_type = game_obj.get_game_type()  # will come back as either "chess" or "checkers"
         self.__board = self.__game.get_board()
 
+    def __init__(self, game_square, game_obj):
+        self.__game_square = game_square
+        self.__Piece = game_square.get_piece()
+        self.__moves = []
+        self.__game = game_obj
+        self.__row = game_square.get_row()
+        self.__col = game_square.get_col()
+        self.__game_type = game_obj.get_game_type()  # will come back as either "chess" or "checkers"
+        self.__board = self.__game.get_board()
+
     def build_list_of_moves(self):
         """
         Determine based on the piece where it can potentially move and load it into the __squares_you_can_move_to attribute
