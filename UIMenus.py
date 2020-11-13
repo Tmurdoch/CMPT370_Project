@@ -1,11 +1,11 @@
 import gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from Player import Player
 from PlayerType import PlayerType
 from Game import Game
 from PieceSet import PieceSet
 from Timer import Timer
-gi.require_version("Gtk", "3.0")
 resume = True
 checkers = False
 chess = False
