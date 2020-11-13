@@ -11,6 +11,7 @@ from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Move import CheckersMove, ChessMove
 from PossibleMoves import PossibleMoves
 from Timer import Timer
+from GameStatus import GameStatus
 import struct
 
 MAGIC = b"cmpt370checkerschess"
@@ -49,6 +50,7 @@ class Game:
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
+        self.__game_status = GameStatus.IN_PROGRESS
         if game_type.lower() == "chess":
             self.__game_type = GAME_TYPE_CHESS
         elif game_type.lower() == "checkers":
@@ -350,7 +352,7 @@ class Game:
             raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
-        return
+        return self.__current_player
 
     def declare_result(self):
         return
@@ -370,6 +372,39 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
+        if self.__game_type == GAME_TYPE_CHECKERS:
+            # Alive Pieces
+            ap = self.__current_player.get_piece_set().get_number_of_live_pieces()
+            if (ap):
+                # try to figure out if they have any moves
+                # Loop Count
+                lc = 0
+                while (lc != ap):
+                    # lovecraftian mind melting horror ahead
+                    # steel yourself
+                    search_target = self.__current_player.get_piece_set().get_live_pieces()[lc]
+                    row = 0
+                    while (row != self.__board.get_size()):
+                        col = 0
+                        while (col != self.__board.get_size()):
+                            if (search_target is self.__board.get_game_square(row,col).get_occupying_piece()):
+                                pm = PossibleMoves(self.__board.get_game_square(row,col),self)
+                                pm.build_list_of_moves()
+                                if (len(pm.get_moves()) == 0 ):
+                                    if self.__current_player is self.__light_player:
+                                        self.__game_status = GameStatus.DARK_VICTORIOUS
+                                    else:
+                                        self.__game_status = GameStatus.LIGHT_VICTORIOUS
+                                    return
+                            col += 1
+                        row+=1
+        elif self.__game_type == GAME_TYPE_CHESS:
+            # TODO CHESS
+        else:
+            # unknown game
+            assert 0
+                                
+                    
 
     def check_for_game_over(self):
         return
