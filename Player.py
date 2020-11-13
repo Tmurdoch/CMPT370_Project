@@ -37,19 +37,23 @@ class Player(object):
         self.__castled = castled
         self.__moves_for_piece = None
 
-    def build_possible_moves(self, Piece, array_location, game):
+    def build_possible_moves(self, game_square, game):
+        #TODO: can get Piece from array_location
         """
         :param: Piece object, piece selected by player
         :param: tuple, represents location of the piece on the board
         :param: Game object, for getting player and board
         Generate list of possible moves when player has selected a piece
         """
-        self.__moves_for_piece = PossibleMoves(Piece, game)
-        self.__moves_for_piece.build_list_of_moves(array_location)
+        self.__moves_for_piece = PossibleMoves(game_square, game)
+        self.__moves_for_piece.build_list_of_moves()
 	
-    def make_move(self):
+    def make_move(self, array_location):
         """Allows a Player to move a piece???"""
-        # TODO:
+        if self.__moves_for_piece is None:
+            raise Exception()
+        elif array_location not in self.__moves_for_piece:
+            raise Exception()
         pass
 
     def get_piece_set(self):

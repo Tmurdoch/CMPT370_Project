@@ -19,17 +19,50 @@ class PossibleMoves():
     __board: board object, created during initialization
     """
 
-    def __init__(self, piece, game_obj):
-        self.__Piece = piece
+    def __init__(self, game_square, game_obj):
+        self.__game_square = game_square
+        self.__Piece = game_square.get_piece()
         self.__move = []
         self.__game = game_obj
-        #self.__board = self.__game.get_board()
+        self.__row = game_square.get_row()
+        self.__col = game_square.get_col()
+        self.__game_type = game_obj.get_game_type() #will come back as either chess or checkers
+        self.__board = self.__game.get_board()
 
-    def build_list_of_moves(self, array_location):
+    def build_list_of_moves(self):
         """
         Determine based on the piece where it can potentially move
         :return: 0 on success, -1 on failure
         """
+        if self.game_type == "checkers":
+            #generate possible moves for checkers
+            if 0 < self.__row-1 < self.__board.get_size()-1 or 0 < self.__col-1 < self.__board.get_size()-1:
+                top_left =  self.__board.get_game_square(self.__row-1, self.__col-1)
+            if self.__row+1 > self.__board.get_size()-1 or self.__col+1 > self.__board.get_size()-1:
+                top_left =  self.__board.get_game_square(self.__row-1, self.__col-1)
+            if self.__Piece.get_promotion_status():
+                #is promoted
+                #check bounds of array
+                if 0 < self.__row-1 < self.__board.get_size()-1 or 0 < self.__col-1 < self.__board.get_size()-1:
+                    top_left =  self.__board.get_game_square(self.__row-1, self.__col-1)
+                if self.__row-1 > self.__board.get_size()-1 or self.__col-1 > self.__board.get_size()-1:
+                    top_left =  self.__board.get_game_square(self.__row-1, self.__col-1)
+                top_right = self.__board.get_game_square(self.__row-1, self.__col+1)
+                
+            else:
+
+                #is not promoted  
+
+
+                top_left =  self.__board.get_game_square(self.__row-1, self.__col-1)
+                top_right = self.__board.get_game_square(self.__row-1, self.__col+1)
+                bot_left = self.__board.get_game_square(self.__row+1, self.__col-1)
+                bot_right = self.__board.get_game_square(self.__row+1. self.__col+1)
+
+        elif self.game_type == "chess":
+            #generate possible moves for a chess piece
+        else:
+            return -1
         #TODO: implement this function
         #following is for TESTING ONLY
         if type(self.__Piece).__name__ == "King":
@@ -39,7 +72,7 @@ class PossibleMoves():
             return 0
         else:
             return -1
-
+    
     def select_best(self):
         """
         Return to the Ai the best potential move
