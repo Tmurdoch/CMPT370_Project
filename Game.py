@@ -9,7 +9,7 @@ from Board import Board
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Move import CheckersMove, ChessMove
-from PossibleMoves import PossibleMoves
+import PossibleMoves
 from Timer import Timer
 import struct
 
