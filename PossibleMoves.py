@@ -53,6 +53,64 @@ class PossibleMoves():
                 pass
             elif type(self.__Piece).__name__ == "Knight":
                 # TODO: generate possible moves for Knight
+                # moves up and to the right
+                if (self.__board.get_game_square(self.__row + 2, self.__col + 1).get_colour()
+                        is not self.__piece.get_colour()):
+                    # if spot has enemy piece on it
+                    if self.__board.get_game_square(self.__row + 2, self.__col + 1) is not None:
+                        # need to find out how to capture a piece
+                        up_right_square = self.__board.get_game_square(self.__row + 2, self.__col + 1)
+                        list_of_candidate_game_squares.append(up_right_square)
+                # moves up and to the left
+                elif (self.__board.get_game_square(self.__row + 2, self.__col - 1).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row + 2, self.__col - 1) is not None:
+                        # need to find out how to capture a piece
+                        up_left_square = self.__board.get_game_square(self.__row + 2, self.__col - 1)
+                        list_of_candidate_game_squares.append(up_left_square)
+                # moves down and to the right
+                elif (self.__board.get_game_square(self.__row - 2, self.__col + 1).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row - 2, self.__col + 1) is not None:
+                        # need to find out how to capture a piece
+                        down_right_square = self.__board.get_game_square(self.__row - 2, self.__col + 1)
+                        list_of_candidate_game_squares.append(down_right_square)
+                # moves down and to the left
+                elif (self.__board.get_game_square(self.__row - 2, self.__col - 1).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row - 2, self.__col - 1) is not None:
+                        # need to find out how to capture a piece
+                        down_left_square = self.__board.get_game_square(self.__row - 2, self.__col - 1)
+                        list_of_candidate_game_squares.append(down_left_square)
+                # moves right and up
+                elif (self.__board.get_game_square(self.__row + 1, self.__col + 2).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row + 1, self.__col + 2) is not None:
+                        # need to find out how to capture a piece
+                        right_up_square = self.__board.get_game_square(self.__row + 1, self.__col + 2)
+                        list_of_candidate_game_squares.append(right_up_square)
+                # moves right and down
+                elif (self.__board.get_game_square(self.__row - 1, self.__col + 2).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row - 1, self.__col + 2) is not None:
+                        # need to find out how to capture a piece
+                        right_down_square = self.__board.get_game_square(self.__row - 1, self.__col + 2)
+                        list_of_candidate_game_squares.append(right_down_square)
+                # moves left and up
+                elif (self.__board.get_game_square(self.__row + 1, self.__col - 2).get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row + 1, self.__col - 2) is not None:
+                        # need to find out how to capture a piece
+                        left_up_square = self.__board.get_game_square(self.__row + 1, self.__col - 2)
+                        list_of_candidate_game_squares.append(left_up_square)
+                # moves left and down
+                elif (self.__board.get_game_square(self.__row - 1, self.__col - 2) .get_colour()
+                      is not self.__piece.get_colour()):
+                    if self.__board.get_game_square(self.__row - 1, self.__col - 2) is not None:
+                        # need to find out how to capture a piece
+                        left_down_square = self.__board.get_game_square(self.__row - 1, self.__col - 2)
+                        list_of_candidate_game_squares.append(left_down_square)
+
                 pass
             elif type(self.__Piece).__name__ == "Rook":
                 # TODO: generate possible moves for Rook
@@ -66,7 +124,7 @@ class PossibleMoves():
 
                 # check if possible to move 2 square in front and pawn has not move yet
                 elif self.__board.get_game_square(self.__row + 2 , self.__col) is None and not self.__Piece.get_moved_yet_status():
-                    front_square2 = self.__board.get_game_square(self.__row + 1, self.__col)
+                    front_square2 = self.__board.get_game_square(self.__row + 2, self.__col)
                     list_of_candidate_game_squares.append(front_square2)
 
                 # check if enemy piece on top right of piece to capture and move
@@ -74,26 +132,27 @@ class PossibleMoves():
                         (self.__board.get_game_square(self.__row + 1, self.__col +1).get_colour() is not self.__piece.get_colour):
                     if (self.__row == self.__board.get_size() - 2):
                         #  promote + capture
-                        self.__Piece.promote()
-                    else:
                         capture_piece_move = self.__board.get_game_square(self.__row + 1, self.__col + 1)
                         list_of_candidate_game_squares.append(capture_piece_move)
-                # check if enemy piece on top left of piece to capture and move
+                        self.__Piece.promote()
+                    else:
+                        # just capture
+                        capture_piece_move = self.__board.get_game_square(self.__row + 1, self.__col + 1)
+                        list_of_candidate_game_squares.append(capture_piece_move)
 
+                # check if enemy piece on top left of piece to capture and move
                 elif self.__board.get_game_square(self.__row + 1, self.__col - 1) is not None and \
                         (self.__board.get_game_square(self.__row + 1, self.__col - 1).get_colour() is not self.__piece.get_colour):
                     if (self.__row == self.__board.get_size() - 2):
                         #  promote + capture
+                        capture_piece_move = self.__board.get_game_square(self.__row + 1, self.__col - 1)
+                        list_of_candidate_game_squares.append(capture_piece_move)
                         self.__Piece.promote()
 
                     else:
+                        # just capture
                         capture_piece_move = self.__board.get_game_square(self.__row + 1, self.__col - 1)
                         list_of_candidate_game_squares.append(capture_piece_move)
-
-                elif self.__row == self.__board.get_size() - 2:
-                    if self.__board.get_game_square(self.__row + 1, self.__col) is None:
-                        promote_move = self.__board.get_game_square(self.__row + 1, self.__col)
-                        list_of_candidate_game_squares.append(promote_move)
 
                 pass
 
