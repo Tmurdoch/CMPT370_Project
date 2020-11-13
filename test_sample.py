@@ -17,6 +17,8 @@ from Board import BoardTheme
 from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
 from Game import Game
 from PlayerType import PlayerType
+
+
 def test_pieces():
     piece_set_colour1 = "Red"
     piece_set_colour2 = "White"
