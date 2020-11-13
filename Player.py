@@ -35,7 +35,18 @@ class Player(object):
         self.__player_type = player_type
         self.__timer = timer
         self.__castled = castled
+        self.__moves_for_piece = None
 
+    def build_possible_moves(self, Piece, array_location, game):
+        """
+        :param: Piece object, piece selected by player
+        :param: tuple, represents location of the piece on the board
+        :param: Game object, for getting player and board
+        Generate list of possible moves when player has selected a piece
+        """
+        self.__moves_for_piece = PossibleMoves(Piece, game)
+        self.__moves_for_piece.build_list_of_moves(array_location)
+	
     def make_move(self):
         """Allows a Player to move a piece???"""
         # TODO:
@@ -101,3 +112,5 @@ def test_player():
     assert(not p.get_castled())
     p.set_castled(True)
     assert(p.get_castled())
+
+    

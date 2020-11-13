@@ -136,15 +136,34 @@ def test_piece_set():
 
 def test_possible_moves():
     piece1 = King("Black")
-    moves_for_piece = PossibleMoves(piece1)
+    moves_for_piece = PossibleMoves(piece1, None)
     try:
         moves_for_piece.get_moves()
     except AttributeError:
         assert True
-    moves_for_piece.build_list_of_moves()
-    p = moves_for_piece.get_moves()
-    assert p == []
 
+    #test build_possible_moves()
+
+
+    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+
+    dark_set = my_game.get_dark_player().get_piece_set().get_live_pieces()
+    light_set = my_game.get_light_player().get_piece_set().get_live_pieces()
+    pc1 = dark_set[0]
+    spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+
+    board = my_game.get_board()
+    i = 0
+    for r in board.get_game_board():
+        r[7].put_piece_here(light_set[i])
+        r[0].put_piece_here(dark_set[i])
+        i += 1
+    selec_piece = (0,0)
+    moves_test = PossibleMoves(pc1, my_game)
+    assert moves_test.build_list_of_moves(selec_piece) == 0
+    
 
 def test_move():
     piece1 = King("Black")
