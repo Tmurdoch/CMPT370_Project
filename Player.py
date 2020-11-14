@@ -61,6 +61,7 @@ class Player(object):
 
     def make_move(self, origin_square, dest_square, board):
         """
+        Actually executes a move (and capture)
         Precondition: Assuming that dest_square is a legal move for the origin_square
         :param: origin_square: GameSquare we are moving from
         :param: dest_square: GameSquare we are moving to
