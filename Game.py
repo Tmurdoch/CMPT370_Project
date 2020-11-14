@@ -3,13 +3,9 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
-from PlayerType import PlayerType
 from Player import Player
 from Board import Board
-from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
-from Move import CheckersMove, ChessMove
-import PossibleMoves
 from Timer import Timer
 import struct
 
@@ -40,6 +36,7 @@ class Game:
         __colour_mode:
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
+        __board: Board: The game board
     """
     def __init__(self, game_type, colour_mode):
         
@@ -81,26 +78,20 @@ class Game:
         :param timer: Timer: The player's timer object
         :param castled: Bool: True is the player has castled, False otherwise
         """
-        self.__light_player = Player(name, player_type, timer, castled)
-        self.__light_player.build_piece_set(
-            GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-            COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-            [ColourOffset.OFFSET_LIGHT])
+        self.__light_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_LIGHT],
+                                     self.__game_type, player_type, timer)
         self.__current_player = self.__light_player  # Light colour goes first
 
     def build_dark_player(self, name, player_type, timer, castled):
         """
         Build the light coloured object.
         :param name: string: Player name
-        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
+        :param player_type: PlayerType: The type of Player the Player is, can be AI or Human
         :param timer: Timer: The player's timer object
         :param castled: Bool: True is the player has castled, False otherwise
         """
-        self.__dark_player = Player(name, player_type, timer, castled)
-        self.__dark_player.build_piece_set(
-            GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type],
-            COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode]
-            [ColourOffset.OFFSET_DARK])
+        self.__dark_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK],
+                                    self.__game_type, player_type, timer)
 
     def start(self):
         # TODO: Not sure what this is?
@@ -115,7 +106,7 @@ class Game:
         return self.__board
 
     def get_current_player(self):
-        # TODO: The current player is the player whose turn it is.
+        """:return: The current player """
         return self.__current_player
 
     def save_to_file(self):
