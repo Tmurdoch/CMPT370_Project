@@ -36,22 +36,38 @@ class Player(object):
         self.__player_type = player_type
         self.__timer = timer
         self.__castled = castled
-        self.__moves_for_piece = None
 
-    def build_possible_moves(self, game_square, game):
-        # TODO: can get Piece from array_location
+    def build_possible_moves_for_single_square(self, game_square, game):
         """
-        :param: Piece object, piece selected by player
-        :param: tuple, represents location of the piece on the board
+        Generates and returns a list of possible moves for a single game square.
+        :param: GameSquare object, for getting game square to build list of moves for
         :param: Game object, for getting player and board
-        Generate list of possible moves when player has selected a piece
+        :return: List of GameSquares for a single square
         """
-        self.__moves_for_piece = PossibleMoves(game_square, game)
-        self.__moves_for_piece.build_list_of_moves()
+        possible_moves_for_square_here = PossibleMoves(game_square, game)
+        possible_moves_for_square_here.build_list_of_moves()
+        return possible_moves_for_square_here.get_list_of_squares_you_can_move_to()
+
+    def build_possible_moves_for_all_pieces(self, game):
+        """Generates and returns all possible moves for all current player's pieces on the board.
+            :param: Game object, for getting player and board
+            :return: List of GameSquares for all the current player's pieces"""
+        game_squares_movable_to = []
+        for row in range(game.get_board().get_size()):
+            for col in range(game.get_board().get_size()):
+                square_here = game.get_board().get_game_square(row, col)
+                if not (square_here.get_occupying_piece() is None and square_here.get_occupying_piece().get_colour()
+                        == game.get_current_player().get_piece_set().get_colour()):
+                    possible_moves_for_square_here = PossibleMoves(square_here, game)
+                    possible_moves_for_square_here.build_list_of_moves()
+                    game_squares_movable_to.append(possible_moves_for_square_here.get_list_of_squares_you_can_move_to())
+        return game_squares_movable_to
 
     def make_move(self, array_location):
         """Allows a Player to move a piece???"""
+
         if self.__moves_for_piece is None:
+            raise Exception()
             raise Exception()
         elif array_location not in self.__moves_for_piece:
             raise Exception()
