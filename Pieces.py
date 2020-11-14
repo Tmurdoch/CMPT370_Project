@@ -41,12 +41,25 @@ class King(PieceInterface):
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
+        self.__movedYet = False
 
     def set_colour(self, colour):
         self.__colour = colour
 
     def get_colour(self):
         return self.__colour
+
+    def move(self):
+        """
+        Indicate that the pawn has moved, the pawn will no longer be able to move 2 spaces forward
+        """
+        self.__movedYet = True
+
+    def get_moved_yet_status(self):
+        """
+        :return: Move status, True if the pawn has already made its first move, False otherwise
+        """
+        return self.__movedYet
 
 
 class Queen(PieceInterface):
@@ -101,12 +114,25 @@ class Rook(PieceInterface):
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
+        self.__movedYet = False
 
     def set_colour(self, colour):
         self.__colour = colour
 
     def get_colour(self):
         return self.__colour
+
+    def move(self):
+        """
+        Indicate that the pawn has moved, the pawn will no longer be able to move 2 spaces forward
+        """
+        self.__movedYet = True
+
+    def get_moved_yet_status(self):
+        """
+        :return: Move status, True if the pawn has already made its first move, False otherwise
+        """
+        return self.__movedYet
 
 
 class Pawn(PieceInterface):
