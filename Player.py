@@ -5,6 +5,7 @@
 from PlayerType import PlayerType
 from Timer import Timer
 from PieceSet import PieceSet
+from PossibleMoves import PossibleMoves
 
 
 class Player(object):
@@ -35,10 +36,25 @@ class Player(object):
         self.__player_type = player_type
         self.__timer = timer
         self.__castled = castled
+        self.__moves_for_piece = None
 
-    def make_move(self):
+    def build_possible_moves(self, game_square, game):
+        # TODO: can get Piece from array_location
+        """
+        :param: Piece object, piece selected by player
+        :param: tuple, represents location of the piece on the board
+        :param: Game object, for getting player and board
+        Generate list of possible moves when player has selected a piece
+        """
+        self.__moves_for_piece = PossibleMoves(game_square, game)
+        self.__moves_for_piece.build_list_of_moves()
+
+    def make_move(self, array_location):
         """Allows a Player to move a piece???"""
-        # TODO:
+        if self.__moves_for_piece is None:
+            raise Exception()
+        elif array_location not in self.__moves_for_piece:
+            raise Exception()
         pass
 
     def get_piece_set(self):
@@ -101,3 +117,5 @@ def test_player():
     assert(not p.get_castled())
     p.set_castled(True)
     assert(p.get_castled())
+
+    
