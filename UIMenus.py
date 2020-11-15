@@ -12,19 +12,6 @@ checkers = False
 chess = False
 
 
-class MyWindow(Gtk.Window):
-    def __init__(self):
-        Gtk.Window.__init__(self, title="Hello World")
-
-        self.button = Gtk.Button(label="Click Here")
-        self.button.connect("clicked", self.on_button_clicked)
-        self.add(self.button)
-
-    def on_button_clicked(self, widget):
-        Gtk.Window.__init__(self, title="Hello ")
-        print("Hello World")
-
-
 class MainMenuWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Main Menu")
@@ -32,10 +19,10 @@ class MainMenuWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
         self.modify_bg(Gtk.StateType.NORMAL, col)
-        b = Button()
+        #b = Button()
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(main_box)
-        self.add(b)
+        #self.add(b)
         chess_button = Gtk.Button.new_with_label("Play")
         chess_button.connect("clicked", self.play_clicked)
         chess_button.set_property("width-request", 300)
@@ -52,6 +39,8 @@ class MainMenuWindow(Gtk.Window):
         back_button = Gtk.Button.new_with_mnemonic("_Exit")
         back_button.connect("clicked", self.exit_clicked)
         main_box.pack_start(back_button, True, True, 0)
+
+        self.connect("destroy", Gtk.main_quit) # fixed the exit stalling problem
 
     def play_clicked(self, button):
         print('Play was chosen')  # put next window here
@@ -92,9 +81,11 @@ class GameChoiceWindow(Gtk.Window):
         checkers_button.set_property("height-request", 100)
         game_box.pack_start(checkers_button, True, True, 0)
 
-        back_button = Gtk.Button.new_with_mnemonic("_Back")
+        back_button = Gtk.Button.new_with_label("Back")
         back_button.connect("clicked", self.back_clicked)
         game_box.pack_start(back_button, True, True, 0)
+
+        self.connect("destroy", Gtk.main_quit) # fixed the exit stalling problem
 
     def chess_clicked(self, button):
         print('Chess was chosen')  # put next window here
@@ -127,6 +118,7 @@ class PlayerTypeWindow(Gtk.Window):
         self.add(player_box)
 
         single_button = Gtk.Button.new_with_label("Single-Player")
+        # single_button.get_style_context().add_class("suggested-action") changes button to blue
         single_button.connect("clicked", self.single_clicked)
         single_button.set_property("width-request", 300)
         single_button.set_property("height-request", 100)
@@ -142,45 +134,7 @@ class PlayerTypeWindow(Gtk.Window):
         back_button.connect("clicked", self.back_clicked)
         player_box.pack_start(back_button, True, True, 0)
 
-    def single_clicked(self, button):
-        print('Single Player was chosen')  # put next window here
-        customization = BoardWindow(self.__game, "Single-Player")
-        customization.show_all()
-        self.hide()
-
-    def multi_clicked(self, button):
-        print('Multi Player was chosen')  # put next window here
-        customization = BoardWindow(self.__game, "Multi-Player")
-        customization.show_all()
-        self.hide()
-
-    def back_clicked(self, button):
-        print("This should go back to Game Choice Window")
-        game_type = GameChoiceWindow()
-        game_type.show_all()
-        self.hide()
-
-
-class BoardWindow(Gtk.Window):
-    def __init__(self, game, game_type):
-        Gtk.Window.__init__(self, title=game + " " + game_type)
-        self.__game = game
-        self.set_border_width(70)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-        grid = Gtk.grid()
-        self.add(grid)
-
-        row_1_0 = Gtk.Button(label=" ")
-        row_1_0 = Gtk.Button(label=" ")
-
-        single_button = Gtk.Button.new_with_label("Single-Player")
-        single_button.connect("clicked", self.single_clicked)
-        single_button.set_property("width-request", 300)
-        single_button.set_property("height-request", 100)
-        #flowbox.pack_start(single_button, True, True, 0)
-
+        self.connect("destroy", Gtk.main_quit) # fixed the exit stalling problem
 
     def single_clicked(self, button):
         print('Single Player was chosen')  # put next window here
@@ -206,27 +160,103 @@ class CustomizationWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
         self.__game_type = game_type
-        self.set_border_width(100)
-        self.set_default_size(200,200)
-        self.set_position(Gtk.WindowPosition.MOUSE)
-        customization = Gtk.Box(spacing=6)
+        self.set_border_width(60)
+        self.set_default_size(150, 150)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.modify_bg(Gtk.StateType.NORMAL, col)
+
+        customization = Gtk.Grid()
         self.add(customization)
+        customization.set_column_spacing(10)
+        customization.set_row_spacing(20)
+        title = Gtk.Label()
+        title.set_markup("<big>Customize your pieces and board!</big>")
+        title.set_justify(Gtk.Justification.RIGHT)
+        title.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach(title, 3, 0, 1, 1)
 
-        red = Gtk.RadioButton.new_with_label_from_widget(None, "Red")
-        red.connect("toggled", self.on_button_toggled, "Red")
-        customization.pack_start(red, False, False, 0)
+        label_piece = Gtk.Label()
+        label_piece.set_markup("<b>Pieces</b>")
+        #label_piece.set_justify(Gtk.Justification.CENTER)
+        label_piece.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach(label_piece, 1, 1, 1, 1)
 
-        blue = Gtk.RadioButton.new_with_label_from_widget(red, "Blue")
-        blue.connect("toggled", self.on_button_toggled, "Blue")
-        customization.pack_start(blue, False, False, 0)
+        label_board = Gtk.Label()
+        label_board.set_markup("<b>Board</b>")
+        label_board.set_justify(Gtk.Justification.CENTER)
+        label_board.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach(label_board, 4, 1, 1, 1)
 
-        green = Gtk.RadioButton.new_with_mnemonic_from_widget(red, "Green")
-        green.connect("toggled", self.on_button_toggled, "Green")
-        customization.pack_start(green, False, False, 0)
+        black_white = Gtk.RadioButton.new_with_label_from_widget(None, "P1-Black P2-White")
+        black_white.connect("toggled", self.on_button_toggled, "Black/White")
+        black_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach(black_white, 0, 2, 2, 1)
 
-        back_button = Gtk.Button.new_with_mnemonic("_Back")
+        white_black = Gtk.RadioButton.new_with_label_from_widget(black_white, "P1-White P2-Black")
+        white_black.connect("toggled", self.on_button_toggled, "White/Black")
+        white_black.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(white_black, black_white, Gtk.PositionType.RIGHT, 2, 1)
+
+        red_white = Gtk.RadioButton.new_with_label_from_widget(black_white, "P1-Red P2-White")
+        red_white.connect("toggled", self.on_button_toggled, "Red/White")
+        red_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(red_white, black_white, Gtk.PositionType.BOTTOM, 2, 1)
+
+        white_red = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-White P2-Red")
+        white_red.connect("toggled", self.on_button_toggled, "White/Red")
+        white_red.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(white_red, red_white, Gtk.PositionType.RIGHT, 1, 1)
+
+        blue_green = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Blue P2- Green")
+        blue_green.connect("toggled", self.on_button_toggled, "Blue/Green")
+        blue_green.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(blue_green, red_white, Gtk.PositionType.BOTTOM, 2, 1)
+
+        green_blue = Gtk.RadioButton.new_with_label_from_widget(red_white,"P1-Green P2-Blue")
+        green_blue.connect("toggled", self.on_button_toggled, "Green/Blue")
+        green_blue.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(green_blue, blue_green, Gtk.PositionType.RIGHT, 2, 1)
+
+        red_blue = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Red P2-Blue")
+        red_blue.connect("toggled", self.on_button_toggled, "Red/Blue")
+        red_blue.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(red_blue, blue_green, Gtk.PositionType.BOTTOM, 2, 1)
+
+        blue_red = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Blue P2-Red")
+        blue_red.connect("toggled", self.on_button_toggled, "Green/Blue")
+        blue_red.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(blue_red, green_blue, Gtk.PositionType.BOTTOM, 2, 1)
+
+        b_black_white = Gtk.RadioButton.new_with_label_from_widget(None, "Black and White")
+        b_black_white.connect("toggled", self.on_button_toggled, "Black and White")
+        b_black_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(b_black_white, white_black, Gtk.PositionType.RIGHT, 2, 1)
+
+        b_brown_white = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Brown and White")
+        b_brown_white.connect("toggled", self.on_button_toggled, "Brown and White")
+        b_brown_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(b_brown_white, b_black_white, Gtk.PositionType.BOTTOM, 2, 1)
+
+        b_green_yellow = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Green and Yellow")
+        b_green_yellow.connect("toggled", self.on_button_toggled, "Green and Yellow")
+        b_green_yellow.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(b_green_yellow, b_brown_white, Gtk.PositionType.BOTTOM, 2, 1)
+
+        b_light_dark_brown = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Light Brown and Dark Brown")
+        b_light_dark_brown.connect("toggled", self.on_button_toggled, "Light Brown and Dark Brown")
+        b_light_dark_brown.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        customization.attach_next_to(b_light_dark_brown, b_green_yellow, Gtk.PositionType.BOTTOM, 2, 1)
+
+        back_button = Gtk.Button.new_with_label("Back")
         back_button.connect("clicked", self.back_clicked)
-        customization.pack_start(back_button, True, True, 0)
+        customization.attach(back_button, 0, 8, 1, 1)
+
+        start_button = Gtk.Button.new_with_label("Start")
+        back_button.connect("clicked", self.start_clicked)
+        customization.attach(start_button, 4, 8, 1, 1)
+
+        self.connect("destroy", Gtk.main_quit) # fixed the exit stalling problem
 
     def on_button_toggled(self, button, name):
         if button.get_active():
@@ -239,6 +269,54 @@ class CustomizationWindow(Gtk.Window):
         print("This should go back to Game Choice Window")
         player_type = PlayerTypeWindow(self.__game)
         player_type.show_all()
+        self.hide()
+
+    def start_clicked(self, button):
+        print("This should go to Board Window")
+        board = BoardWindow(self.__game, self.__game_type)
+        board.show_all()
+        self.hide()
+
+
+class BoardWindow(Gtk.Window):
+    def __init__(self, game, game_type):
+        Gtk.Window.__init__(self, title=game + " " + game_type)
+        self.__game = game
+        self.set_border_width(200)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.modify_bg(Gtk.StateType.NORMAL, col)
+        grid = Gtk.Grid()
+        self.add(grid)
+
+        row_1_0 = Gtk.Button(label=" ")
+        row_1_0 = Gtk.Button(label=" ")
+
+        single_button = Gtk.Button.new_with_label("Single-Player")
+        single_button.connect("clicked", self.single_clicked)
+        single_button.set_property("width-request", 300)
+        single_button.set_property("height-request", 100)
+        #flowbox.pack_start(single_button, True, True, 0)
+
+        # look at EventBox() to see if that works for this
+
+        self.connect("destroy", Gtk.main_quit)
+    def single_clicked(self, button):
+        print('Single Player was chosen')  # put next window here
+        customization = CustomizationWindow(self.__game, "Single-Player")
+        customization.show_all()
+        self.hide()
+
+    def multi_clicked(self, button):
+        print('Multi Player was chosen')  # put next window here
+        customization = CustomizationWindow(self.__game, "Multi-Player")
+        customization.show_all()
+        self.hide()
+
+    def back_clicked(self, button):
+        print("This should go back to Game Choice Window")
+        game_type = GameChoiceWindow()
+        game_type.show_all()
         self.hide()
 
 
