@@ -3,10 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
-from Pieces import *
-import pytest
-from Game import Game
-from Board import Board
+import random
 
 
 class PossibleMoves:
@@ -379,21 +376,24 @@ class PossibleMoves:
             # Game mode is neither "chess" nor "checkers"
             return -1
     
-    def select_best(self):
+    def select_best(self, candidate_game_squares):
         """
-        Chooses and return the best game squre to move to
+        Chooses and return the best game square to move to from a list of candidate squares
+        :param: List of GameSquares to choose from
         :return: GameSquare, the best game square to move to. Returns None if there are no moves for that square
         """
-        if not self.__squares_you_can_move_to:
+        if not candidate_game_squares:
             # List of moves is empty
             return None
-        elif len(self.__squares_you_can_move_to) == 1:
+        elif len(candidate_game_squares) == 1:
             # The is only one move, it has to be the best
-            return self.__squares_you_can_move_to[0]
+            return candidate_game_squares[0]
         else:
             # TODO: Some AI code to evaluate the list of moves to choose the best one, in the mean time we are jsut
             #  returning the first one in the list
-            return self.__squares_you_can_move_to[0]
+            # Right now we will just return a random one
+            random_index = (random.randrange(0, len(candidate_game_squares), 1))
+            return candidate_game_squares[random_index]
 
     def get_list_of_squares_you_can_move_to(self):
         """
