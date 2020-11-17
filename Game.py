@@ -62,6 +62,17 @@ class Game:
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
         self.__board = Board(8)
+
+        # temp for testing by Antoni
+        # ------------------------------------------
+        if game_type.lower() == "chess":
+            self.__game_type = game_type
+        elif game_type.lower() == "checkers":
+            self.__game_type = game_type
+        else:
+            raise Exception("Wrong Game Type S")
+        # -------------------------------------------
+
         return
 
     def get_light_player(self):
@@ -374,7 +385,7 @@ class Game:
         return
 
     def get_game_type(self):
-        return
+        return self.__game_type
 
     def change_current_player(self):
         if self.__current_player is self.__dark_player:

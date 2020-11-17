@@ -91,6 +91,35 @@ class Board:
         """
         return self.__size
 
+    def build_chess_board(self, player1_pieces, player2_pieces):
+        """
+        set up chess pieces on the board
+        Player1 on the bottom col 7, 6
+        Player2 on the top col 0, 1
+        player1_pieces: list of pieces in pieceSet for player 1
+        player2_pieces: list of pieces in pieceSet for player 2
+        """
+        # indexes of pieces based on where they are on the board
+        spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+
+        # set up board player 1 pieces
+        i = 0
+        for col in spec_piece:
+            self.__gameBoard[7][col].put_piece_here(player1_pieces[i])
+            i += 1
+        for col in range(8):
+            self.__gameBoard[6][col].put_piece_here(player1_pieces[i])
+            i += 1
+
+        # set up board player 2 pieces
+        i = 0
+        for col in spec_piece:
+            self.__gameBoard[0][col].put_piece_here(player2_pieces[i])
+            i += 1
+        for col in range(8):
+            self.__gameBoard[1][col].put_piece_here(player2_pieces[i])
+            i += 1
+
     def print_game_board(self):
         """
         For visual representation of the board. prints the coordinates of the board square

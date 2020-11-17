@@ -139,7 +139,47 @@ def test_piece_set():
 
 def test_possible_moves():
     # TODO: Fix these tests, Thomas and Michael were to lazy to do it when they broke them
-    pass
+    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    # TODO: Fix these tests, Thomas and Michael were to lazy to do it when they broke them
+    # make sure that game is created correctly
+    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    assert my_game.get_dark_player() is None
+    assert my_game.get_light_player() is None
+    assert my_game.get_current_player() is None
+
+    # create dark player
+
+    my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game.get_dark_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
+
+    # create light player
+    my_game.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game.get_light_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+
+    # check if players are correctly assigned
+    assert my_game.get_current_player() is my_game.get_light_player()
+    my_game.change_current_player()
+    assert my_game.get_current_player() is my_game.get_dark_player()
+    assert my_game.get_board().get_size() == 8
+
+    # set up the pieces in the board
+    dark_set = my_game.get_dark_player().get_piece_set().get_live_pieces()
+    light_set = my_game.get_light_player().get_piece_set().get_live_pieces()
+
+    board = my_game.get_board()
+    board.build_chess_board(dark_set, light_set)
+    board.print_game_board()
+
+    lom = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
+    print("possible moves: ", [x.get_row_and_column() for x in lom])
+    board.get_game_square(4, 3).put_piece_here(board.get_game_square(7, 0).get_occupying_piece())
+    board.get_game_square(7, 0).remove_occupying_piece()
+
+    board.print_game_board()
+    lom = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
+    print("\npossible moves: ", [x.get_row_and_column() for x in lom])
 
 
 def test_move():
@@ -266,13 +306,13 @@ def test_show_board():
         my_board.get_game_square(7, spec_piece[i]).put_piece_here(type(white_pieces[i]).__name__)
     for i in range(8):
         my_board.get_game_square(6, i).put_piece_here(type(white_pieces[i + 8]).__name__ + ' ')
-    my_board.print_game_board()
+    # my_board.print_game_board()
 
     print("\n\nMoving Pawn(6, 3) to (4,3)")
     pawn = my_board.get_game_square(6, 3).get_occupying_piece()
     my_board.get_game_square(6, 3).remove_occupying_piece()
     my_board.get_game_square(4, 3).put_piece_here(pawn)
-    my_board.print_game_board()
+    # my_board.print_game_board()
 
 
 def test_game():
@@ -323,5 +363,5 @@ def test_player():
     assert (p.get_castled())
 
 
-if __name__ == '__main__':
-    test_show_board()
+# if __name__ == '__main__':
+    # test_show_board()
