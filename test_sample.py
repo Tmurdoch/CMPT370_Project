@@ -95,12 +95,14 @@ def test_pieces():
 
 
 def test_piece_set():
+    # checkers = 1, chess = 0
     piece_set_colour = "White"
-    piece_set1 = PieceSet("Checkers", piece_set_colour)
+    piece_set1 = PieceSet(1, piece_set_colour)
 
     # Test initial conditions for Checkers
     assert piece_set1.get_number_of_captured_pieces() == 0
-    assert piece_set1.get_piece_set_type() == "Checkers"
+    # Chess = 0, Checkers = 1
+    assert piece_set1.get_piece_set_type() == 1
     assert piece_set1.get_colour() == piece_set_colour
     assert piece_set1.get_number_of_live_pieces() == 12
     assert (piece_set1.get_live_pieces()[0]).get_colour() == piece_set_colour
@@ -127,12 +129,14 @@ def test_piece_set():
     # Make sure colour is preserved
     assert piece_set1.get_colour() == piece_set_colour
 
+    # chess = 0, checkers = 1
     piece_set_colour = "Black"
-    piece_set2 = PieceSet("Chess", piece_set_colour)
+    piece_set2 = PieceSet(0, piece_set_colour)
 
     # Test initial conditions for Chess
     assert piece_set2.get_number_of_captured_pieces() == 0
-    assert piece_set2.get_piece_set_type() == "Chess"
+    # Chess = 0, Checkers = 1
+    assert piece_set2.get_piece_set_type() == 0
     assert piece_set2.get_colour() == piece_set_colour
     assert piece_set2.get_number_of_live_pieces() == 16
 
@@ -140,7 +144,8 @@ def test_piece_set():
 def test_possible_moves():
     # TODO: Fix these tests, Thomas and Michael were to lazy to do it when they broke them
     # make sure that game is created correctly
-    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    # chess = 0
+    my_game = Game(0, ColourCodes.WHITE_BLACK)
     assert my_game.get_dark_player() is None
     assert my_game.get_light_player() is None
     assert my_game.get_current_player() is None
@@ -306,15 +311,16 @@ def test_game_square():
 def test_show_board():
     # Test mock board and adding pieces and moving them
     my_board = Board(8)
-
-    black_set = PieceSet("Chess", "Black")
+    # chess = 0
+    black_set = PieceSet(0, "Black")
     black_pieces = black_set.get_live_pieces()
     spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
     for i in range(8):
         my_board.get_game_square(0, spec_piece[i]).put_piece_here(type(black_pieces[i]).__name__)
     for i in range(8):
         my_board.get_game_square(1, i).put_piece_here(type(black_pieces[i + 8]).__name__ + ' ')
-    white_set = PieceSet("Chess", "White")
+    # chess = 0
+    white_set = PieceSet(0, "White")
     white_pieces = white_set.get_live_pieces()
     for i in range(8):
         my_board.get_game_square(7, spec_piece[i]).put_piece_here(type(white_pieces[i]).__name__)
@@ -331,7 +337,8 @@ def test_show_board():
 
 def test_game():
     # TODO: How to build a player has changed, need to update this to reflect those changes
-    my_game = Game("Chess", ColourCodes.WHITE_BLACK)
+    # chess = 0
+    my_game = Game(0, ColourCodes.WHITE_BLACK)
     assert my_game.get_dark_player() is None
     assert my_game.get_light_player() is None
     assert my_game.get_current_player() is None
@@ -368,7 +375,8 @@ def test_game():
 def test_player():
     pt = PlayerType.AI
     t = Timer(1, False)
-    p = Player("Joel", "White", "chess", pt, t)
+    # chess = 0
+    p = Player("Joel", "White", 0, pt, t)
     assert (p.get_name() == 'Joel')
     assert (p.get_player_type() == 0)
     assert (p.get_timer() == t)

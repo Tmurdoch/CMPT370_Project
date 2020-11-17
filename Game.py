@@ -47,9 +47,10 @@ class Game:
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        if game_type.lower() == "chess":
+        # chess = 0, checkers = 1
+        if game_type == 0:
             self.__game_type = GAME_TYPE_CHESS
-        elif game_type.lower() == "checkers":
+        elif game_type.lower() == 1:
             self.__game_type = GAME_TYPE_CHECKERS
         else:
             # something went wrong here and it wasn't the users fault
@@ -62,16 +63,6 @@ class Game:
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
         self.__board = Board(8)
-
-        # temp for testing by Antoni
-        # ------------------------------------------
-        if game_type.lower() == "chess":
-            self.__game_type = game_type
-        elif game_type.lower() == "checkers":
-            self.__game_type = game_type
-        else:
-            raise Exception("Wrong Game Type S")
-        # -------------------------------------------
 
         return
 
