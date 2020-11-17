@@ -240,13 +240,13 @@ class PossibleMoves:
                     for col in range(self.__board.get_size()):
                         if abs(self.__row - row) == abs(self.__col - col):
                             # on the diagonal
-                            if self.__board.get_game_board().get_game_square(row, col) is None:
+                            if self.__board.get_game_square(row, col).get_occupying_piece() is None:
                                 list_of_candidate_game_squares \
-                                    .append(self.__board.get_game_board().get_game_square(row, col))
-                            if self.__board.get_game_board().get_game_square(row, col).get_occupying_piece()\
+                                    .append(self.__board.get_game_square(row, col))
+                            elif self.__board.get_game_square(row, col).get_occupying_piece()\
                                     .get_colour() != self.__piece.get_colour():
                                 list_of_candidate_game_squares \
-                                    .append(self.__board.get_game_board().get_game_square(row, col))
+                                    .append(self.__board.get_game_square(row, col))
 
             elif type(self.__piece).__name__ == "Knight":
 
