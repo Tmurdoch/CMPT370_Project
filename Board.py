@@ -100,7 +100,7 @@ class Board:
         player2_pieces: list of pieces in pieceSet for player 2
         """
         # indexes of pieces based on where they are on the board
-        spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+        spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]
 
         # set up board player 1 pieces
         i = 0
