@@ -18,6 +18,7 @@ from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
 from Game import Game
 from PlayerType import PlayerType
 from Player import Player
+from Pieces import PieceInterface
 
 
 def test_pieces():
@@ -445,6 +446,86 @@ def test_player():
     p.castle()
     assert (p.get_castled())
 
+
+def test_integration_1():
+    # Testing the integration of GameSquare.py and Boards.py
+    s = 8
+    my_board = Board(s)
+    a_game_square = GameSquare(0, 0)
+    # test if the game square in the board are all game squares
+    # test if the game square when initialized in the board to be None
+    # test if game squares have the right row and column
+    row = 0
+    for row_gs in my_board.get_game_board():
+        col = 0
+        for col_gs in row_gs:
+            assert type(col_gs) is type(a_game_square)
+            assert col_gs.get_occupying_piece() is None
+            assert col_gs.get_row() is row
+            assert col_gs.get_col() is col
+            col += 1
+        row += 1
+
+    # test switching board sides
+    # my_board.switch_board_sides()
+    # copy above test and make sure they have the same things
+
+
+def test_integration_2():
+    # Testing the integration of GameSquare.py, Boards.py, and Pieces.py, PieceSet.py
+    my_board = Board(8)
+
+    # Game Type 0 is Chess
+    lp_chess_pieces = PieceSet(0, "White")
+    dp_chess_pieces = PieceSet(0, "Black")
+
+    # indexes of pieces based on where they are on the board
+    # king, queen...
+    spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]
+
+    # set up board player 1 pieces
+    # pieces are set up to row 7 and row 6
+    i = 0
+    for col in spec_piece:
+        my_board.get_game_board()[7][col].put_piece_here(dp_chess_pieces.get_live_pieces()[i])
+        i += 1
+    for col in range(8):
+        my_board.get_game_board()[6][col].put_piece_here(dp_chess_pieces.get_live_pieces()[i])
+        i += 1
+
+    # set up board player 2 pieces
+    # pieces are set up to row 0 and row 1
+    i = 0
+    for col in spec_piece:
+        my_board.get_game_board()[0][col].put_piece_here(lp_chess_pieces.get_live_pieces()[i])
+        i += 1
+    for col in range(8):
+        my_board.get_game_board()[1][col].put_piece_here(lp_chess_pieces.get_live_pieces()[i])
+        i += 1
+
+    a_game_square = GameSquare(0, 0)
+    # test if the game square in the board are all game squares after adding the pieces to each game square
+    # test if the game square received the pieces
+    # check if a square has a piece to check if it is one of the pieces in string
+    # test if game squares have the right row and column
+    row = 0
+    for row_gs in my_board.get_game_board():
+        col = 0
+        for col_gs in row_gs:
+            assert type(col_gs) is type(a_game_square)
+            if col_gs.get_occupying_piece() is not None:
+                pieces_string = ["King", "Queen", "Bishop", "Rook", "Knight", "Pawn"]
+                pieces_colour = ["White", "Black"]
+                assert type(col_gs.get_occupying_piece()).__name__ in pieces_string
+                assert col_gs.get_occupying_piece().get_colour() in pieces_colour
+            assert col_gs.get_row() is row
+            assert col_gs.get_col() is col
+            col += 1
+        row += 1
+
+    # Game Type 1 is Checkers
+    lp_checkers_pieces = PieceSet(1, "White")
+    dp_checkers_pieces = PieceSet(1, "Black")
 
 # if __name__ == '__main__':
     # test_show_board()
