@@ -216,14 +216,13 @@ def test_possible_moves():
     lombishop2 = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
     print("\nBishop (7, 0) possible moves: ", [x.get_row_and_column() for x in lombishop2])
 
-    # move bishop from 7, 2 to 3, 1
     board.get_game_square(4, 2).put_piece_here(board.get_game_square(7, 0).get_occupying_piece())
     board.get_game_square(7, 0).remove_occupying_piece()
 
     lombishop2 = PossibleMoves(board.get_game_square(4, 2), my_game).build_list_of_moves()
     print("\nBishop (4, 2) possible moves: ", [x.get_row_and_column() for x in lombishop2])
 
-    #board.print_game_board()
+    board.print_game_board()
     # lom = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
     # print("\nRook (4, 3) possible moves: ", [x.get_row_and_column() for x in lom])
     # lom = PossibleMoves(board.get_game_square(3, 3), my_game).build_list_of_moves()
