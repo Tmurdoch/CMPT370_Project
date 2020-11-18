@@ -233,7 +233,7 @@ class PossibleMoves:
                 # Vertical DOWN
                 # check from piece to bot row -- (row, col) -> (7, col)
                 row_neg = self.__row
-                while row_neg != 7:
+                while row_neg != self.__board.get_size() - 1:
                     row_neg += 1
                     if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece().get_colour() == \
@@ -251,7 +251,7 @@ class PossibleMoves:
                 # Horizontal RIGHT
                 # check from piece to right col -- (row, col) -> (row, 7)
                 col_pos = self.__col
-                while col_pos != 7:
+                while col_pos != self.__board.get_size() - 1:
                     col_pos += 1
                     if self.__board.get_game_board()[self.__row][col_pos].get_occupying_piece() is not None:
 
@@ -295,10 +295,10 @@ class PossibleMoves:
                 # Top Right
                 row_pos = self.__row
                 col_pos = self.__col
-                while row_pos != 0 or col_pos != 7:
+                while row_pos != 0 or col_pos != self.__board.get_size() - 1:
                     row_pos -= 1
                     col_pos += 1
-                    if row_pos < 0 or col_pos > 7:
+                    if row_pos < 0 or col_pos > self.__board.get_size() - 1:
                         break
                     if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() == \
@@ -335,10 +335,10 @@ class PossibleMoves:
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
-                while row_neg != 7 or col_pos != 7:
+                while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
                     row_neg += 1
                     col_pos += 1
-                    if row_neg > 7 or col_pos > 7:
+                    if row_neg > self.__board.get_size() - 1 or col_pos > self.__board.get_size() - 1:
                         break
                     if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() == \
@@ -355,10 +355,10 @@ class PossibleMoves:
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
-                while row_neg != 7 or col_neg != 0:
+                while row_neg != self.__board.get_size() - 1 or col_neg != 0:
                     row_neg += 1
                     col_neg -= 1
-                    if row_neg > 7 or col_pos < 0:
+                    if row_neg > self.__board.get_size() - 1 or col_pos < 0:
                         break
                     if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() == \
@@ -416,10 +416,10 @@ class PossibleMoves:
                 # Top Right
                 row_pos = self.__row
                 col_pos = self.__col
-                while row_pos != 0 or col_pos != 7:
+                while row_pos != 0 or col_pos != self.__board.get_size() - 1:
                     row_pos -= 1
                     col_pos += 1
-                    if row_pos < 0 or col_pos > 7:
+                    if row_pos < 0 or col_pos > self.__board.get_size() - 1:
                         break
                     if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() == \
@@ -455,10 +455,10 @@ class PossibleMoves:
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
-                while row_neg != 7 or col_pos != 7:
+                while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
                     row_neg += 1
                     col_pos += 1
-                    if row_neg > 7 or col_pos > 7:
+                    if row_neg > self.__board.get_size() - 1 or col_pos > self.__board.get_size() - 1:
                         break
                     if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() == \
@@ -475,10 +475,10 @@ class PossibleMoves:
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
-                while row_neg != 7 or col_neg != 0:
+                while row_neg != self.__board.get_size() - 1 or col_neg != 0:
                     row_neg += 1
                     col_neg -= 1
-                    if row_neg > 7 or col_pos < 0:
+                    if row_neg > self.__board.get_size() - 1 or col_pos < 0:
                         break
                     if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() == \
@@ -641,7 +641,7 @@ class PossibleMoves:
                 # Vertical DOWN
                 # check from piece to bot row -- (row, col) -> (7, col)
                 row_neg = self.__row
-                while row_neg != 7:
+                while row_neg != self.__board.get_size() - 1:
                     row_neg += 1
                     if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece().get_colour() == \
@@ -659,7 +659,7 @@ class PossibleMoves:
                 # Horizontal RIGHT
                 # check from piece to right col -- (row, col) -> (row, 7)
                 col_pos = self.__col
-                while col_pos != 7:
+                while col_pos != self.__board.get_size() - 1:
                     col_pos += 1
                     if self.__board.get_game_board()[self.__row][col_pos].get_occupying_piece() is not None:
 
