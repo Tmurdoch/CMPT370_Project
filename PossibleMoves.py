@@ -5,6 +5,9 @@
 
 import random
 
+GAME_TYPE_CHESS = 0
+GAME_TYPE_CHECKERS = 1
+
 
 class PossibleMoves:
     """
@@ -33,7 +36,7 @@ class PossibleMoves:
         """
         list_of_candidate_game_squares = []
         # 1 == checkers
-        if self.__game_type == 1:
+        if self.__game_type == GAME_TYPE_CHECKERS:
             # Generate possible moves for checkers
             if 0 <= self.__row-1 < self.__board.get_size() or 0 <= self.__col-1 < self.__board.get_size():
                 top_left = self.__board.get_game_square(self.__row-1, self.__col-1)
@@ -106,7 +109,7 @@ class PossibleMoves:
             return 0
 
         # chess = 0
-        elif self.__game_type == 0:
+        elif self.__game_type == GAME_TYPE_CHESS:
 
             if type(self.__piece).__name__ == "King":
                 # A king can move one square in any direction (horizontally,
