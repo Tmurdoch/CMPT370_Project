@@ -237,6 +237,7 @@ class PossibleMoves:
 
             elif type(self.__piece).__name__ == "Bishop":
                 # The bishop can be moved any number of unoccupied squares in a straight line diagonally
+                """
                 for row in range(self.__board.get_size()):
                     for col in range(self.__board.get_size()):
                         if abs(self.__row - row) == abs(self.__col - col):
@@ -248,6 +249,93 @@ class PossibleMoves:
                                     .get_colour() != self.__piece.get_colour():
                                 list_of_candidate_game_squares \
                                     .append(self.__board.get_game_square(row, col))
+                """
+                # check if the row or column are out of bounds
+                # check specific corner from piece
+                # will stop until sees a peace
+                # if piece friendly stop
+                # if non friendly add add (row, col) to possible moves but also stops
+                # if empty then add it to list and keep going
+
+                # Top Right
+                row_pos = self.__row
+                col_pos = self.__col
+                while row_pos != 0 or col_pos != 7:
+                    row_pos -= 1
+                    col_pos += 1
+                    if row_pos < 0 or col_pos > 7:
+                        break
+                    if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece() is not None:
+                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() == \
+                                self.__piece.get_colour():
+                            break
+                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() != \
+                                self.__piece.get_colour():
+                            list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
+                            break
+                    else:
+                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
+
+                # Top Left
+                row_pos = self.__row
+                col_neg = self.__col
+                while row_pos != 0 or col_neg != 0:
+                    row_pos -= 1
+                    col_neg -= 1
+                    if row_pos < 0 or col_neg < 0:
+                        break
+                    if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece() is not None:
+                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() == \
+                                self.__piece.get_colour():
+                            break
+                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() != \
+                                self.__piece.get_colour():
+                            list_of_candidate_game_squares.append(
+                                self.__board.get_game_board()[row_pos][col_neg])
+                            break
+                    else:
+                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_neg])
+
+                # Bottom Right
+                row_neg = self.__row
+                col_pos = self.__col
+                while row_neg != 7 or col_pos != 7:
+                    row_neg += 1
+                    col_pos += 1
+                    if row_neg > 7 or col_pos > 7:
+                        break
+                    if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece() is not None:
+                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() == \
+                                self.__piece.get_colour():
+                            break
+                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() != \
+                                self.__piece.get_colour():
+                            list_of_candidate_game_squares.append(
+                                self.__board.get_game_board()[row_neg][col_pos])
+                            break
+                    else:
+                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_pos])
+
+                # Bottom Left
+                row_neg = self.__row
+                col_neg = self.__col
+                while row_neg != 7 or col_neg != 0:
+                    row_neg += 1
+                    col_neg -= 1
+                    if row_neg > 7 or col_pos < 0:
+                        break
+                    if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece() is not None:
+                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() == \
+                                self.__piece.get_colour():
+                            break
+                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() != \
+                                self.__piece.get_colour():
+                            list_of_candidate_game_squares.append(
+                                self.__board.get_game_board()[row_neg][col_neg])
+                            break
+                    else:
+                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_neg])
+                        break
 
             elif type(self.__piece).__name__ == "Knight":
 
