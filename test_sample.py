@@ -181,6 +181,8 @@ def test_possible_moves():
     print("\nKnight (7, 1) possible moves: ", [x.get_row_and_column() for x in lomknight])
     lombishop = PossibleMoves(board.get_game_square(7, 2), my_game).build_list_of_moves()
     print("\nBishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lombishop])
+    lomqueen = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
+    print("\nQueen (7, 4) possible moves: ", [x.get_row_and_column() for x in lomqueen])
 
     # moving pieces -> get your BOARD then get (ROW, COL) of DESTINATION then set piece from another square
     # then remove the piece where you got the piece
@@ -196,14 +198,20 @@ def test_possible_moves():
     board.get_game_square(7, 0).put_piece_here(board.get_game_square(7, 2).get_occupying_piece())
     board.get_game_square(7, 2).remove_occupying_piece()
 
+    # move queen from 7, 4 to 4, 4
+    board.get_game_square(4, 4).put_piece_here(board.get_game_square(7, 4).get_occupying_piece())
+    board.get_game_square(7, 4).remove_occupying_piece()
+
     lomrook = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
     print("Rook (4,3) possible moves: ", [x.get_row_and_column() for x in lomrook])
     lomrook2 = PossibleMoves(board.get_game_square(4, 6), my_game).build_list_of_moves()
     print("Rook2 (4,6) possible moves: ", [x.get_row_and_column() for x in lomrook2])
+    lomqueen = PossibleMoves(board.get_game_square(4, 4), my_game).build_list_of_moves()
+    print("Queen (4,4) possible moves: ", [x.get_row_and_column() for x in lomqueen])
     # move knight 7, 1 to 3,3
     # board.get_game_square(3, 3).put_piece_here(board.get_game_square(7, 1).get_occupying_piece())
     # board.get_game_square(7, 1).remove_occupying_piece()
-
+    board.print_game_board()
     board.get_game_square(6, 1).remove_occupying_piece()
     lombishop2 = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
     print("\nBishop (7, 0) possible moves: ", [x.get_row_and_column() for x in lombishop2])
@@ -215,7 +223,7 @@ def test_possible_moves():
     lombishop2 = PossibleMoves(board.get_game_square(4, 2), my_game).build_list_of_moves()
     print("\nBishop (4, 2) possible moves: ", [x.get_row_and_column() for x in lombishop2])
 
-    board.print_game_board()
+    #board.print_game_board()
     # lom = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
     # print("\nRook (4, 3) possible moves: ", [x.get_row_and_column() for x in lom])
     # lom = PossibleMoves(board.get_game_square(3, 3), my_game).build_list_of_moves()
