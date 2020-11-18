@@ -382,7 +382,7 @@ class PossibleMoves:
                 # if non friendly add add (row, col) to possible moves but also stops
                 row_neg = self.__row
                 while row_neg != 7:
-                    row_pos += 1
+                    row_neg += 1
                     if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece() is not None:
                         if self.__board.get_game_board()[row_neg][self.__col].get_occupying_piece().get_colour() == \
                                 self.__piece.get_colour():
@@ -404,7 +404,7 @@ class PossibleMoves:
                 while col_pos != 7:
                     col_pos += 1
                     if self.__board.get_game_board()[self.__row][col_pos].get_occupying_piece() is not None:
-                        print("HI")
+
                         if self.__board.get_game_board()[self.__row][col_pos].get_occupying_piece().get_colour() == \
                                 self.__piece.get_colour():
                             break

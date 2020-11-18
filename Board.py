@@ -143,9 +143,19 @@ class Board:
             column = []
             for c in r:
                 if c.get_occupying_piece() is None:
-                    column.append(["Empty"])
+                    column.append(["E     "])
                 else:
-                    column.append([(c.get_occupying_piece())])
+                    if type(c.get_occupying_piece()).__name__ is "Pawn":
+                        column.append([type(c.get_occupying_piece()).__name__+"  "])
+                    elif type(c.get_occupying_piece()).__name__ is "Rook":
+                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                    elif type(c.get_occupying_piece()).__name__ is "King":
+                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                    elif type(c.get_occupying_piece()).__name__ is "Queen":
+                        column.append([type(c.get_occupying_piece()).__name__ + " "])
+                    else:
+                        column.append([type(c.get_occupying_piece()).__name__])
+
             board_pieces.append(column)
 
         print("\nBoard Initialized\n\nBoard Squares Coordinates:")

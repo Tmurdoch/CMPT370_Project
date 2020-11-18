@@ -175,30 +175,42 @@ def test_possible_moves():
     board.build_chess_board(dark_set, light_set)
     # board.print_game_board()
 
-    lom = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
-    print("Rook (7,0) possible moves: ", [x.get_row_and_column() for x in lom])
-    lom = PossibleMoves(board.get_game_square(7, 1), my_game).build_list_of_moves()
-    print("\nKnight (7, 1) possible moves: ", [x.get_row_and_column() for x in lom])
-    lom = PossibleMoves(board.get_game_square(7, 2), my_game).build_list_of_moves()
-    print("\nBishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lom])
+    lomrook = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
+    print("Rook (7,0) possible moves: ", [x.get_row_and_column() for x in lomrook])
+    lomknight = PossibleMoves(board.get_game_square(7, 1), my_game).build_list_of_moves()
+    print("\nKnight (7, 1) possible moves: ", [x.get_row_and_column() for x in lomknight])
+    lombishop = PossibleMoves(board.get_game_square(7, 2), my_game).build_list_of_moves()
+    print("\nBishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lombishop])
+
+    # moving pieces -> get your BOARD then get (ROW, COL) of DESTINATION then set piece from another square
+    # then remove the piece where you got the piece
     # move rook 7, 0 to 4, 3 for testing
     board.get_game_square(4, 3).put_piece_here(board.get_game_square(7, 0).get_occupying_piece())
     board.get_game_square(7, 0).remove_occupying_piece()
 
+    # move rook 2 from 7, 7 to 4, 6
+    board.get_game_square(4, 6).put_piece_here(board.get_game_square(7, 7).get_occupying_piece())
+    board.get_game_square(7, 7).remove_occupying_piece()
+
+    lomrook = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
+    print("Rook (4,3) possible moves: ", [x.get_row_and_column() for x in lomrook])
+    lomrook2 = PossibleMoves(board.get_game_square(4, 6), my_game).build_list_of_moves()
+    print("Rook2 (4,6) possible moves: ", [x.get_row_and_column() for x in lomrook2])
     # move knight 7, 1 to 3,3
-    board.get_game_square(3, 3).put_piece_here(board.get_game_square(7, 1).get_occupying_piece())
-    board.get_game_square(7, 1).remove_occupying_piece()
+    # board.get_game_square(3, 3).put_piece_here(board.get_game_square(7, 1).get_occupying_piece())
+    # board.get_game_square(7, 1).remove_occupying_piece()
+
     board.print_game_board()
-    lom = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
-    print("\nRook (4, 3) possible moves: ", [x.get_row_and_column() for x in lom])
-    lom = PossibleMoves(board.get_game_square(3, 3), my_game).build_list_of_moves()
-    print("\nKnight (7, 1) possible moves: ", [x.get_row_and_column() for x in lom])
+    # lom = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
+    # print("\nRook (4, 3) possible moves: ", [x.get_row_and_column() for x in lom])
+    # lom = PossibleMoves(board.get_game_square(3, 3), my_game).build_list_of_moves()
+    # print("\nKnight (7, 1) possible moves: ", [x.get_row_and_column() for x in lom])
 
     # move knight 3, 3 to 5, 1
-    board.get_game_square(5, 1).put_piece_here(board.get_game_square(3, 3).get_occupying_piece())
-    board.get_game_square(3, 3).remove_occupying_piece()
-    lom = PossibleMoves(board.get_game_square(5, 1), my_game).build_list_of_moves()
-    print("\nKnight (5, 1) possible moves: ", [x.get_row_and_column() for x in lom])
+    # board.get_game_square(5, 1).put_piece_here(board.get_game_square(3, 3).get_occupying_piece())
+    # board.get_game_square(3, 3).remove_occupying_piece()
+    # lom = PossibleMoves(board.get_game_square(5, 1), my_game).build_list_of_moves()
+    # print("\nKnight (5, 1) possible moves: ", [x.get_row_and_column() for x in lom])
 
 
 def test_move():
