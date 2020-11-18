@@ -94,8 +94,12 @@ class Board:
     def build_chess_board(self, player1_pieces, player2_pieces):
         """
         set up chess pieces on the board
-        Player1 on the bottom col 7, 6
-        Player2 on the top col 0, 1
+        Player1 on the bottom row 7 and 6 -> 
+        row 7 where king, queen, rook... are
+        row 6 where pawns are
+        Player2 on the top row 0 and 1 -> 
+        row 0 where king, queen, rook... are
+        row 1 where pawns are
         player1_pieces: list of pieces in pieceSet for player 1
         player2_pieces: list of pieces in pieceSet for player 2
         """
