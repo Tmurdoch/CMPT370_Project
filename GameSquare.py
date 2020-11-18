@@ -107,6 +107,13 @@ class GameSquare:
         """
         self.__occupyingPiece = None
 
+    def set_row_and_column(self, row, col):
+        self.__row = row
+        self.__col = col
+
+    def get_row_and_column(self):
+        return self.__row, self.__col
+
 
 """
 def test_fail():

@@ -47,9 +47,10 @@ class Game:
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        if game_type.lower() == "chess":
+        # chess = 0, checkers = 1
+        if game_type == 0:
             self.__game_type = GAME_TYPE_CHESS
-        elif game_type.lower() == "checkers":
+        elif game_type.lower() == 1:
             self.__game_type = GAME_TYPE_CHECKERS
         else:
             # something went wrong here and it wasn't the users fault
@@ -62,6 +63,7 @@ class Game:
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
         self.__board = Board(8)
+
         return
 
     def get_light_player(self):
@@ -374,7 +376,7 @@ class Game:
         return
 
     def get_game_type(self):
-        return
+        return self.__game_type
 
     def change_current_player(self):
         if self.__current_player is self.__dark_player:

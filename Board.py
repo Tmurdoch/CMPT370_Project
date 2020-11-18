@@ -91,6 +91,39 @@ class Board:
         """
         return self.__size
 
+    def build_chess_board(self, player1_pieces, player2_pieces):
+        """
+        set up chess pieces on the board
+        Player1 on the bottom row 7 and 6 -> 
+        row 7 where king, queen, rook... are
+        row 6 where pawns are
+        Player2 on the top row 0 and 1 -> 
+        row 0 where king, queen, rook... are
+        row 1 where pawns are
+        player1_pieces: list of pieces in pieceSet for player 1
+        player2_pieces: list of pieces in pieceSet for player 2
+        """
+        # indexes of pieces based on where they are on the board
+        spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]
+
+        # set up board player 1 pieces
+        i = 0
+        for col in spec_piece:
+            self.__gameBoard[7][col].put_piece_here(player1_pieces[i])
+            i += 1
+        for col in range(8):
+            self.__gameBoard[6][col].put_piece_here(player1_pieces[i])
+            i += 1
+
+        # set up board player 2 pieces
+        i = 0
+        for col in spec_piece:
+            self.__gameBoard[0][col].put_piece_here(player2_pieces[i])
+            i += 1
+        for col in range(8):
+            self.__gameBoard[1][col].put_piece_here(player2_pieces[i])
+            i += 1
+
     def print_game_board(self):
         """
         For visual representation of the board. prints the coordinates of the board square
@@ -114,9 +147,19 @@ class Board:
             column = []
             for c in r:
                 if c.get_occupying_piece() is None:
-                    column.append(["Empty"])
+                    column.append(["E     "])
                 else:
-                    column.append([(c.get_occupying_piece())])
+                    if type(c.get_occupying_piece()).__name__ is "Pawn":
+                        column.append([type(c.get_occupying_piece()).__name__+"  "])
+                    elif type(c.get_occupying_piece()).__name__ is "Rook":
+                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                    elif type(c.get_occupying_piece()).__name__ is "King":
+                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                    elif type(c.get_occupying_piece()).__name__ is "Queen":
+                        column.append([type(c.get_occupying_piece()).__name__ + " "])
+                    else:
+                        column.append([type(c.get_occupying_piece()).__name__])
+
             board_pieces.append(column)
 
         print("\nBoard Initialized\n\nBoard Squares Coordinates:")
