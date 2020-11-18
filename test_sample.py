@@ -184,6 +184,8 @@ def test_possible_moves():
     print("Bishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lombishop])
     lomqueen = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
     print("Queen (7, 4) possible moves: ", [x.get_row_and_column() for x in lomqueen])
+    lompawn = PossibleMoves(board.get_game_square(6, 0), my_game).build_list_of_moves()
+    print("Pawn (6, 0) possible moves: ", [x.get_row_and_column() for x in lompawn])
 
     # moving pieces -> get your BOARD then get (ROW, COL) of DESTINATION then set piece from another square
     # then remove the piece where you got the piece
@@ -203,6 +205,10 @@ def test_possible_moves():
     board.get_game_square(4, 4).put_piece_here(board.get_game_square(7, 4).get_occupying_piece())
     board.get_game_square(7, 4).remove_occupying_piece()
 
+    # move enemy pawn from 1, 0 to 5, 1
+    board.get_game_square(5, 1).put_piece_here(board.get_game_square(1, 0).get_occupying_piece())
+    board.get_game_square(1, 0).remove_occupying_piece()
+
     print("\nPieces moved Positions")
     lomrook = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
     print("Rook (4,3) possible moves: ", [x.get_row_and_column() for x in lomrook])
@@ -210,6 +216,8 @@ def test_possible_moves():
     print("Rook2 (4,6) possible moves: ", [x.get_row_and_column() for x in lomrook2])
     lomqueen = PossibleMoves(board.get_game_square(4, 4), my_game).build_list_of_moves()
     print("Queen (4,4) possible moves: ", [x.get_row_and_column() for x in lomqueen])
+    lompawn = PossibleMoves(board.get_game_square(6, 0), my_game).build_list_of_moves()
+    print("Pawn (6, 0) enemy at (5, 1) possible moves: ", [x.get_row_and_column() for x in lompawn])
     # move knight 7, 1 to 3,3
     # board.get_game_square(3, 3).put_piece_here(board.get_game_square(7, 1).get_occupying_piece())
     # board.get_game_square(7, 1).remove_occupying_piece()

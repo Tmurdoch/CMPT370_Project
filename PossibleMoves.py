@@ -722,7 +722,68 @@ class PossibleMoves:
                 # Normally a pawn moves by advancing a single square,
                 #  but the first time a pawn moves, it has the option of advancing two squares. Pawns may not use the
                 #  initial two-square advance to jump over an occupied square, or to capture. Any piece immediately 
-                #  in front of a pawn, friend or foe, blocks its advance. 
+                #  in front of a pawn, friend or foe, blocks its advance.
+
+                # Normal movements
+                # forward 1 step and 2 step
+                if self.__row > 0:
+                    # 1 step
+                    if self.__board.get_game_square(self.__row - 1, self.__col).get_occupying_piece() is None:
+                        list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1, self.__col))
+
+                    # 2 step
+                    if not self.__piece.get_moved_yet_status():
+                        if self.__board.get_game_square(self.__row - 2, self.__col).get_occupying_piece() is None:
+                            list_of_candidate_game_squares.append(
+                                self.__board.get_game_square(self.__row - 2, self.__col))
+
+                # diagonal movements
+                # only used when non friendly piece on the front diagonal sides
+                # check if inside the board
+                # check for edge case for columns 0 and 7
+                # if they are just check one diagonal side
+                # check if there is a non friendly
+                # then add it
+                if self.__row > 0 and 0 <= self.__col <= self.__board.get_size() - 1:
+
+                    # left most case
+                    if self.__col == 0:
+                        if self.__board.get_game_square(self.__row - 1,
+                                                        self.__col + 1).get_occupying_piece() is not None:
+                            if self.__board.get_game_square(self.__row - 1, self.__col + 1).get_occupying_piece()\
+                                    .get_colour() is not self.__piece.get_colour():
+                                list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1,
+                                                                                                   self.__col + 1))
+
+                    # right most case:
+                    elif self.__col == self.__board.get_size() - 1:
+                        if self.__board.get_game_square(self.__row - 1,
+                                                        self.__col - 1).get_occupying_piece() is not None:
+                            if self.__board.get_game_square(self.__row - 1, self.__col - 1).get_occupying_piece()\
+                                    .get_colour() is not self.__piece.get_colour():
+                                list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1,
+                                                                                                   self.__col - 1))
+
+                    # Non edge case
+                    # checks for both sides of the diagonal front
+                    # if there is a non friendly add it to the list
+                    else:
+                        # front left
+                        if self.__board.get_game_square(self.__row - 1,
+                                                        self.__col - 1).get_occupying_piece() is not None:
+                            if self.__board.get_game_square(self.__row - 1, self.__col - 1).get_occupying_piece()\
+                                    .get_colour() is not self.__piece.get_colour():
+                                list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1,
+                                                                                                   self.__col - 1))
+                        # front right
+                        if self.__board.get_game_square(self.__row - 1,
+                                                        self.__col - 1).get_occupying_piece() is not None:
+                            if self.__board.get_game_square(self.__row - 1, self.__col - 1).get_occupying_piece()\
+                                    .get_colour() is not self.__piece.get_colour():
+                                list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1,
+                                                                                                   self.__col - 1))
+
+                """
                 if 0 <= self.__row - 1 < self.__board.get_size():
                     immediately_in_front = self.__board.get_game_square(self.__row-1, self.__col)
                     if immediately_in_front.get_occupying_piece() is None:
@@ -757,6 +818,7 @@ class PossibleMoves:
                             list_of_candidate_game_squares.append(top_right)
 
                 self.__squares_you_can_move_to = list_of_candidate_game_squares
+                """
             else:
                 # Could not identify the type of piece
                 return -1
