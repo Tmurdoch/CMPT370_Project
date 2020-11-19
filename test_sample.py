@@ -527,5 +527,48 @@ def test_integration_2():
     lp_checkers_pieces = PieceSet(1, "White")
     dp_checkers_pieces = PieceSet(1, "Black")
 
+    my_board_checkers = Board(8)
+    # list of index inside piece set for light player and dark player
+    # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player
+    # used so we can evenly take away checkers and put it in the board
+    checker_indexes = [[0, 4, 8], [0, 4, 8]]
+    # iterating through columns 0, 2, 4, 6
+    # these are the column index where the piece will be set
+    for col in range(0, 8, 2):
+        # put the checkrs piece from dark or light player piece set using specific index
+        # in specific row, col in board
+        # 7, 6 are for the dark player and 1 is for light player these
+        # these numbers are specific rows where player piece start from edge column
+        my_board_checkers.get_game_square(7, col).put_piece_here(dp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[0][0]])
+        my_board_checkers.get_game_square(5, col).put_piece_here(lp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[1][1]])
+        my_board_checkers.get_game_square(1, col).put_piece_here(dp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[0][2]])
+        checker_indexes[0][0] += 1
+        checker_indexes[1][1] += 1
+        checker_indexes[0][2] += 1
+
+    # iterating through columns 1, 3, 5, 7
+    # these are the column index where the piece will be set
+    for col in range(1, 8, 2):
+        # put the checkrs piece from dark or light player piece set using specific index
+        # in specific row, col in board
+        # 6 is for the dark player and 2, 0 are for light player
+        # these numbers are specific rows where player piece start from edge column
+        my_board_checkers.get_game_square(6, col).put_piece_here(dp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[0][1]])
+        my_board_checkers.get_game_square(2, col).put_piece_here(lp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[1][2]])
+        my_board_checkers.get_game_square(0, col).put_piece_here(lp_checkers_pieces
+                                                                 .get_live_pieces()[checker_indexes[1][0]])
+        checker_indexes[0][1] += 1
+        checker_indexes[1][2] += 1
+        checker_indexes[1][0] += 1
+
+    my_board_checkers.print_game_board()
+
+
+
 # if __name__ == '__main__':
     # test_show_board()

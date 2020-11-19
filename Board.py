@@ -143,20 +143,27 @@ class Board:
             board_row_col.append(column)
 
         board_pieces = []
+        empty_string = "E            "
         for r in self.__gameBoard:
             column = []
             for c in r:
                 if c.get_occupying_piece() is None:
-                    column.append(["E     "])
+                    column.append([empty_string])
                 else:
-                    if type(c.get_occupying_piece()).__name__ is "Pawn":
+                    if type(c.get_occupying_piece()).__name__ is "CheckersCoin":
+                        column.append([type(c.get_occupying_piece()).__name__ + " "])
+                    elif type(c.get_occupying_piece()).__name__ is "Pawn":
                         column.append([type(c.get_occupying_piece()).__name__+"  "])
+                        empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "Rook":
                         column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                        empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "King":
                         column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                        empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "Queen":
                         column.append([type(c.get_occupying_piece()).__name__ + " "])
+                        empty_string = "E     "
                     else:
                         column.append([type(c.get_occupying_piece()).__name__])
 
