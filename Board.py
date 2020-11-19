@@ -177,7 +177,12 @@ class Board:
         for r in range(self.__size):
             row = []
             for c in range(self.__size):
-                row.insert(0, self.__gameBoard[r][c])
+                # switch row and col so it would have the same root (0,0) at top left
+                new_gamesquare = self.__gameBoard[r][c]
+                new_gamesquare.set_row(self.__size - 1 - r)
+                new_gamesquare.set_col(self.__size - 1 - c)
+                row.insert(0, new_gamesquare)
+
             new_board.insert(0, row)
 
         self.__gameBoard = new_board
