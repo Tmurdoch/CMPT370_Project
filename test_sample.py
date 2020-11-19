@@ -143,7 +143,6 @@ def test_piece_set():
 
 
 def test_possible_moves():
-    # TODO: Fix these tests, Thomas and Michael were to lazy to do it when they broke them
     # make sure that game is created correctly
     # chess = 0
     my_game = Game(0, ColourCodes.WHITE_BLACK)
@@ -260,6 +259,11 @@ def test_possible_moves():
     lomking = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
     print("King (7, 4) possible moves: ", [x.get_row_and_column() for x in lomking])
 
+    board.print_game_board()
+
+    # switch board
+    board.switch_sides()
+    print("\nBoard Switched")
     board.print_game_board()
 
 
@@ -473,9 +477,10 @@ def test_integration_1():
 
 def test_integration_2():
     # Testing the integration of GameSquare.py, Boards.py, and Pieces.py, PieceSet.py
-    my_board = Board(8)
 
+    # ------Chess-----------
     # Game Type 0 is Chess
+    my_board = Board(8)
     lp_chess_pieces = PieceSet(0, "White")
     dp_chess_pieces = PieceSet(0, "Black")
 
@@ -504,6 +509,7 @@ def test_integration_2():
         i += 1
     a_game_square = GameSquare(0, 0)
 
+    # TESTS STARTS FOR CHESS
     # test if the game square in the board are all game squares after adding the pieces to each game square
     # test if the game square received the pieces
     # check if a square has a piece to check if it is one of the pieces in string
@@ -523,13 +529,76 @@ def test_integration_2():
             col += 1
         row += 1
 
+    # test for switching sides
+    # list of String names of pieces in chess
+    chess_r7 = [["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"], ["Pawn"]]
+    # for player 1 Dark Bottom Current Player
+    # index for chess_r7 to get the correct name in row 6 or 7
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_r7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 7
+            else:
+                row = 6
+            # check if each peace are the correct colour and at the right spot
+            assert my_board.get_game_square(row, col).get_occupying_piece().get_colour() == "Black"
+            assert type(my_board.get_game_square(row, col).get_occupying_piece()).__name__ is chess_r7[rows][col]
+
+    # for player 2 Light Top
+    # index for chess_r7 to get the correct name in row 0 or 1
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_r7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 0
+            else:
+                row = 1
+            # check if each peace are the correct colour and at the right spot
+            assert my_board.get_game_square(row, col).get_occupying_piece().get_colour() == "White"
+            assert type(my_board.get_game_square(row, col).get_occupying_piece()).__name__ is chess_r7[rows][col]
+
+    # SWITCHING SIDES
+    my_board.switch_sides()
+
+    # since board rotated king and queen switch position
+    chess_r7_switch = [["Rook", "Knight", "Bishop", "King", "Queen", "Bishop", "Knight", "Rook"], ["Pawn"]]
+    # for player 1 Dark TOP
+    # index for chess_r7 to get the correct name in row 6 or 7
+    for rows in [0, 1]:
+        # index of column in both chess_r7_switch and the board
+        for col in range(len(chess_r7_switch[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 0
+            else:
+                row = 1
+            # check if each peace are the correct colour and at the right spot
+            assert my_board.get_game_square(row, col).get_occupying_piece().get_colour() == "Black"
+            assert type(my_board.get_game_square(row, col).get_occupying_piece()).__name__ is chess_r7_switch[rows][col]
+
+    # for player 2 Light Bottom Current Player
+    # index for chess_r7_switch to get the correct name in row 0 or 1
+    for rows in [0, 1]:
+        # index of column in both chess_r7_switch and the board
+        for col in range(len(chess_r7_switch[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 7
+            else:
+                row = 6
+            # check if each peace are the correct colour and at the right spot
+            assert my_board.get_game_square(row, col).get_occupying_piece().get_colour() == "White"
+            assert type(my_board.get_game_square(row, col).get_occupying_piece()).__name__ is chess_r7_switch[rows][col]
+
+    # -----Checkers-----
     # Game Type 1 is Checkers
+    my_board_checkers = Board(8)
     lp_checkers_pieces = PieceSet(1, "White")
     dp_checkers_pieces = PieceSet(1, "Black")
 
-    my_board_checkers = Board(8)
-
-    # TESTS STARTS FOR CHESS
     # list of index inside piece set for light player and dark player
     # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player
     # used so we can evenly take away checkers and put it in the board
@@ -587,6 +656,9 @@ def test_integration_2():
             col += 1
         row += 1
 
+    assert my_board_checkers.get_game_square(7, 0).get_occupying_piece().get_colour() is "Black"
+    my_board_checkers.switch_sides()
+    assert my_board_checkers.get_game_square(7, 0).get_occupying_piece().get_colour() is "White"
 
 
 

@@ -169,6 +169,19 @@ class Board:
             checker_indexes[1][2] += 1
             checker_indexes[1][0] += 1
 
+    def switch_sides(self):
+        """
+        Rotates the board as if it is being rotated at 180 degrees
+        """
+        new_board = []
+        for r in range(self.__size):
+            row = []
+            for c in range(self.__size):
+                row.insert(0, self.__gameBoard[r][c])
+            new_board.insert(0, row)
+
+        self.__gameBoard = new_board
+
     def print_game_board(self):
         """
         For visual representation of the board. prints the coordinates of the board square
