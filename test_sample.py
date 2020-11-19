@@ -914,7 +914,252 @@ def test_integration_4():
     assert pc_checkers is not pl_checkers
     assert pc_checkers is pd_checkers
 
-# def test_integration_5():
-    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, and PossibleMoves.py
+
+def test_integration_5():
+    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, and Game.py
+    # basically combining test_integration_2 and test_integration_4
+
+    # game types chess = 0 checkers = 1
+    gt_chess = 0
+    gt_checkers = 1
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+    gc_rb = ColourCodes.RED_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+    my_checkers_game = Game(gt_checkers, gc_rb)
+
+    # test if game is initialized correctly
+    # for chess game
+    assert my_chess_game.get_game_type() == gt_chess
+    assert my_chess_game.get_light_player() is None
+    assert my_chess_game.get_dark_player() is None
+    assert my_chess_game.get_current_player() is None
+
+    # for checkers game
+    assert my_checkers_game.get_game_type() == gt_checkers
+    assert my_checkers_game.get_light_player() is None
+    assert my_checkers_game.get_dark_player() is None
+    assert my_checkers_game.get_current_player() is None
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    # checkers player light ai 1st turn
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+
+    # checkers player dark human 2nd turn
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+
+    # Build Chess Board on my_chess_game using the games light and dark player piece set
+    my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
+                                                my_chess_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # Build Checkers Board on my_checkers_game using the games light and dark player piece set
+    my_checkers_game.get_board().build_checkers_board(
+        my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
+        my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # TESTS
+    # - Test for pieces on correct spots
+
+    # -- CHESS
+    # list of String names of pieces in chess
+    chess_r7 = [["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"], ["Pawn"]]
+
+    # --- player light human
+    # index for chess_r7 to get the correct name in row 6 or 7
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_r7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 7
+            else:
+                row = 6
+            # check if each peace are the correct colour and at the right spot
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() == "White"
+            assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
+                   chess_r7[rows][col]
+
+    # --- player dark ai
+    # index for chess_r7 to get the correct name in row 0 or 1
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_r7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 0
+            else:
+                row = 1
+            # check if each peace are the correct colour and at the right spot
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() == "Black"
+            assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
+                   chess_r7[rows][col]
+
+    # --- game suares in middle of board are empty
+    # middle rows of the game board rows 2 to 5
+    for row in range(2, 6):
+        for col in range(my_chess_game.get_board().get_size()):
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece() is None
+
+    # -- CHECKERS
+
+    # test if checkers coin are correctly placed in the board for eache player
+
+    # determines what we are looking at in a specific col
+    # 0 if square has none and 1 if it has a coin
+    x = 0
+
+    # player colour index currently checking
+    # y = 0 dark player y = 1 light player
+    y = 0
+
+    checker_colour = ["Black", "Red"]
+    for row in range(my_checkers_game.get_board().get_size()):
+        for col in range(my_checkers_game.get_board().get_size()):
+            # rows 3 and 4 are middle rows that are empty
+            if row == 3 or row == 4:
+                assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece() is None
+                # done checking dark player
+                y = 1
+
+            # rows 0, 1, 2, 5, 6, 7 are top and bottom rows where coins are located
+            else:
+                # checker coin pattern
+                # checks for none,coin pattern on board
+                # pattern does not change at col 7
+                if x == 0:
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece() is None
+                    if col != my_checkers_game.get_board().get_size() - 1:
+                        x = 1
+                else:
+                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__\
+                           is "CheckersCoin"
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() is\
+                           checker_colour[y]
+
+                    if col != my_checkers_game.get_board().get_size() - 1:
+                        x = 0
+
+    # - Test after switching sides
+
+    # -- CHESS
+    my_chess_game.get_board().switch_sides()
+
+    # list of String names of pieces in chess but queen and king switch because of the rotation
+    chess_nr7 = [["Rook", "Knight", "Bishop", "King", "Queen", "Bishop", "Knight", "Rook"], ["Pawn"]]
+
+    # --- player light human
+    # index for chess_r7 to get the correct name in row 6 or 7
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_nr7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 7
+            else:
+                row = 6
+            # check if each peace are the correct colour and at the right spot
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() == "Black"
+            assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
+                   chess_nr7[rows][col]
+
+    # --- player dark ai
+    # index for chess_r7 to get the correct name in row 0 or 1
+    for rows in [0, 1]:
+        # index of column in both chess_r7 and the board
+        for col in range(len(chess_nr7[rows])):
+            # for correct row in the board
+            if rows == 0:
+                row = 0
+            else:
+                row = 1
+            # check if each peace are the correct colour and at the right spot
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() == "White"
+            assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
+                   chess_nr7[rows][col]
+
+    # --- game suares in middle of board are empty
+    # middle rows of the game board rows 2 to 5
+    for row in range(2, 6):
+        for col in range(my_chess_game.get_board().get_size()):
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece() is None
+
+    # -- CHECKERS
+    my_checkers_game.get_board().print_game_board()
+    my_checkers_game.get_board().switch_sides()
+    my_checkers_game.get_board().print_game_board()
+    # determines what we are looking at in a specific col
+    # 0 if square has none and 1 if it has a coin
+    x = 0
+
+    # player colour index currently checking
+    # y = 0 dark player y = 1 light player
+    y = 0
+
+    checker_colour = ["Red", "Black"]
+    for row in range(my_checkers_game.get_board().get_size()):
+        for col in range(my_checkers_game.get_board().get_size()):
+            # rows 3 and 4 are middle rows that are empty
+            if row == 3 or row == 4:
+                assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece() is None
+                # done checking dark player
+                y = 1
+
+            # rows 0, 1, 2, 5, 6, 7 are top and bottom rows where coins are located
+            else:
+                # checker coin pattern
+                # checks for none,coin pattern on board
+                # pattern does not change at col 7
+                if x == 0:
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece() is None
+                    if col != my_checkers_game.get_board().get_size() - 1:
+                        x = 1
+                else:
+                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__\
+                           is "CheckersCoin"
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() \
+                           is checker_colour[y]
+
+                    if col != my_checkers_game.get_board().get_size() - 1:
+                        x = 0
+
+    # - Testing Saving and Loading
+    """
+    my_chess_game.save_to_file()
+
+    load_chess_game = Game(0, ColourCodes.WHITE_BLACK)
+    load_chess_game.load_from_file()
+    """
+    
+    """
+    for row_gs in my_checkers_game.get_board().get_game_board():
+        col = 0
+        for col_gs in row_gs:
+            if col_gs.get_occupying_piece() is not None:
+                pieces_colour = ["White", "Black"]
+                assert type(col_gs.get_occupying_piece()).__name__ is "CheckersCoin"
+                assert col_gs.get_occupying_piece().get_colour() in pieces_colour
+            assert col_gs.get_row() is row
+            assert col_gs.get_col() is col
+            col += 1
+        row += 1
+    # SWITCHING SIDES
+    my_board.switch_sides()
+    """
 
 # ---------------------------------------------------------------------------

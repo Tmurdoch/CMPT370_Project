@@ -146,11 +146,11 @@ class Board:
         for col in range(0, 8, 2):
             # put the checkrs piece from player 1 and player 2 piece set using specific index
             # in specific row, col in board
-            # 7, 6 are for the dark player and 1 is for light player these
+            # 7, 5 are for the light player and 1 is for dark player these
             # these numbers are specific rows where player piece start from edge column
             self.__gameBoard[7][col].put_piece_here(player1_pieces[checker_indexes[0][0]])
-            self.__gameBoard[5][col].put_piece_here(player2_pieces[checker_indexes[1][1]])
-            self.__gameBoard[1][col].put_piece_here(player1_pieces[checker_indexes[0][2]])
+            self.__gameBoard[5][col].put_piece_here(player1_pieces[checker_indexes[1][1]])
+            self.__gameBoard[1][col].put_piece_here(player2_pieces[checker_indexes[0][2]])
             checker_indexes[0][0] += 1
             checker_indexes[1][1] += 1
             checker_indexes[0][2] += 1
@@ -160,7 +160,7 @@ class Board:
         for col in range(1, 8, 2):
             # put the checkrs piece from player 1 or player 2 piece set using specific index
             # in specific row, col in board
-            # 6 is for the dark player and 2, 0 are for light player
+            # 6 is for the light player and 2, 0 are for dark player
             # these numbers are specific rows where player piece start from edge column
             self.__gameBoard[6][col].put_piece_here(player1_pieces[checker_indexes[0][1]])
             self.__gameBoard[2][col].put_piece_here(player2_pieces[checker_indexes[1][2]])
@@ -198,6 +198,8 @@ class Board:
         # board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
         # board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
         # for list
+
+        # creates a 2d list of (row, col) of the board
         board_row_col = []
         for r in self.__gameBoard:
             column = []
@@ -205,6 +207,7 @@ class Board:
                 column.append((c.get_row(), c.get_col()))
             board_row_col.append(column)
 
+        # creates a 2d list of pieces of the board
         board_pieces = []
         empty_string = "E            "
         for r in self.__gameBoard:
@@ -232,10 +235,27 @@ class Board:
 
             board_pieces.append(column)
 
+        # creates a 2d list of colour of the pieces on the board
+        board_pieces_colour = []
+        empty_string = "     "
+        for r in self.__gameBoard:
+            column = []
+            for c in r:
+                if c.get_occupying_piece() is None:
+                    column.append([empty_string])
+                else:
+                    if c.get_occupying_piece().get_colour() is "Red":
+                        column.append([c.get_occupying_piece().get_colour()+"  "])
+                    else:
+                        column.append([c.get_occupying_piece().get_colour()])
+            board_pieces_colour.append(column)
+
         print("\nBoard Initialized\n\nBoard Squares Coordinates:")
         [print(row) for row in board_row_col]
         print("\nBoard Squares Occupied_Pieces")
         [print(row) for row in board_pieces]
+        print("\nBoard Pieces Colour")
+        [print(row) for row in board_pieces_colour]
         
         # board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
         # board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
