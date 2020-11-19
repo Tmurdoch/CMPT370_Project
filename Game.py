@@ -50,7 +50,7 @@ class Game:
         # chess = 0, checkers = 1
         if game_type == 0:
             self.__game_type = GAME_TYPE_CHESS
-        elif game_type.lower() == 1:
+        elif game_type == 1:
             self.__game_type = GAME_TYPE_CHECKERS
         else:
             # something went wrong here and it wasn't the users fault

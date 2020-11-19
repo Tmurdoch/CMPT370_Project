@@ -677,6 +677,244 @@ def test_integration_2():
     assert my_board_checkers.get_game_square(7, 0).get_occupying_piece().get_colour() is "White"
 
 
+# starting from here it goes off the test plan -----------------------------
+def test_integration_3():
+    # testing Player.py and PieceSet.py
+    p1_name = "DarkPlayer"
+    p2_name = "LightPlayer"
+    # need to be in the look up table in Colours.py
+    p1_colour = "Black"
+    p2_colour = "White"
+    # Game type can be 0 -> chess or 1 -> checkers
+    game_type_chess = 0
+    game_type_checkers = 1
+    # player type can be PlayerType.{HUMAN, AI}
+    # HUMAN = 1, AI = 0
+    p1_type = PlayerType.HUMAN
+    p2_type = PlayerType.AI
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
 
-# if __name__ == '__main__':
-    # test_show_board()
+    # tests if correct player and pieces are made when a player is created
+    # tests for attributes
+    # checks for pieces to be correctly made
+    # What kind of pieces is in the set depending on the game type
+    # chess will have its 16 pieces and checkers will have its 12 pieces
+    # makes sure kinds of pieces are in there
+
+    # tests for CHESS and HUMAN
+    player1 = Player(p1_name, p1_colour, game_type_chess, p1_type, timer)
+    player1_pieceset = player1.get_piece_set()
+    assert player1_pieceset.get_colour() is p1_colour
+    assert not player1.get_castled()
+    assert player1.get_name() is p1_name
+    assert player1.get_player_type() is 1
+    assert player1.get_timer() is timer
+    assert player1_pieceset.get_number_of_live_pieces() == 16
+    assert player1_pieceset.get_number_of_captured_pieces() == 0
+    assert player1_pieceset.get_captured_pieces() == []
+    for pieces in player1_pieceset.get_live_pieces():
+        assert type(pieces).__name__ in ["Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
+
+    # tests for CHESS and AI
+    player2 = Player(p2_name, p2_colour, game_type_chess, p2_type, timer)
+    player2_pieceset = player2.get_piece_set()
+    assert player2_pieceset.get_colour() is p2_colour
+    assert not player2.get_castled()
+    assert player2.get_name() is p2_name
+    assert player2.get_player_type() is 0
+    assert player2.get_timer() is timer
+    assert player2_pieceset.get_number_of_live_pieces() == 16
+    assert player2_pieceset.get_number_of_captured_pieces() == 0
+    assert player2_pieceset.get_captured_pieces() == []
+    for pieces in player2_pieceset.get_live_pieces():
+        assert type(pieces).__name__ in ["Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
+
+    # tests for CHECKERS and HUMAN
+    player1 = Player(p1_name, p1_colour, game_type_checkers, p1_type, timer)
+    player1_pieceset = player1.get_piece_set()
+    assert player1_pieceset.get_colour() is p1_colour
+    assert player1.get_name() is p1_name
+    assert player1.get_player_type() is 1
+    assert player1.get_timer() is timer
+    assert player1_pieceset.get_number_of_live_pieces() == 12
+    assert player1_pieceset.get_number_of_captured_pieces() == 0
+    assert player1_pieceset.get_captured_pieces() == []
+    for pieces in player1_pieceset.get_live_pieces():
+        assert type(pieces).__name__ in ["CheckersCoin"]
+
+    # tests for CHECKERS and AI
+    player2 = Player(p2_name, p2_colour, game_type_checkers, p2_type, timer)
+    player2_pieceset = player2.get_piece_set()
+    assert player2_pieceset.get_colour() is p2_colour
+    assert player2.get_name() is p2_name
+    assert player2.get_player_type() is 0
+    assert player2.get_timer() is timer
+    assert player2_pieceset.get_number_of_live_pieces() == 12
+    assert player2_pieceset.get_number_of_captured_pieces() == 0
+    assert player2_pieceset.get_captured_pieces() == []
+    for pieces in player2_pieceset.get_live_pieces():
+        assert type(pieces).__name__ in ["CheckersCoin"]
+
+
+def test_integration_4():
+    # Testing the integration of Player.py, PieceSet.py, Pieces.py, and Game.py
+
+    # game types chess = 0 checkers = 1
+    gt_chess = 0
+    gt_checkers = 1
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+    gc_rb = ColourCodes.RED_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+    my_checkers_game = Game(gt_checkers, gc_rb)
+
+    # test if game is initialized correctly
+    # for chess game
+    assert my_chess_game.get_game_type() == gt_chess
+    assert my_chess_game.get_light_player() is None
+    assert my_chess_game.get_dark_player() is None
+    assert my_chess_game.get_current_player() is None
+
+    # for checkers game
+    assert my_checkers_game.get_game_type() == gt_checkers
+    assert my_checkers_game.get_light_player() is None
+    assert my_checkers_game.get_dark_player() is None
+    assert my_checkers_game.get_current_player() is None
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    pl_chess = my_chess_game.get_light_player()
+    pc_chess = my_chess_game.get_current_player()
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    pd_chess = my_chess_game.get_dark_player()
+
+    # checkers player light ai 1st turn
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+    pl_checkers = my_checkers_game.get_light_player()
+    pc_checkers = my_checkers_game.get_current_player()
+
+    # checkers player dark human 2nd turn
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+    pd_checkers = my_checkers_game.get_dark_player()
+
+    # TESTS
+    # - Attribute Test
+    #   test if built correctly
+    #   check correct game type
+    #   check for colour for right players
+    #   check their pieces
+
+    # -- CHESS
+    # --- main game testing
+    assert my_chess_game.get_game_type() == gt_chess
+    assert pl_chess.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+    assert pd_chess.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
+    assert pc_chess.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+
+    # --- player light human testing
+    assert not pl_chess.get_castled()
+    assert pl_chess.get_name() is "Light HU"
+    assert pl_chess.get_player_type() is 1
+    assert pl_chess.get_timer() is timer
+    assert pl_chess.get_piece_set().get_number_of_live_pieces() == 16
+    assert pl_chess.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pl_chess.get_piece_set().get_captured_pieces() == []
+    for pieces in pl_chess.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
+
+    # --- player dark ai testing
+    assert not pd_chess.get_castled()
+    assert pd_chess.get_name() is "Dark AI"
+    assert pd_chess.get_player_type() is 0
+    assert pd_chess.get_timer() is timer
+    assert pd_chess.get_piece_set().get_number_of_live_pieces() == 16
+    assert pd_chess.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pd_chess.get_piece_set().get_captured_pieces() == []
+    for pieces in pd_chess.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
+
+    # --- current player
+    assert not pc_chess.get_castled()
+    assert pc_chess.get_name() is "Light HU"
+    assert pc_chess.get_player_type() is 1
+    assert pc_chess.get_timer() is timer
+    assert pc_chess.get_piece_set().get_number_of_live_pieces() == 16
+    assert pc_chess.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pc_chess.get_piece_set().get_captured_pieces() == []
+    for pieces in pc_chess.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
+    assert pc_chess is pl_chess
+
+    # -- CHECKERS
+    assert my_checkers_game.get_game_type() == gt_checkers
+    assert pl_checkers.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+    assert pd_checkers.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
+    assert pc_checkers.get_colour() is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+
+    # --- player light ai testing
+    assert pl_checkers.get_name() is "Light AI"
+    assert pl_checkers.get_player_type() is 0
+    assert pl_checkers.get_timer() is timer
+    assert pl_checkers.get_piece_set().get_number_of_live_pieces() == 12
+    assert pl_checkers.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pl_checkers.get_piece_set().get_captured_pieces() == []
+    for pieces in pl_checkers.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["CheckersCoin"]
+
+    # --- player dark human testing
+    assert pd_checkers.get_name() is "Dark HU"
+    assert pd_checkers.get_player_type() is 1
+    assert pd_checkers.get_timer() is timer
+    assert pd_checkers.get_piece_set().get_number_of_live_pieces() == 12
+    assert pd_checkers.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pd_checkers.get_piece_set().get_captured_pieces() == []
+    for pieces in pd_checkers.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["CheckersCoin"]
+
+    # --- current player testing
+    assert pc_checkers.get_name() is "Light AI"
+    assert pc_checkers.get_player_type() is 0
+    assert pc_checkers.get_timer() is timer
+    assert pc_checkers.get_piece_set().get_number_of_live_pieces() == 12
+    assert pc_checkers.get_piece_set().get_number_of_captured_pieces() == 0
+    assert pc_checkers.get_piece_set().get_captured_pieces() == []
+    for pieces in pc_checkers.get_piece_set().get_live_pieces():
+        assert type(pieces).__name__ in ["CheckersCoin"]
+    assert pc_checkers is pl_checkers
+
+    # - Test change in player
+    #   check if players are correctly assigned after changing players
+    #   change current player
+
+    # -- CHESS
+    assert pc_chess is pl_chess
+    my_chess_game.change_current_player()
+    pc_chess = my_chess_game.get_current_player()
+    assert pc_chess is not pl_chess
+    assert pc_chess is pd_chess
+
+    # -- CHECKERS
+    assert pc_checkers is pl_checkers
+    my_checkers_game.change_current_player()
+    pc_checkers = my_checkers_game.get_current_player()
+    assert pc_checkers is not pl_checkers
+    assert pc_checkers is pd_checkers
+
+# def test_integration_5():
+    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, and PossibleMoves.py
+
+# ---------------------------------------------------------------------------
