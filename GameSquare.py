@@ -99,6 +99,8 @@ class GameSquare:
         """
         return self.__occupyingPiece
 
+    # Added functions might not be in the domain model yet
+    # ------------------------------------------------------------------------------------------------
     # added this because there is no other way to remove a
     # piece on a square
     def remove_occupying_piece(self):
@@ -107,12 +109,16 @@ class GameSquare:
         """
         self.__occupyingPiece = None
 
+    # testing purposes
     def set_row_and_column(self, row, col):
         self.__row = row
         self.__col = col
 
+    # testing purposes
     def get_row_and_column(self):
         return self.__row, self.__col
+
+    # ---------------------------------------------------------------------------------------------------
 
 
 """

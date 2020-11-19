@@ -502,8 +502,8 @@ def test_integration_2():
     for col in range(8):
         my_board.get_game_board()[1][col].put_piece_here(lp_chess_pieces.get_live_pieces()[i])
         i += 1
-
     a_game_square = GameSquare(0, 0)
+
     # test if the game square in the board are all game squares after adding the pieces to each game square
     # test if the game square received the pieces
     # check if a square has a piece to check if it is one of the pieces in string
@@ -528,6 +528,8 @@ def test_integration_2():
     dp_checkers_pieces = PieceSet(1, "Black")
 
     my_board_checkers = Board(8)
+
+    # TESTS STARTS FOR CHESS
     # list of index inside piece set for light player and dark player
     # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player
     # used so we can evenly take away checkers and put it in the board
@@ -566,7 +568,25 @@ def test_integration_2():
         checker_indexes[1][2] += 1
         checker_indexes[1][0] += 1
 
-    my_board_checkers.print_game_board()
+    # TESTS STARTS FOR CHECKERS
+    # test if the game square in the board are all game squares after adding the pieces to each game square
+    # test if the game square received the pieces
+    # check if a square has a piece to check if it is one of the pieces in string
+    # test if game squares have the right row and column
+    row = 0
+    for row_gs in my_board_checkers.get_game_board():
+        col = 0
+        for col_gs in row_gs:
+            assert type(col_gs) is type(a_game_square)
+            if col_gs.get_occupying_piece() is not None:
+                pieces_colour = ["White", "Black"]
+                assert type(col_gs.get_occupying_piece()).__name__ is "CheckersCoin"
+                assert col_gs.get_occupying_piece().get_colour() in pieces_colour
+            assert col_gs.get_row() is row
+            assert col_gs.get_col() is col
+            col += 1
+        row += 1
+
 
 
 

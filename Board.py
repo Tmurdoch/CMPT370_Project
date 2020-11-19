@@ -83,7 +83,8 @@ class Board:
 
         self.__boardTheme = theme
 
-    # Added functions not in domain model
+    # Added functions might not be in the domain model yet
+    # ------------------------------------------------------------------------------------------------
     def get_size(self):
         """
         returns the size of the board
@@ -123,6 +124,50 @@ class Board:
         for col in range(8):
             self.__gameBoard[1][col].put_piece_here(player2_pieces[i])
             i += 1
+
+    def build_checkers_board(self, player1_pieces, player2_pieces):
+        """
+        set up checkers pieces on the board
+        Player1 on the bottom row 7, 6, and 5 ->
+        row 7 and 5 starts from col index 0
+        row 6 starts at index 1
+        Player2 on the bottom row 2, 1, and 0 ->
+        row 0 and 2 starts from col index 1
+        row 1 starts at index 0
+        player1_pieces: list of pieces in pieceSet for player 1
+        player2_pieces: list of pieces in pieceSet for player 2
+        """
+        # list of index inside piece set for light player and dark player
+        # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player
+        # used so we can evenly take away checkers and put it in the board
+        checker_indexes = [[0, 4, 8], [0, 4, 8]]
+        # iterating through columns 0, 2, 4, 6
+        # these are the column index where the piece will be set
+        for col in range(0, 8, 2):
+            # put the checkrs piece from player 1 and player 2 piece set using specific index
+            # in specific row, col in board
+            # 7, 6 are for the dark player and 1 is for light player these
+            # these numbers are specific rows where player piece start from edge column
+            self.__gameBoard[7][col].put_piece_here(player1_pieces[checker_indexes[0][0]])
+            self.__gameBoard[5][col].put_piece_here(player2_pieces[checker_indexes[1][1]])
+            self.__gameBoard[1][col].put_piece_here(player1_pieces[checker_indexes[0][2]])
+            checker_indexes[0][0] += 1
+            checker_indexes[1][1] += 1
+            checker_indexes[0][2] += 1
+
+        # iterating through columns 1, 3, 5, 7
+        # these are the column index where the piece will be set
+        for col in range(1, 8, 2):
+            # put the checkrs piece from player 1 or player 2 piece set using specific index
+            # in specific row, col in board
+            # 6 is for the dark player and 2, 0 are for light player
+            # these numbers are specific rows where player piece start from edge column
+            self.__gameBoard[6][col].put_piece_here(player1_pieces[checker_indexes[0][1]])
+            self.__gameBoard[2][col].put_piece_here(player2_pieces[checker_indexes[1][2]])
+            self.__gameBoard[0][col].put_piece_here(player2_pieces[checker_indexes[1][0]])
+            checker_indexes[0][1] += 1
+            checker_indexes[1][2] += 1
+            checker_indexes[1][0] += 1
 
     def print_game_board(self):
         """
@@ -179,6 +224,8 @@ class Board:
         # print("\nBoard added mock piece")
         # [print(row) for row in board_row_col]
         # [print(row) for row in board_pieces]
+
+    # --------------------------------------------------------------------------------------------------
 
 
 class BoardTheme(Enum):
