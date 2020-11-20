@@ -7,6 +7,7 @@ import Pieces
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 
+
 class PieceSet:
     """
     A players set of pieces.
@@ -34,7 +35,7 @@ class PieceSet:
         self.__capturedPieces = []
         if piece_set_type == 1:
             self.__pieceSetType = GAME_TYPE_CHECKERS
-            self.__livePieces = [Pieces.CheckersCoin(colour) for i in range(12)]
+            self.__livePieces = [Pieces.CheckersCoin(colour)] * 12
         elif piece_set_type == 0:
             self.__pieceSetType = GAME_TYPE_CHESS
             self.__livePieces = [Pieces.King(colour),

@@ -17,6 +17,7 @@ class PieceInterface(ABC):
         Initialize a piece
         :param colour: Piece __colour as a string with the first letter capitalized (e.g. "White").
         """
+        self.__colour = colour
         pass
 
     @abstractmethod
