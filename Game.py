@@ -373,39 +373,18 @@ class Game:
         else:
             self.__current_player = self.__dark_player
         if self.__game_type == GAME_TYPE_CHECKERS:
-            # Alive Pieces
-            ap = self.__current_player.get_piece_set().get_number_of_live_pieces()
-            if (ap):
-                # try to figure out if they have any moves
-                # Loop Count
-                lc = 0
-                while (lc != ap):
-                    # lovecraftian mind melting horror ahead
-                    # steel yourself
-                    search_target = self.__current_player.get_piece_set().get_live_pieces()[lc]
-                    row = 0
-                    while (row != self.__board.get_size()):
-                        col = 0
-                        while (col != self.__board.get_size()):
-                            if (search_target is self.__board.get_game_square(row,col).get_occupying_piece()):
-                                pm = PossibleMoves(self.__board.get_game_square(row,col),self)
-                                pm.build_list_of_moves()
-                                if (len(pm.get_moves()) == 0 ):
-                                    if self.__current_player is self.__light_player:
-                                        self.__game_status = GameStatus.DARK_VICTORIOUS
-                                    else:
-                                        self.__game_status = GameStatus.LIGHT_VICTORIOUS
-                                    return
-                            col += 1
-                        row += 1
-                    lc += 1
+            if (0 = len(self.__current_player.build_possible_moves_for_all_pieces(self))):
+                if self.__current_player is self.__light_player:
+                    self.__game_status = GameStatus.DARK_VICTORIOUS
+                else:
+                    self.__game_status = GameStatus.LIGHT_VICTORIOUS
         elif self.__game_type == GAME_TYPE_CHESS:
             # TODO CHESS
             print("do stuff")
         else:
             # unknown game
             assert 0
-                                
+        return
                     
 
     def check_for_game_over(self):
