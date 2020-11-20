@@ -1352,8 +1352,7 @@ def test_integration_5():
 
 
 def test_integration_6():
-    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, and Game.py
-
+    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, Game.py, PossibleMoves.py
     # game types chess = 0 checkers = 1
     gt_chess = 0
     gt_checkers = 1
@@ -1394,4 +1393,234 @@ def test_integration_6():
     my_checkers_game.get_board().build_checkers_board(
         my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
         my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # -----TESTS-----
+    # test if the possible moves at  the start of the game is normal
+    # test row 7 and 6 where the current player takes a turn
+
+    # Testing Chess
+    # pieces on rows 7 and 6 respectively
+    # ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+    # ["Pawn", "Pawn", "Pawn", "Pawn", "Pawn", "Pawn", "Pawn", "Pawn"]
+    # expected possible moves at the start of the game for the pieces on rows 7 and 6 respectively
+    chess_r7_pm = [[], [(5, 0), (5, 2)], [], [], [], [], [(5, 5), (5, 7)], []]
+    chess_r6_pm = [[(5, 0), (4, 0)], [(5, 1), (4, 1)], [(5, 2), (4, 2)], [(5, 3), (4, 3)],
+                   [(5, 4), (4, 4)], [(5, 5), (4, 5)], [(5, 6), (4, 6)], [(5, 7), (4, 7)]]
+    # light player
+    for row in range(7, 5, -1):
+        for col in range(0, 8):
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() is "White"
+            if row == 7:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col])
+            if row == 6:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r6_pm[col])
+
+    # switch player
+    my_chess_game.get_board().switch_sides()
+    # current player change to dark player
+    # only difference should be the switch possition of the King and Queen
+    # but at the start of the turn nothing changes on the expected possible moves
+
+    # dark player
+    for row in range(7, 5, -1):
+        for col in range(0, 8):
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() is "Black"
+            if row == 7:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col])
+            if row == 6:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r6_pm[col])
+
+    # One more switch
+    my_chess_game.get_board().switch_sides()
+
+    # back to light player
+    # should be the same as before the first switch
+    # light player
+    for row in range(7, 5, -1):
+        for col in range(0, 8):
+            assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() is "White"
+            if row == 7:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col])
+            if row == 6:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r6_pm[col])
+
+    # testing Checkers
+
+    # light player
+    # the row that will have the piece are 7, 6, 5
+    # there will be a max of 4 coins in a given row
+    checkers_r7_pv = [[], [], [], []]
+    checkers_r6_pv = [[], [], [], []]
+    checkers_r5_pv = [[(4, 1)], [(4, 1), (4, 3)], [(4, 3), (4, 5)], [(4, 5), (4, 7)]]
+
+    # start is where checkers start at each row
+    start = 0
+    for row in range(7, 4, -1):
+        col_count = 0
+        for col in range(start, 8, 2):
+            assert my_checkers_game.get_board().get_game_square(row, col).get_occupying_piece().get_colour() is "Red"
+            if row == 7:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r7_pv[col_count])
+                start = 1
+            elif row == 6:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r6_pv[col_count])
+                start = 0
+            elif row == 5:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r5_pv[col_count])
+            col_count += 1
+
+    # switch checkers player
+    my_checkers_game.get_board().switch_sides()
+
+    # dark player
+    # should have the same possible moves start as the light player
+    # switched sides
+    start = 0
+    for row in range(7, 4, -1):
+        col_count = 0
+        for col in range(start, 8, 2):
+            assert my_checkers_game.get_board().get_game_square(row,
+                                                                col).get_occupying_piece().get_colour() is "Black"
+            if row == 7:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r7_pv[col_count])
+                start = 1
+            elif row == 6:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r6_pv[col_count])
+                start = 0
+            elif row == 5:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r5_pv[col_count])
+            col_count += 1
+
+    # switch it back to light first
+    my_checkers_game.get_board().switch_sides()
+
+    # light player is at bottom again
+    # make sure nothing changed
+    start = 0
+    for row in range(7, 4, -1):
+        col_count = 0
+        for col in range(start, 8, 2):
+            assert my_checkers_game.get_board().get_game_square(row,
+                                                                col).get_occupying_piece().get_colour() is "Red"
+            if row == 7:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r7_pv[col_count])
+                start = 1
+            elif row == 6:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r6_pv[col_count])
+                start = 0
+            elif row == 5:
+                my_moves = PossibleMoves(my_checkers_game.get_board().get_game_square(row, col),
+                                         my_checkers_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r5_pv[col_count])
+            col_count += 1
+
+    # Testing pieces interaction with enemy pieces
+
+    # testing Chess
+    # list of moves in particular row
+    # ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+    # chess row5 test all row
+    chess_r5_tar = [[(4, 0), (3, 0), (2, 0), (1, 0)],
+                    [(3, 0), (3, 2), (4, 3), (7, 2), (7, 0)],
+                    [(4, 1), (3, 0), (4, 3), (3, 4), (2, 5), (1, 6)],
+                    [(4, 3), (3, 3), (2, 3), (1, 3), (4, 4), (3, 5), (2, 6), (1, 7), (4, 2), (3, 1), (2, 0)],
+                    [(4, 3), (4, 4), (4, 5)],
+                    [(4, 6), (3, 7), (4, 4), (3, 3), (2, 2), (1, 1)],
+                    [(3, 7), (3, 5), (4, 4), (7, 5), (7, 7)],
+                    [(4, 7), (3, 7), (2, 7), (1, 7)]]
+    chess_r2_tar = [[(4, 0), (3, 0), (5, 0), (1, 0)],
+                    [(0, 0), (0, 2), (1, 3), (4, 0), (4, 2), (3, 3)],
+                    [(1, 1), (1, 3), (3, 1), (3, 3), (4, 0), (4, 4), (5, 5)],
+                    [(1, 2), (1, 3), (1, 4), (3, 2), (3, 3), (3, 4), (4, 1), (4, 3), (4, 5), (5, 0), (5, 6), (5, 3)],
+                    [(1, 3), (1, 4), (1, 5), (3, 3), (3, 4), (3, 5)],
+                    [(1, 4), (1, 6), (3, 4), (3, 6), (4, 3), (4, 7), (5, 2)],
+                    [(0, 5), (0, 7), (4, 5), (4, 7), (3, 4), (1, 4)],
+                    [(4, 7), (3, 7), (5, 7), (1, 7)]]
+    # move pieces from prev_row to rows 5 to 2
+    # prev_row is where the pecies are currently
+    prev_row = 7
+    for row in range(5, 1, -3):
+        # gets all pieces
+        for col in range(8):
+            # move piece from (prev_row, col) to (row, col))
+            my_chess_game.get_board().get_game_square(row, col).put_piece_here(my_chess_game.get_board().
+                                                                               get_game_square(prev_row,
+                                                                                               col).get_occupying_piece())
+            # remove piece from (prev_row, col)
+            my_chess_game.get_board().get_game_square(prev_row, col).remove_occupying_piece()
+            # prev row now goes to the row because it just relocated the pieces there
+
+        prev_row = 5
+        for col2 in range(8):
+            # check pieces possible moves in their new positions
+            if row == 5:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col2),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r5_tar[col2])
+            elif row == 2:
+                my_moves = PossibleMoves(my_chess_game.get_board().get_game_square(row, col2),
+                                         my_chess_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r2_tar[col2])
+
+    # testing Checkers
+
+    # test predetermined scenarios
+    # checkers row 5 all possible moves
+    checkers_r5_apm = [[(3, 2), (1, 0), (1, 4)],
+                       [(3, 0), (1, 2), (3, 4), (1, 2), (1, 6)],
+                       [(3, 2), (1, 0), (1, 4), (3, 6), (1, 4)],
+                       [(3, 4), (1, 2), (1, 6)]]
+    # moves checker pieces on row 2 to row 4
+    for coin in my_checkers_game.get_board().get_game_board()[2]:
+        if coin.get_occupying_piece() is not None:
+            my_checkers_game.get_board(). \
+                get_game_square(4, coin.get_col()).\
+                put_piece_here(my_checkers_game.get_board().get_game_square(2, coin.get_col()).get_occupying_piece())
+            my_checkers_game.get_board().get_game_square(2, coin.get_col()).remove_occupying_piece()
+
+    # moves checker pieces on row 1 to row 3 and -1 to col as if they are moving bot right
+    for coin in my_checkers_game.get_board().get_game_board()[1]:
+        if coin.get_occupying_piece() is not None:
+            my_checkers_game.get_board(). \
+                get_game_square(2, coin.get_col() + 1). \
+                put_piece_here(my_checkers_game.get_board().get_game_square(1, coin.get_col()).get_occupying_piece())
+            my_checkers_game.get_board().get_game_square(1, coin.get_col()).remove_occupying_piece()
+
+    # counter
+    x = 0
+    for coin in my_checkers_game.get_board().get_game_board()[5]:
+        if coin.get_occupying_piece() is not None:
+            my_moves = PossibleMoves(coin, my_checkers_game).build_list_of_moves()
+            assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(checkers_r5_apm[x])
+            x += 1
+
+
 # ---------------------------------------------------------------------------
