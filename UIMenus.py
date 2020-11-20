@@ -11,41 +11,48 @@ resume = True
 checkers = False
 chess = False
 
+class TheWindow(Gtk.Window):
+        def __init__(self):
+                Gtk.Window.__init__(self, title="Main Menu")
+                self.set_border_width(70)
+                self.set_position(Gtk.WindowPosition.CENTER)
+                col = Gdk.Color(2000, 6000, 200)  # dark green
+                self.modify_bg(Gtk.StateType.NORMAL, col)
+                # b = Button()
+                main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+                self.add(main_box)
+                main_box.show()
+        
+                self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
-class MainMenuWindow(Gtk.Window):
+
+class MainMenuBox(Gtk.Box):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Main Menu")
-        self.set_border_width(70)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-        # b = Button()
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.add(main_box)
+        Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
         # self.add(b)
         chess_button = Gtk.Button.new_with_label("Play")
         chess_button.connect("clicked", self.play_clicked)
         chess_button.set_property("width-request", 300)
         chess_button.set_property("height-request", 100)
-        main_box.pack_start(chess_button, True, True, 0)
+        self.pack_start(chess_button, True, True, 0)
 
         if resume:
             checkers_button = Gtk.Button.new_with_label("Resume")
             checkers_button.connect("clicked", self.resume_clicked)
             checkers_button.set_property("width-request", 300)
             checkers_button.set_property("height-request", 100)
-            main_box.pack_start(checkers_button, True, True, 0)
+            self.pack_start(checkers_button, True, True, 0)
 
         back_button = Gtk.Button.new_with_mnemonic("_Exit")
         back_button.connect("clicked", self.exit_clicked)
-        main_box.pack_start(back_button, True, True, 0)
+        self.pack_start(back_button, True, True, 0)
 
         self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
     def play_clicked(self, button):
         print('Play was chosen')  # put next window here
         game_type = GameChoiceWindow()
-        game_type.show_all()
+        #game_type.show_all()
         self.hide()
 
     def resume_clicked(self, button):
@@ -400,7 +407,7 @@ class PlayAgainWindow(Gtk.Window):
         print("b")"""
 
 if __name__ == "__main__":
-    win = MainMenuWindow()
+    win = TheWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     Gtk.main()
