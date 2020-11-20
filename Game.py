@@ -41,7 +41,7 @@ class Game:
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        if not (GameType.has_value(game_type))
+        if game_type>1:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
