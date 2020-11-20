@@ -426,6 +426,31 @@ class PossibleMoves:
                 # Top Right
                 row_pos = self.__row
                 col_pos = self.__col
+
+                stopper = False
+                if row_pos != 0:
+                    for row in range(row_pos - 1, -1, -1):
+                        if col_pos != self.__board.get_size() - 1:
+                            if not stopper:
+                                for col in range(col_pos + 1, self.__board.get_size()):
+                                    if abs(row_pos - row) == abs(col_pos - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+                """
                 while row_pos != 0 or col_pos != self.__board.get_size() - 1:
                     row_pos -= 1
                     col_pos += 1
@@ -442,10 +467,37 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
+                """
 
                 # Top Left
                 row_pos = self.__row
                 col_neg = self.__col
+
+                stopper = False
+                if row_pos != 0:
+                    for row in range(row_pos - 1, -1, -1):
+                        if col_neg != 0:
+                            if not stopper:
+                                for col in range(col_neg - 1, -1, -1):
+                                    if abs(row_pos - row) == abs(col_neg - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+
+                """
                 while row_pos != 0 or col_neg != 0:
                     row_pos -= 1
                     col_neg -= 1
@@ -462,10 +514,35 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_neg])
-
+                """
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
+
+                stopper = False
+                if row_neg != self.__board.get_size() - 1:
+                    for row in range(row_neg + 1, self.__board.get_size()):
+                        if col_pos != self.__board.get_size() - 1:
+                            if not stopper:
+                                for col in range(col_pos + 1, self.__board.get_size()):
+                                    if abs(row_neg - row) == abs(col_pos - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+                """
                 while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
                     row_neg += 1
                     col_pos += 1
@@ -482,10 +559,36 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_pos])
-
+                """
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
+
+                stopper = False
+                if row_neg != self.__board.get_size():
+                    for row in range(row_neg + 1, self.__board.get_size()):
+                        if col_neg != 0:
+                            if not stopper:
+                                for col in range(col_neg - 1, -1, -1):
+                                    if abs(row_neg - row) == abs(col_neg - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+
+                """
                 while row_neg != self.__board.get_size() - 1 or col_neg != 0:
                     row_neg += 1
                     col_neg -= 1
@@ -502,6 +605,7 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_neg])
+                """
 
                 """
                 for row_of_game_square in self.__board.get_game_board():
@@ -547,6 +651,32 @@ class PossibleMoves:
                 # Top Right
                 row_pos = self.__row
                 col_pos = self.__col
+
+                stopper = False
+                if row_pos != 0:
+                    for row in range(row_pos - 1, -1, -1):
+                        if col_pos != self.__board.get_size() - 1:
+                            if not stopper:
+                                for col in range(col_pos + 1, self.__board.get_size()):
+                                    if abs(row_pos - row) == abs(col_pos - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+
+                """
                 while row_pos != 0 or col_pos != self.__board.get_size() - 1:
                     row_pos -= 1
                     col_pos += 1
@@ -558,14 +688,42 @@ class PossibleMoves:
                             break
                         if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() != \
                                 self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
+                            list_of_candidate_game_squares.append(
+                                self.__board.get_game_board()[row_pos][col_pos])
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
+                """
 
                 # Top Left
                 row_pos = self.__row
                 col_neg = self.__col
+
+                stopper = False
+                if row_pos != 0:
+                    for row in range(row_pos - 1, -1, -1):
+                        if col_neg != 0:
+                            if not stopper:
+                                for col in range(col_neg - 1, -1, -1):
+                                    if abs(row_pos - row) == abs(col_neg - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+
+                """
                 while row_pos != 0 or col_neg != 0:
                     row_pos -= 1
                     col_neg -= 1
@@ -582,10 +740,35 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_neg])
-
+                """
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
+
+                stopper = False
+                if row_neg != self.__board.get_size() - 1:
+                    for row in range(row_neg + 1, self.__board.get_size()):
+                        if col_pos != self.__board.get_size() - 1:
+                            if not stopper:
+                                for col in range(col_pos + 1, self.__board.get_size()):
+                                    if abs(row_neg - row) == abs(col_pos - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+                """
                 while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
                     row_neg += 1
                     col_pos += 1
@@ -602,10 +785,36 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_pos])
-
+                """
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
+
+                stopper = False
+                if row_neg != self.__board.get_size():
+                    for row in range(row_neg + 1, self.__board.get_size()):
+                        if col_neg != 0:
+                            if not stopper:
+                                for col in range(col_neg - 1, -1, -1):
+                                    if abs(row_neg - row) == abs(col_neg - col):
+                                        if self.__board.get_game_board()[row][col].get_occupying_piece() is not None:
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() == self.__piece.get_colour():
+                                                stopper = True
+                                                break
+                                            if self.__board.get_game_board()[row][col].get_occupying_piece() \
+                                                    .get_colour() != self.__piece.get_colour():
+                                                list_of_candidate_game_squares.append(
+                                                    self.__board.get_game_board()[row][col])
+                                                stopper = True
+                                                break
+                                        else:
+                                            list_of_candidate_game_squares.append(
+                                                self.__board.get_game_board()[row][col])
+                            else:
+                                break
+
+                """
                 while row_neg != self.__board.get_size() - 1 or col_neg != 0:
                     row_neg += 1
                     col_neg -= 1
@@ -622,6 +831,7 @@ class PossibleMoves:
                             break
                     else:
                         list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_neg])
+                """
 
                 """
                                 for row in range(self.__board.get_size()):

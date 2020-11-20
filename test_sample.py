@@ -151,7 +151,6 @@ def test_possible_moves():
     assert my_game.get_current_player() is None
 
     # create dark player
-
     my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
     assert my_game.get_dark_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
@@ -170,27 +169,158 @@ def test_possible_moves():
     # set up the pieces in the board
     dark_set = my_game.get_dark_player().get_piece_set().get_live_pieces()
     light_set = my_game.get_light_player().get_piece_set().get_live_pieces()
+    # ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"
 
-    board = my_game.get_board()
-    board.build_chess_board(dark_set, light_set)
-    # board.print_game_board()
+    # TEST CHESS PIECES POSSIBLE MOVES
 
-    print("\nPieces on Standard Positions")
-    lomrook = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
-    print("Rook (7,0) possible moves: ", [x.get_row_and_column() for x in lomrook])
-    lomknight = PossibleMoves(board.get_game_square(7, 1), my_game).build_list_of_moves()
-    print("Knight (7, 1) possible moves: ", [x.get_row_and_column() for x in lomknight])
-    lombishop = PossibleMoves(board.get_game_square(7, 2), my_game).build_list_of_moves()
-    print("Bishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lombishop])
-    lomqueen = PossibleMoves(board.get_game_square(7, 3), my_game).build_list_of_moves()
-    print("Queen (7, 3) possible moves: ", [x.get_row_and_column() for x in lomqueen])
-    lompawn = PossibleMoves(board.get_game_square(6, 0), my_game).build_list_of_moves()
-    print("Pawn (6, 0) possible moves: ", [x.get_row_and_column() for x in lompawn])
-    lomking = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
-    print("King (7, 4) possible moves: ", [x.get_row_and_column() for x in lomking])
-    board.print_game_board()
-    board.switch_sides()
-    board.print_game_board()
+    # pc_moves_{...} have all 5 lists of tuples
+    # each representing the board location in index_piece_test
+    # these are list expected (row, col) if a piece is at an index_piece_test location
+    pc_moves_rook = [sorted([(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7),
+                             (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0)]),
+                     sorted([(7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7),
+                             (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0)]),
+                     sorted([(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6),
+                             (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7)]),
+                     sorted([(7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6),
+                             (0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7)]),
+                     sorted([(3, 0), (3, 1), (3, 2), (3, 3), (3, 5), (3, 6), (3, 7),
+                             (0, 4), (1, 4), (2, 4), (4, 4), (5, 4), (6, 4), (7, 4)])]
+
+    pc_moves_knight = [sorted([(2, 1), (1, 2)]), sorted([(5, 1), (6, 2)]),
+                       sorted([(1, 5), (2, 6)]), sorted([(6, 5), (5, 6)]),
+                       sorted([(2, 2), (1, 3), (1, 5), (2, 6), (4, 6), (5, 5), (5, 3), (4, 2)])]
+
+    pc_moves_bishop = [sorted([(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)]),
+                       sorted([(6, 1), (5, 2), (4, 3), (3, 4), (2, 5), (1, 6), (0, 7)]),
+                       sorted([(7, 0), (6, 1), (5, 2), (4, 3), (3, 4), (2, 5), (1, 6)]),
+                       sorted([(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)]),
+                       sorted([(2, 3), (1, 2), (0, 1), (2, 5), (1, 6), (0, 7), (4, 5),
+                               (5, 6), (6, 7), (4, 3), (5, 2), (6, 1), (7, 0)])]
+
+    pc_moves_queen = [sorted([(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7),
+                              (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
+                              (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)]),
+                      sorted([(7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7),
+                              (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0),
+                              (6, 1), (5, 2), (4, 3), (3, 4), (2, 5), (1, 6), (0, 7)]),
+                      sorted([(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6),
+                              (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
+                              (7, 0), (6, 1), (5, 2), (4, 3), (3, 4), (2, 5), (1, 6)]),
+                      sorted([(7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6),
+                              (0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7),
+                              (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)]),
+                      sorted([(3, 0), (3, 1), (3, 2), (3, 3), (3, 5), (3, 6), (3, 7),
+                              (0, 4), (1, 4), (2, 4), (4, 4), (5, 4), (6, 4), (7, 4),
+                              (2, 3), (1, 2), (0, 1), (2, 5), (1, 6), (0, 7), (4, 5),
+                              (5, 6), (6, 7), (4, 3), (5, 2), (6, 1), (7, 0)
+                              ])]
+
+    pc_moves_pawn = [sorted([]), sorted([(5, 0), (6, 0)]),
+                     sorted([]), sorted([(6, 7), (5, 7)]), sorted([(1, 4), (2, 4)])]
+
+    pc_moves_king = [sorted([(0, 1), (1, 0), (1, 1)]), sorted([(6, 0), (7, 1), (6, 1)]),
+                     sorted([(0, 6), (1, 6), (1, 7)]), sorted([(7, 6), (6, 6), (6, 7)]),
+                     sorted([(2, 3), (2, 4), (2, 5), (4, 3), (4, 4), (4, 5), (3, 3), (3, 5)])]
+
+    # location on board (row, col) -> board corners and middle
+    index_piece_test = [(0, 0), (7, 0), (0, 7), (7, 7), (3, 4)]
+
+    # goes through a piece set
+    # goes through specified indexes in index_piece
+    # checks what piece it is and then creates a possible moves list
+    # converts the possible moves list to a tuple list and compare to
+    # the fixed list of moves like pc_moves_...
+    # both are sorted first then compared
+    for pieces in dark_set:
+        for test_tuple in range(len(index_piece_test)):
+            my_game.get_board().get_game_square(
+                index_piece_test[test_tuple][0], index_piece_test[test_tuple][1]).put_piece_here(pieces)
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "King":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_king[test_tuple]
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Queen":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple]
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Bishop":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_bishop[test_tuple]
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Knight":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_knight[test_tuple]
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Rook":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_rook[test_tuple]
+            if type(my_game.get_board().get_game_square(
+                    index_piece_test[test_tuple][0],
+                    index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Pawn":
+                pm_gs = PossibleMoves(my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
+                                                                          index_piece_test[test_tuple][1]),
+                                      my_game).build_list_of_moves()
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_pawn[test_tuple]
+            my_game.get_board().get_game_square(
+                index_piece_test[test_tuple][0],
+                index_piece_test[test_tuple][1]).remove_occupying_piece()
+
+    # build a chess game with all pieces on the board
+    my_game.get_board().build_chess_board(dark_set, light_set)
+
+    # checks standard fresh game of chess move list
+
+    # rooks
+    lomrook = PossibleMoves(my_game.get_board().get_game_square(7, 0), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomrook]) == sorted([])
+    lomrook2 = PossibleMoves(my_game.get_board().get_game_square(7, 7), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomrook2]) == sorted([])
+
+    # knights
+    lomknight = PossibleMoves(my_game.get_board().get_game_square(7, 1), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomknight]) == sorted([(5, 2), (5, 0)])
+    lomknight2 = PossibleMoves(my_game.get_board().get_game_square(7, 6), my_game).build_list_of_moves()
+    assert [x.get_row_and_column() for x in lomknight2] == [(5, 7), (5, 5)]
+
+    # bishops
+    lombishop = PossibleMoves(my_game.get_board().get_game_square(7, 2), my_game).build_list_of_moves()
+    assert [x.get_row_and_column() for x in lombishop] == []
+    lombishop2 = PossibleMoves(my_game.get_board().get_game_square(7, 5), my_game).build_list_of_moves()
+    assert [x.get_row_and_column() for x in lombishop2] == []
+
+    # queen
+    lomqueen = PossibleMoves(my_game.get_board().get_game_square(7, 3), my_game).build_list_of_moves()
+    assert [x.get_row_and_column() for x in lomqueen] == []
+
+    # king
+    lomking = PossibleMoves(my_game.get_board().get_game_square(7, 4), my_game).build_list_of_moves()
+    assert [x.get_row_and_column() for x in lomking] == []
+
+    # pawns
+    for col in range(my_game.get_board().get_size()):
+        lompawn = PossibleMoves(my_game.get_board().get_game_square(6, col), my_game).build_list_of_moves()
+        assert [x.get_row_and_column() for x in lompawn] == [(5, col), (4, col)]
+
+    my_game.get_board().switch_sides()
+
+    """
     print("\nPieces on Standard Positions after switch")
     lomrook = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
     print("Rook (7,0) possible moves: ", [x.get_row_and_column() for x in lomrook])
@@ -281,6 +411,7 @@ def test_possible_moves():
     board.switch_sides()
     print("\nBoard Switched")
     board.print_game_board()
+    """
 
 
 def test_move():
@@ -1047,9 +1178,9 @@ def test_integration_5():
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 1
                 else:
-                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__\
+                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__ \
                            is "CheckersCoin"
-                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() is\
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() is \
                            checker_colour[y]
 
                     if col != my_checkers_game.get_board().get_size() - 1:
@@ -1130,7 +1261,7 @@ def test_integration_5():
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 1
                 else:
-                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__\
+                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__ \
                            is "CheckersCoin"
                     assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() \
                            is checker_colour[y]
@@ -1145,7 +1276,7 @@ def test_integration_5():
     load_chess_game = Game(0, ColourCodes.WHITE_BLACK)
     load_chess_game.load_from_file()
     """
-    
+
     """
     for row_gs in my_checkers_game.get_board().get_game_board():
         col = 0
@@ -1162,4 +1293,48 @@ def test_integration_5():
     my_board.switch_sides()
     """
 
+
+def test_integration_6():
+    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, and Game.py
+
+    # game types chess = 0 checkers = 1
+    gt_chess = 0
+    gt_checkers = 1
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+    gc_rb = ColourCodes.RED_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+    my_checkers_game = Game(gt_checkers, gc_rb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    # checkers player light ai 1st turn
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+
+    # checkers player dark human 2nd turn
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+
+    # Build Chess Board on my_chess_game using the games light and dark player piece set
+    my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
+                                                my_chess_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # Build Checkers Board on my_checkers_game using the games light and dark player piece set
+    my_checkers_game.get_board().build_checkers_board(
+        my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
+        my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
 # ---------------------------------------------------------------------------
