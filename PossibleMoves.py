@@ -57,125 +57,7 @@ class PossibleMoves:
             # capture movements
             self.checkers_jump(self.__board.get_game_square(self.__row, self.__col), list_of_candidate_game_squares)
 
-            """
-            # Direction Up Left
-            if self.__row > 0 and self.__col > 0:
-                if self.__board.get_game_square(self.__row - 1,
-                                                self.__col - 1).get_occupying_piece() is not None:
-                    if self.__board.get_game_square(self.__row - 1, self.__col - 1).get_occupying_piece() \
-                            .get_colour() is not self.__piece.get_colour():
-                        # check if diagonal up left of the sqaure where the enemy is is open and in the board
-                        if self.__row - 2 >= 0 and self.__col - 2 >= 0:
-                            if self.__board.get_game_square(self.__row - 2, self.__col - 2).get_occupyinh_piece() is 
-                            None:
-                                list_of_candidate_game_squares.append(
-                                    self.__board.get_game_square(self.__row - 2, self.__col - 2))
-                                # look for another enemy to capture
-                                can_jump = True
-                                temp_rpos = self.__row - 2
-                                temp_cpos = self.__col - 2
-                                while can_jump:
-                                    # Direction Up Left
-                                    if self.__row > 0 and self.__col > 0:
-                                        if self.__board.get_game_square(self.__row - 1,
-                                                                        self.__col - 1).get_occupying_piece() is None:
-                                            list_of_candidate_game_squares.append(
-                                                self.__board.get_game_square(self.__row - 1,
-                                                                             self.__col - 1))
-
-                                    # Direction Up Right
-                                    if self.__row > 0 and self.__col < self.__board.get_size() - 1:
-                                        if self.__board.get_game_square(self.__row - 1,
-                                                                        self.__col + 1).get_occupying_piece() is None:
-                                            list_of_candidate_game_squares.append(
-                                                self.__board.get_game_square(self.__row - 1,
-                                                                             self.__col + 1))
-
-            # Direction Up Right
-            if self.__row > 0 and self.__col < self.__board.get_size() - 1:
-                if self.__board.get_game_square(self.__row - 1,
-                                                self.__col + 1).get_occupying_piece() is not None:
-                    if self.__board.get_game_square(self.__row - 1, self.__col + 1).get_occupying_piece() \
-                            .get_colour() is not self.__piece.get_colour():
-                        list_of_candidate_game_squares.append(
-                            self.__board.get_game_square(self.__row - 1, self.__col + 1))
-            """
-
-            """
-            if 0 <= self.__row-1 < self.__board.get_size() or 0 <= self.__col-1 < self.__board.get_size():
-                top_left = self.__board.get_game_square(self.__row-1, self.__col-1)
-                list_of_candidate_game_squares.append(top_left)
-            if 0 <= self.__row-1 < self.__board.get_size() or 0 <= self.__col+1 < self.__board.get_size():
-                top_right = self.__board.get_game_square(self.__row-1, self.__col+1)
-                list_of_candidate_game_squares.append(top_right)
-
-            if self.__piece.get_promotion_status():
-                # Promoted checkers coins can also move backwards
-                if 0 <= self.__row+1 < self.__board.get_size() or 0 <= self.__col-1 < self.__board.get_size():
-                    bot_left = self.__board.get_game_square(self.__row+1, self.__col-1)
-                    list_of_candidate_game_squares.append(bot_left)
-                if 0 <= self.__row+1 < self.__board.get_size() or 0 <= self.__col+1 < self.__board.get_size():
-                    bot_right = self.__board.get_game_square(self.__row+1, self.__col+1)
-                    list_of_candidate_game_squares.append(bot_right)
-
-            for square in list_of_candidate_game_squares:
-                dest_piece = square.get_occupying_piece()
-                if dest_piece is None:
-                    continue
-                    # Do nothing, the square is a valid move
-                else:
-                    # There is a piece there, compare the colour
-                    if self.__game_square().get_occupying_piece().get_colour() == dest_piece.get_colour():
-                        # Pieces are the same colour, cannot make this move
-                        list_of_candidate_game_squares.remove(square)
-                    else:
-                        # Piece is an opponent piece, we need to go look at what is on the other side of it.
-                        if self.__game_square().get_col() < square.get_col():
-                            # We are to the right
-                            if self.__game_square().get_row() < square.get_row():
-                                # Bottom right
-                                if 0 <= self.__row + 2 < self.__board.get_size() or \
-                                        0 <= self.__col + 2 < self.__board.get_size():
-                                    new_bot_right = self.__board.get_game_square(self.__row + 2, self.__col + 2)
-                                    if new_bot_right.get_occupying_piece() is None:
-                                        list_of_candidate_game_squares.append(new_bot_right)
-                                        # TODO: Right now this only allows for one jump, need to check to see if
-                                        #  there are multi-jump moves available
-                            else:
-                                # Top right
-                                if 0 <= self.__row - 2 < self.__board.get_size() or \
-                                        0 <= self.__col + 2 < self.__board.get_size():
-                                    new_top_right = self.__board.get_game_square(self.__row - 2, self.__col + 2)
-                                    if new_top_right.get_occupying_piece() is None:
-                                        list_of_candidate_game_squares.append(new_top_right)
-                                        # TODO: Right now this only allows for one jump, need to check to see if
-                                        #  there are multi-jump moves available
-                        else:
-                            # Destination square we are comparing to is to the left of our originally clicked on square
-                            if self.__game_square().get_row() < square.get_row():
-                                # Bottom left
-                                if 0 <= self.__row + 2 < self.__board.get_size() or \
-                                        0 <= self.__col - 2 < self.__board.get_size():
-                                    new_bot_left = self.__board.get_game_square(self.__row + 2, self.__col - 2)
-                                    if new_bot_left.get_occupying_piece() is None:
-                                        list_of_candidate_game_squares.append(new_bot_left)
-                                        # TODO: Right now this only allows for one jump, need to check to see if
-                                        #  there are multi-jump moves available
-                            else:
-                                # Top Left
-                                if 0 <= self.__row - 2 < self.__board.get_size() or \
-                                        0 <= self.__col - 2 < self.__board.get_size():
-                                    new_top_left = self.__board.get_game_square(self.__row - 2, self.__col - 2)
-                                    if new_top_left.get_occupying_piece() is None:
-                                        list_of_candidate_game_squares.append(new_top_left)
-                                        # TODO: Right now this only allows for one jump, need to check to see if
-                                        #  there are multi-jump moves available
-
-                        list_of_candidate_game_squares.remove(square)
-
-            self.__squares_you_can_move_to = list_of_candidate_game_squares
-            return 0
-        """
+            
             return list_of_candidate_game_squares
 
         # chess = 0
@@ -321,87 +203,7 @@ class PossibleMoves:
                                 if not self.__board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
                                     list_of_candidate_game_squares.append(self.__board.get_game_square(7, 0))
 
-                """
-                # Check one square left
-                if 0 <= self.__col - 1 < self.__board.get_size():
-                    one_square_left = self.__board.get_game_square(self.__row, self.__col - 1)
-                    if one_square_left.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(one_square_left)
-                    elif one_square_left.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(one_square_left)
-
-                # Check one square right
-                if 0 <= self.__col + 1 < self.__board.get_size():
-                    one_square_right = self.__board.get_game_square(self.__row, self.__col + 1)
-                    if one_square_right.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(one_square_right)
-                    elif one_square_right.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(one_square_right)
-
-                # Check one square forward
-                if 0 <= self.__row - 1 < self.__board.get_size():
-                    one_square_forward = self.__board.get_game_square(self.__row - 1, self.__col)
-                    if one_square_forward.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(one_square_forward)
-                    elif one_square_forward.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(one_square_forward)
-
-                # Check one square backwards
-                if 0 <= self.__row + 1 < self.__board.get_size():
-                    one_square_backward = self.__board.get_game_square(self.__row + 1, self.__col)
-                    if one_square_backward.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(one_square_backward)
-                    elif one_square_backward.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(one_square_backward)
-
-                # Check top left corner
-                if 0 <= self.__row - 1 < self.__board.get_size() or 0 <= self.__col - 1 < self.__board.get_size():
-                    top_left = self.__board.get_game_square(self.__row - 1, self.__col - 1)
-                    if top_left.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(top_left)
-                    elif top_left.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(top_left)
-
-                # Check top right corner
-                if 0 <= self.__row - 1 < self.__board.get_size() or 0 <= self.__col + 1 < self.__board.get_size():
-                    top_right = self.__board.get_game_square(self.__row - 1, self.__col + 1)
-                    if top_right.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(top_right)
-                    elif top_right.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(top_right)
-
-                # Check bottom left corner
-                if 0 <= self.__row + 1 < self.__board.get_size() or 0 <= self.__col - 1 < self.__board.get_size():
-                    bottom_left = self.__board.get_game_square(self.__row + 1, self.__col - 1)
-                    if bottom_left.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(bottom_left)
-                    elif bottom_left.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(bottom_left)
-
-                # Check bottom right corner
-                if 0 <= self.__row + 1 < self.__board.get_size() or 0 <= self.__col + 1 < self.__board.get_size():
-                    bottom_right = self.__board.get_game_square(self.__row + 1, self.__col + 1)
-                    if bottom_right.get_occupying_piece() is None:
-                        # Empty, we can move there
-                        list_of_candidate_game_squares.append(bottom_right)
-                    elif bottom_right.get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        # Opponent piece there
-                        list_of_candidate_game_squares.append(bottom_right)
-            """
+               
 
             elif type(self.__piece).__name__ == "Queen":
                 # The queen can be moved any number of unoccupied squares in a straight line
@@ -520,24 +322,7 @@ class PossibleMoves:
                                                 self.__board.get_game_board()[row][col])
                             else:
                                 break
-                """
-                while row_pos != 0 or col_pos != self.__board.get_size() - 1:
-                    row_pos -= 1
-                    col_pos += 1
-                    if row_pos < 0 or col_pos > self.__board.get_size() - 1:
-                        break
-                    if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_pos][col_pos])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
-                """
+               
 
                 # Top Left
                 row_pos = self.__row
@@ -567,24 +352,7 @@ class PossibleMoves:
                             else:
                                 break
 
-                """
-                while row_pos != 0 or col_neg != 0:
-                    row_pos -= 1
-                    col_neg -= 1
-                    if row_pos < 0 or col_neg < 0:
-                        break
-                    if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_pos][col_neg])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_neg])
-                """
+                
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
@@ -612,24 +380,7 @@ class PossibleMoves:
                                                 self.__board.get_game_board()[row][col])
                             else:
                                 break
-                """
-                while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
-                    row_neg += 1
-                    col_pos += 1
-                    if row_neg > self.__board.get_size() - 1 or col_pos > self.__board.get_size() - 1:
-                        break
-                    if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_neg][col_pos])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_pos])
-                """
+                
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
@@ -658,55 +409,7 @@ class PossibleMoves:
                             else:
                                 break
 
-                """
-                while row_neg != self.__board.get_size() - 1 or col_neg != 0:
-                    row_neg += 1
-                    col_neg -= 1
-                    if row_neg > self.__board.get_size() - 1 or col_pos < 0:
-                        break
-                    if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_neg][col_neg])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_neg])
-                """
-
-                """
-                for row_of_game_square in self.__board.get_game_board():
-                    if row_of_game_square[self.__col].get_occupying_piece() is None:
-                        list_of_candidate_game_squares.append(row_of_game_square[self.__col])
-                    elif row_of_game_square[self.__col].get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        list_of_candidate_game_squares.append(row_of_game_square[self.__col])
-
-                # Horizontal movements
-                for col_of_game_square in range(self.__board.get_size()):
-                    if self.__board.get_game_board[self.__row][col_of_game_square] is None:
-                        list_of_candidate_game_squares.append(
-                            self.__board.get_game_board[self.__row][col_of_game_square])
-                    elif self.__board.get_game_board[self.__row][col_of_game_square].get_occupying_piece().get_colour()\
-                            != self.__piece.get_colour():
-                        list_of_candidate_game_squares.append(
-                            self.__board.get_game_board[self.__row][col_of_game_square])
-
-                # Diagonal movements
-                for row in range(self.__board.get_size()):
-                    for col in range(self.__board.get_size()):
-                        if abs(self.__row - row) == abs(self.__col - col):
-                            # on the diagonal
-                            if self.__board.get_game_board().get_game_square(row, col) is None:
-                                list_of_candidate_game_squares\
-                                    .append(self.__board.get_game_board().get_game_square(row, col))
-                            if self.__board.get_game_board().get_game_square(row, col).get_occupying_piece()\
-                                    .get_colour() != self.__piece.get_colour():
-                                list_of_candidate_game_squares \
-                                    .append(self.__board.get_game_board().get_game_square(row, col))
-            """
+                
 
             elif type(self.__piece).__name__ == "Bishop":
                 # The bishop can be moved any number of unoccupied squares in a straight line diagonally
@@ -746,24 +449,7 @@ class PossibleMoves:
                             else:
                                 break
 
-                """
-                while row_pos != 0 or col_pos != self.__board.get_size() - 1:
-                    row_pos -= 1
-                    col_pos += 1
-                    if row_pos < 0 or col_pos > self.__board.get_size() - 1:
-                        break
-                    if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_pos][col_pos].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_pos][col_pos])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_pos])
-                """
+                
 
                 # Top Left
                 row_pos = self.__row
@@ -793,24 +479,7 @@ class PossibleMoves:
                             else:
                                 break
 
-                """
-                while row_pos != 0 or col_neg != 0:
-                    row_pos -= 1
-                    col_neg -= 1
-                    if row_pos < 0 or col_neg < 0:
-                        break
-                    if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_pos][col_neg].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_pos][col_neg])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_pos][col_neg])
-                """
+                
                 # Bottom Right
                 row_neg = self.__row
                 col_pos = self.__col
@@ -838,24 +507,7 @@ class PossibleMoves:
                                                 self.__board.get_game_board()[row][col])
                             else:
                                 break
-                """
-                while row_neg != self.__board.get_size() - 1 or col_pos != self.__board.get_size() - 1:
-                    row_neg += 1
-                    col_pos += 1
-                    if row_neg > self.__board.get_size() - 1 or col_pos > self.__board.get_size() - 1:
-                        break
-                    if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_neg][col_pos].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_neg][col_pos])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_pos])
-                """
+               
                 # Bottom Left
                 row_neg = self.__row
                 col_neg = self.__col
@@ -884,38 +536,7 @@ class PossibleMoves:
                             else:
                                 break
 
-                """
-                while row_neg != self.__board.get_size() - 1 or col_neg != 0:
-                    row_neg += 1
-                    col_neg -= 1
-                    if row_neg > self.__board.get_size() - 1 or col_pos < 0:
-                        break
-                    if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece() is not None:
-                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() == \
-                                self.__piece.get_colour():
-                            break
-                        if self.__board.get_game_board()[row_neg][col_neg].get_occupying_piece().get_colour() != \
-                                self.__piece.get_colour():
-                            list_of_candidate_game_squares.append(
-                                self.__board.get_game_board()[row_neg][col_neg])
-                            break
-                    else:
-                        list_of_candidate_game_squares.append(self.__board.get_game_board()[row_neg][col_neg])
-                """
-
-                """
-                                for row in range(self.__board.get_size()):
-                                    for col in range(self.__board.get_size()):
-                                        if abs(self.__row - row) == abs(self.__col - col):
-                                            # on the diagonal
-                                            if self.__board.get_game_square(row, col).get_occupying_piece() is None:
-                                                list_of_candidate_game_squares \
-                                                    .append(self.__board.get_game_square(row, col))
-                                            elif self.__board.get_game_square(row, col).get_occupying_piece()\
-                                                    .get_colour() != self.__piece.get_colour():
-                                                list_of_candidate_game_squares \
-                                                    .append(self.__board.get_game_square(row, col))
-                                """
+               
 
             elif type(self.__piece).__name__ == "Knight":
 
@@ -1103,28 +724,7 @@ class PossibleMoves:
                     else:
                         list_of_candidate_game_squares.append(
                             self.__board.get_game_board()[self.__row][col_neg])
-                """
-            for row_of_game_square in self.__board.get_game_board():
-                    if row_of_game_square[self.__col].get_occupying_piece() is None:
-                        list_of_candidate_game_squares.append(row_of_game_square[self.__col])
-                    elif row_of_game_square[self.__col].get_occupying_piece().get_colour() != self.__piece.get_colour():
-                        list_of_candidate_game_squares.append(row_of_game_square[self.__col])
-
-                # Horizontal movements
-                # horizontal stop
-                h_stop = False
-                for col_of_game_square in range(self.__board.get_size()):
-                    if self.__board.get_game_board()[self.__row][col_of_game_square] is None and not h_stop:
-                        list_of_candidate_game_squares.append(
-                            self.__board.get_game_board()[self.__row][col_of_game_square])
-                    elif self.__board.get_game_board()[self.__row][col_of_game_square].get_occupying_piece()\
-                            .get_colour() == self.__piece.get_colour():
-                        h_stop = True
-                    elif self.__board.get_game_board()[self.__row][col_of_game_square].get_occupying_piece()\
-                            .get_colour() != self.__piece.get_colour() and not h_stop:
-                        list_of_candidate_game_squares.append(
-                            self.__board.get_game_board()[self.__row][col_of_game_square])
-                """
+                
 
             elif type(self.__piece).__name__ == "Pawn":
                 # Normally a pawn moves by advancing a single square,
@@ -1191,42 +791,6 @@ class PossibleMoves:
                                 list_of_candidate_game_squares.append(self.__board.get_game_square(self.__row - 1,
                                                                                                    self.__col - 1))
 
-                """
-                if 0 <= self.__row - 1 < self.__board.get_size():
-                    immediately_in_front = self.__board.get_game_square(self.__row-1, self.__col)
-                    if immediately_in_front.get_occupying_piece() is None:
-                        list_of_candidate_game_squares.append(immediately_in_front)
-                        # Since there is no piece immediately in front, we can check to see if we can move 2 up
-                        if not self.__game_square.get_occupying_piece().get_moved_yet_status():
-                            # Pawn has not moved yet so it can also move 2 squares forward
-                            # This will always be on the board
-                            two_in_front = self.__board.get_game_square(self.__row - 2, self.__col)
-                            if two_in_front.get_occupying_piece() is None:
-                                list_of_candidate_game_squares.append(two_in_front)
-
-                # A pawn captures diagonally forward one square to the left or right
-                # Top left corner
-                if 0 <= self.__row - 1 < self.__board.get_size() or 0 <= self.__col - 1 < self.__board.get_size():
-                    top_left = self.__board.get_game_square(self.__row - 1, self.__col - 1)
-                    if top_left.get_occupying_piece() is not None:
-                        # Then there is a piece there, look at what colour it is
-                        if self.__game_square().get_occupying_piece().get_colour() != top_left\
-                                .get_occupying_piece().get_colour():
-                            # It is an opponent piece, go ahead and add this as a square they can move to
-                            list_of_candidate_game_squares.append(top_left)
-
-                # Top right corner
-                if 0 <= self.__row - 1 < self.__board.get_size() or 0 <= self.__col + 1 < self.__board.get_size():
-                    top_right = self.__board.get_game_square(self.__row - 1, self.__col + 1)
-                    if top_right.get_occupying_piece() is not None:
-                        # Then there is a piece there, look at what colour it is
-                        if self.__game_square().get_occupying_piece().get_colour() != top_right.get_occupying_piece()\
-                                .get_colour():
-                            # It is an opponent piece, go ahead and add this as a square they can move to
-                            list_of_candidate_game_squares.append(top_right)
-
-                self.__squares_you_can_move_to = list_of_candidate_game_squares
-                """
 
             else:
                 # Could not identify the type of piece
