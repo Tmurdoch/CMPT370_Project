@@ -30,7 +30,8 @@ class PossibleMoves:
 
     def build_list_of_moves(self):
         """
-        Determine based on the piece where it can potentially move and load it into the __squares_you_can_move_to attribute
+        Determine based on the piece where it can potentially move and load it into the __squares_you_can_move_to
+        attribute
         Note: Even on success, the list of possible moves for a game-square might be an empty list
         :return: 0 on success, -1 on failure
         """
@@ -70,7 +71,8 @@ class PossibleMoves:
                             # We are to the right
                             if self.__game_square().get_row() < square.get_row():
                                 # Bottom right
-                                if 0 <= self.__row + 2 < self.__board.get_size() or 0 <= self.__col + 2 < self.__board.get_size():
+                                if 0 <= self.__row + 2 < self.__board.get_size() or \
+                                        0 <= self.__col + 2 < self.__board.get_size():
                                     new_bot_right = self.__board.get_game_square(self.__row + 2, self.__col + 2)
                                     if new_bot_right.get_occupying_piece() is None:
                                         list_of_candidate_game_squares.append(new_bot_right)
@@ -78,7 +80,8 @@ class PossibleMoves:
                                         #  there are multi-jump moves available
                             else:
                                 # Top right
-                                if 0 <= self.__row - 2 < self.__board.get_size() or 0 <= self.__col + 2 < self.__board.get_size():
+                                if 0 <= self.__row - 2 < self.__board.get_size() or \
+                                        0 <= self.__col + 2 < self.__board.get_size():
                                     new_top_right = self.__board.get_game_square(self.__row - 2, self.__col + 2)
                                     if new_top_right.get_occupying_piece() is None:
                                         list_of_candidate_game_squares.append(new_top_right)
@@ -88,7 +91,8 @@ class PossibleMoves:
                             # Destination square we are comparing to is to the left of our originally clicked on square
                             if self.__game_square().get_row() < square.get_row():
                                 # Bottom left
-                                if 0 <= self.__row + 2 < self.__board.get_size() or 0 <= self.__col - 2 < self.__board.get_size():
+                                if 0 <= self.__row + 2 < self.__board.get_size() or \
+                                        0 <= self.__col - 2 < self.__board.get_size():
                                     new_bot_left = self.__board.get_game_square(self.__row + 2, self.__col - 2)
                                     if new_bot_left.get_occupying_piece() is None:
                                         list_of_candidate_game_squares.append(new_bot_left)
@@ -96,7 +100,8 @@ class PossibleMoves:
                                         #  there are multi-jump moves available
                             else:
                                 # Top Left
-                                if 0 <= self.__row - 2 < self.__board.get_size() or 0 <= self.__col - 2 < self.__board.get_size():
+                                if 0 <= self.__row - 2 < self.__board.get_size() or \
+                                        0 <= self.__col - 2 < self.__board.get_size():
                                     new_top_left = self.__board.get_game_square(self.__row - 2, self.__col - 2)
                                     if new_top_left.get_occupying_piece() is None:
                                         list_of_candidate_game_squares.append(new_top_left)

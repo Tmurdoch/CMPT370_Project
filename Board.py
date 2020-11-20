@@ -274,4 +274,3 @@ class BoardTheme(Enum):
     BlackWhite = 1
     GreenYellow = 2
     DarkBrownLightBrown = 3
-

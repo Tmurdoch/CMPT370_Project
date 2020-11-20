@@ -321,27 +321,33 @@ def test_possible_moves():
     # moving pieces -> get your BOARD then get (ROW, COL) of DESTINATION then set piece from another square
     # then remove the piece where you got the piece
     # move rook 7, 0 to 4, 3 for testing
-    my_game.get_board().get_game_square(4, 3).put_piece_here(my_game.get_board().get_game_square(7, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 3).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 0).get_occupying_piece())
     my_game.get_board().get_game_square(7, 0).remove_occupying_piece()
 
     # move rook 2 from 7, 7 to 4, 6
-    my_game.get_board().get_game_square(4, 6).put_piece_here(my_game.get_board().get_game_square(7, 7).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 6).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 7).get_occupying_piece())
     my_game.get_board().get_game_square(7, 7).remove_occupying_piece()
 
     # move bishop from 7, 2 to 7, 0
-    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().get_game_square(7, 2).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 2).get_occupying_piece())
     my_game.get_board().get_game_square(7, 2).remove_occupying_piece()
 
     # move queen from 7, 3 to 4, 4
-    my_game.get_board().get_game_square(4, 4).put_piece_here(my_game.get_board().get_game_square(7, 3).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 4).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 3).get_occupying_piece())
     my_game.get_board().get_game_square(7, 3).remove_occupying_piece()
 
     # move enemy pawn from 1, 0 to 5, 1
-    my_game.get_board().get_game_square(5, 1).put_piece_here(my_game.get_board().get_game_square(1, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(5, 1).put_piece_here(my_game.get_board().
+                                                             get_game_square(1, 0).get_occupying_piece())
     my_game.get_board().get_game_square(1, 0).remove_occupying_piece()
 
     # move king from 4, 0 to 7, 4
-    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().get_game_square(7, 4).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 4).get_occupying_piece())
     my_game.get_board().get_game_square(7, 4).remove_occupying_piece()
 
     # test the moved positions
@@ -363,31 +369,38 @@ def test_possible_moves():
 
     # test castling
     # move knight from 7, 1 to 5, 0
-    my_game.get_board().get_game_square(5, 0).put_piece_here(my_game.get_board().get_game_square(7, 1).get_occupying_piece())
+    my_game.get_board().get_game_square(5, 0).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 1).get_occupying_piece())
     my_game.get_board().get_game_square(7, 1).remove_occupying_piece()
 
     # move Bishop from 7, 1 to 5, 0
-    my_game.get_board().get_game_square(5, 5).put_piece_here(my_game.get_board().get_game_square(7, 5).get_occupying_piece())
+    my_game.get_board().get_game_square(5, 5).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 5).get_occupying_piece())
     my_game.get_board().get_game_square(7, 5).remove_occupying_piece()
 
     # move knight from 7, 1 to 5, 0
-    my_game.get_board().get_game_square(5, 6).put_piece_here(my_game.get_board().get_game_square(7, 6).get_occupying_piece())
+    my_game.get_board().get_game_square(5, 6).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 6).get_occupying_piece())
     my_game.get_board().get_game_square(7, 6).remove_occupying_piece()
 
     # move king from 4, 0 to 7, 4
-    my_game.get_board().get_game_square(7, 4).put_piece_here(my_game.get_board().get_game_square(4, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 4).put_piece_here(my_game.get_board().
+                                                             get_game_square(4, 0).get_occupying_piece())
     my_game.get_board().get_game_square(4, 0).remove_occupying_piece()
 
     # move enemy rook from 0, 7 to 7, 7
-    my_game.get_board().get_game_square(7, 7).put_piece_here(my_game.get_board().get_game_square(0, 7).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 7).put_piece_here(my_game.get_board().
+                                                             get_game_square(0, 7).get_occupying_piece())
     my_game.get_board().get_game_square(0, 7).remove_occupying_piece()
 
     # move bishop from 7, 0 to 4, 0
-    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().get_game_square(7, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().
+                                                             get_game_square(7, 0).get_occupying_piece())
     my_game.get_board().get_game_square(7, 0).remove_occupying_piece()
 
     # move rook from 4, 3 to 7, 0
-    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().get_game_square(4, 3).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().
+                                                             get_game_square(4, 3).get_occupying_piece())
     my_game.get_board().get_game_square(4, 3).remove_occupying_piece()
 
     lomking = PossibleMoves(my_game.get_board().get_game_square(7, 4), my_game).build_list_of_moves()
@@ -525,7 +538,6 @@ def test_show_board():
     my_board.get_game_square(4, 3).put_piece_here(pawn)
 
 
-
 def test_game():
     # TODO: How to build a player has changed, need to update this to reflect those changes
     # chess = 0
@@ -546,7 +558,7 @@ def test_game():
 
     # dark_set = my_game.get_dark_player().get_piece_set().get_live_pieces()
     # light_set = my_game.get_light_player().get_piece_set().get_live_pieces()
-    spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
+    # spec_piece = [3, 4, 0, 7, 2, 5, 1, 6]
     """
     board = my_game.get_board()
     i = 0
@@ -1153,10 +1165,10 @@ def test_integration_5():
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 1
                 else:
-                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__ \
-                           is "CheckersCoin"
-                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() is \
-                           checker_colour[y]
+                    assert type(my_checkers_game.get_board().get_game_board()[row][
+                                    col].get_occupying_piece()).__name__ is "CheckersCoin"
+                    assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() \
+                           is checker_colour[y]
 
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 0
@@ -1235,8 +1247,8 @@ def test_integration_5():
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 1
                 else:
-                    assert type(my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece()).__name__ \
-                           is "CheckersCoin"
+                    assert type(my_checkers_game.get_board().get_game_board()[row][col].
+                                get_occupying_piece()).__name__ is "CheckersCoin"
                     assert my_checkers_game.get_board().get_game_board()[row][col].get_occupying_piece().get_colour() \
                            is checker_colour[y]
 
