@@ -297,121 +297,101 @@ def test_possible_moves():
     lomknight = PossibleMoves(my_game.get_board().get_game_square(7, 1), my_game).build_list_of_moves()
     assert sorted([x.get_row_and_column() for x in lomknight]) == sorted([(5, 2), (5, 0)])
     lomknight2 = PossibleMoves(my_game.get_board().get_game_square(7, 6), my_game).build_list_of_moves()
-    assert [x.get_row_and_column() for x in lomknight2] == [(5, 7), (5, 5)]
+    assert sorted([x.get_row_and_column() for x in lomknight2]) == sorted([(5, 7), (5, 5)])
 
     # bishops
     lombishop = PossibleMoves(my_game.get_board().get_game_square(7, 2), my_game).build_list_of_moves()
-    assert [x.get_row_and_column() for x in lombishop] == []
+    assert sorted([x.get_row_and_column() for x in lombishop]) == sorted([])
     lombishop2 = PossibleMoves(my_game.get_board().get_game_square(7, 5), my_game).build_list_of_moves()
-    assert [x.get_row_and_column() for x in lombishop2] == []
+    assert sorted([x.get_row_and_column() for x in lombishop2]) == sorted([])
 
     # queen
     lomqueen = PossibleMoves(my_game.get_board().get_game_square(7, 3), my_game).build_list_of_moves()
-    assert [x.get_row_and_column() for x in lomqueen] == []
+    assert sorted([x.get_row_and_column() for x in lomqueen]) == sorted([])
 
     # king
     lomking = PossibleMoves(my_game.get_board().get_game_square(7, 4), my_game).build_list_of_moves()
-    assert [x.get_row_and_column() for x in lomking] == []
+    assert sorted([x.get_row_and_column() for x in lomking]) == sorted([])
 
     # pawns
     for col in range(my_game.get_board().get_size()):
         lompawn = PossibleMoves(my_game.get_board().get_game_square(6, col), my_game).build_list_of_moves()
-        assert [x.get_row_and_column() for x in lompawn] == [(5, col), (4, col)]
-
-    my_game.get_board().switch_sides()
-
-    """
-    print("\nPieces on Standard Positions after switch")
-    lomrook = PossibleMoves(board.get_game_square(7, 0), my_game).build_list_of_moves()
-    print("Rook (7,0) possible moves: ", [x.get_row_and_column() for x in lomrook])
-    lomknight = PossibleMoves(board.get_game_square(7, 1), my_game).build_list_of_moves()
-    print("Knight (7, 1) possible moves: ", [x.get_row_and_column() for x in lomknight])
-    lombishop = PossibleMoves(board.get_game_square(7, 2), my_game).build_list_of_moves()
-    print("Bishop (7, 2) possible moves: ", [x.get_row_and_column() for x in lombishop])
-    lomqueen = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
-    print("Queen (7, 3) possible moves: ", [x.get_row_and_column() for x in lomqueen])
-    lompawn = PossibleMoves(board.get_game_square(6, 0), my_game).build_list_of_moves()
-    print("Pawn (6, 0) possible moves: ", [x.get_row_and_column() for x in lompawn])
-    lomking = PossibleMoves(board.get_game_square(7, 3), my_game).build_list_of_moves()
-    print("King (7, 4) possible moves: ", [x.get_row_and_column() for x in lomking])
+        assert sorted([x.get_row_and_column() for x in lompawn]) == sorted([(5, col), (4, col)])
 
     # moving pieces -> get your BOARD then get (ROW, COL) of DESTINATION then set piece from another square
     # then remove the piece where you got the piece
     # move rook 7, 0 to 4, 3 for testing
-    board.get_game_square(4, 3).put_piece_here(board.get_game_square(7, 0).get_occupying_piece())
-    board.get_game_square(7, 0).remove_occupying_piece()
+    my_game.get_board().get_game_square(4, 3).put_piece_here(my_game.get_board().get_game_square(7, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 0).remove_occupying_piece()
 
     # move rook 2 from 7, 7 to 4, 6
-    board.get_game_square(4, 6).put_piece_here(board.get_game_square(7, 7).get_occupying_piece())
-    board.get_game_square(7, 7).remove_occupying_piece()
+    my_game.get_board().get_game_square(4, 6).put_piece_here(my_game.get_board().get_game_square(7, 7).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 7).remove_occupying_piece()
 
     # move bishop from 7, 2 to 7, 0
-    board.get_game_square(7, 0).put_piece_here(board.get_game_square(7, 2).get_occupying_piece())
-    board.get_game_square(7, 2).remove_occupying_piece()
+    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().get_game_square(7, 2).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 2).remove_occupying_piece()
 
     # move queen from 7, 3 to 4, 4
-    board.get_game_square(4, 4).put_piece_here(board.get_game_square(7, 3).get_occupying_piece())
-    board.get_game_square(7, 3).remove_occupying_piece()
+    my_game.get_board().get_game_square(4, 4).put_piece_here(my_game.get_board().get_game_square(7, 3).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 3).remove_occupying_piece()
 
     # move enemy pawn from 1, 0 to 5, 1
-    board.get_game_square(5, 1).put_piece_here(board.get_game_square(1, 0).get_occupying_piece())
-    board.get_game_square(1, 0).remove_occupying_piece()
+    my_game.get_board().get_game_square(5, 1).put_piece_here(my_game.get_board().get_game_square(1, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(1, 0).remove_occupying_piece()
 
     # move king from 4, 0 to 7, 4
-    board.get_game_square(4, 0).put_piece_here(board.get_game_square(7, 4).get_occupying_piece())
-    board.get_game_square(7, 4).remove_occupying_piece()
+    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().get_game_square(7, 4).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 4).remove_occupying_piece()
 
-    print("\nPieces moved Positions")
-    lomrook = PossibleMoves(board.get_game_square(4, 3), my_game).build_list_of_moves()
-    print("Rook (4,3) possible moves: ", [x.get_row_and_column() for x in lomrook])
-    lomrook2 = PossibleMoves(board.get_game_square(4, 6), my_game).build_list_of_moves()
-    print("Rook2 (4,6) possible moves: ", [x.get_row_and_column() for x in lomrook2])
-    lomqueen = PossibleMoves(board.get_game_square(4, 4), my_game).build_list_of_moves()
-    print("Queen (4,4) possible moves: ", [x.get_row_and_column() for x in lomqueen])
-    lompawn = PossibleMoves(board.get_game_square(6, 0), my_game).build_list_of_moves()
-    print("Pawn (6, 0) enemy at (5, 1) possible moves: ", [x.get_row_and_column() for x in lompawn])
-    lomking = PossibleMoves(board.get_game_square(4, 0), my_game).build_list_of_moves()
-    print("King (4, 0) possible moves: ", [x.get_row_and_column() for x in lomking])
+    # test the moved positions
+    lomrook = PossibleMoves(my_game.get_board().get_game_square(4, 3), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomrook]) == sorted([(3, 3), (2, 3), (1, 3), (5, 3),
+                                                                        (4, 2), (4, 1)])
+    lomrook2 = PossibleMoves(my_game.get_board().get_game_square(4, 6), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomrook2]) == sorted([(3, 6), (2, 6), (1, 6), (5, 6),
+                                                                         (4, 7), (4, 5)])
+    lomqueen = PossibleMoves(my_game.get_board().get_game_square(4, 4), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomqueen]) == sorted([(3, 4), (2, 4), (1, 4), (5, 4),
+                                                                         (4, 5), (3, 5), (2, 6), (1, 7),
+                                                                         (3, 3), (2, 2), (1, 1), (5, 5),
+                                                                         (5, 3)])
+    lompawn = PossibleMoves(my_game.get_board().get_game_square(6, 0), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lompawn]) == sorted([(5, 0), (5, 1)])
+    lomking = PossibleMoves(my_game.get_board().get_game_square(4, 0), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomking]) == sorted([(3, 0), (5, 0), (4, 1), (5, 1), (3, 1)])
 
+    # test castling
     # move knight from 7, 1 to 5, 0
-    board.get_game_square(5, 0).put_piece_here(board.get_game_square(7, 1).get_occupying_piece())
-    board.get_game_square(7, 1).remove_occupying_piece()
+    my_game.get_board().get_game_square(5, 0).put_piece_here(my_game.get_board().get_game_square(7, 1).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 1).remove_occupying_piece()
 
     # move Bishop from 7, 1 to 5, 0
-    board.get_game_square(5, 5).put_piece_here(board.get_game_square(7, 5).get_occupying_piece())
-    board.get_game_square(7, 5).remove_occupying_piece()
+    my_game.get_board().get_game_square(5, 5).put_piece_here(my_game.get_board().get_game_square(7, 5).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 5).remove_occupying_piece()
 
     # move knight from 7, 1 to 5, 0
-    board.get_game_square(5, 6).put_piece_here(board.get_game_square(7, 6).get_occupying_piece())
-    board.get_game_square(7, 6).remove_occupying_piece()
+    my_game.get_board().get_game_square(5, 6).put_piece_here(my_game.get_board().get_game_square(7, 6).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 6).remove_occupying_piece()
 
     # move king from 4, 0 to 7, 4
-    board.get_game_square(7, 4).put_piece_here(board.get_game_square(4, 0).get_occupying_piece())
-    board.get_game_square(4, 0).remove_occupying_piece()
+    my_game.get_board().get_game_square(7, 4).put_piece_here(my_game.get_board().get_game_square(4, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 0).remove_occupying_piece()
 
     # move enemy rook from 0, 7 to 7, 7
-    board.get_game_square(7, 7).put_piece_here(board.get_game_square(0, 7).get_occupying_piece())
-    board.get_game_square(0, 7).remove_occupying_piece()
+    my_game.get_board().get_game_square(7, 7).put_piece_here(my_game.get_board().get_game_square(0, 7).get_occupying_piece())
+    my_game.get_board().get_game_square(0, 7).remove_occupying_piece()
 
     # move bishop from 7, 0 to 4, 0
-    board.get_game_square(4, 0).put_piece_here(board.get_game_square(7, 0).get_occupying_piece())
-    board.get_game_square(7, 0).remove_occupying_piece()
+    my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().get_game_square(7, 0).get_occupying_piece())
+    my_game.get_board().get_game_square(7, 0).remove_occupying_piece()
 
     # move rook from 4, 3 to 7, 0
-    board.get_game_square(7, 0).put_piece_here(board.get_game_square(4, 3).get_occupying_piece())
-    board.get_game_square(4, 3).remove_occupying_piece()
+    my_game.get_board().get_game_square(7, 0).put_piece_here(my_game.get_board().get_game_square(4, 3).get_occupying_piece())
+    my_game.get_board().get_game_square(4, 3).remove_occupying_piece()
 
-    print("Test for Castling")
-    lomking = PossibleMoves(board.get_game_square(7, 4), my_game).build_list_of_moves()
-    print("King (7, 4) possible moves: ", [x.get_row_and_column() for x in lomking])
-
-    board.print_game_board()
-
-    # switch board
-    board.switch_sides()
-    print("\nBoard Switched")
-    board.print_game_board()
-    """
+    lomking = PossibleMoves(my_game.get_board().get_game_square(7, 4), my_game).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomking]) == sorted([(7, 3), (7, 5), (7, 0)])
 
 
 def test_move():
@@ -539,13 +519,11 @@ def test_show_board():
         my_board.get_game_square(7, spec_piece[i]).put_piece_here(type(white_pieces[i]).__name__)
     for i in range(8):
         my_board.get_game_square(6, i).put_piece_here(type(white_pieces[i + 8]).__name__ + ' ')
-    # my_board.print_game_board()
 
-    # print("\n\nMoving Pawn(6, 3) to (4,3)")
     pawn = my_board.get_game_square(6, 3).get_occupying_piece()
     my_board.get_game_square(6, 3).remove_occupying_piece()
     my_board.get_game_square(4, 3).put_piece_here(pawn)
-    # my_board.print_game_board()
+
 
 
 def test_game():
@@ -576,12 +554,9 @@ def test_game():
         r[7].put_piece_here(light_set[i])
         r[0].put_piece_here(dark_set[i])
         i += 1
-    board.print_game_board()
     my_game.save_to_file()
-
     load_game = Game("Chess", ColourCodes.WHITE_BLACK)
     load_game.load_from_file()
-    load_game.get_board().print_game_board()
     """
 
 
@@ -1231,9 +1206,8 @@ def test_integration_5():
             assert my_chess_game.get_board().get_game_square(row, col).get_occupying_piece() is None
 
     # -- CHECKERS
-    my_checkers_game.get_board().print_game_board()
     my_checkers_game.get_board().switch_sides()
-    my_checkers_game.get_board().print_game_board()
+
     # determines what we are looking at in a specific col
     # 0 if square has none and 1 if it has a coin
     x = 0
