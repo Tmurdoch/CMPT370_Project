@@ -4,6 +4,8 @@
 
 import Pieces
 
+GAME_TYPE_CHESS = 0
+GAME_TYPE_CHECKERS = 1
 
 class PieceSet:
     """
@@ -28,12 +30,13 @@ class PieceSet:
         :param piece_set_type: string: either "Chess" or "Checkers"
         :param colour: string: piece set __colour
         """
+        # chess = 0, checkers = 1
         self.__capturedPieces = []
-        if piece_set_type == "Checkers" or piece_set_type == "checkers":
-            self.__pieceSetType = "Checkers"
+        if piece_set_type == 1:
+            self.__pieceSetType = GAME_TYPE_CHECKERS
             self.__livePieces = [Pieces.CheckersCoin(colour) for i in range(12)]
-        elif piece_set_type == "Chess" or piece_set_type == "chess":
-            self.__pieceSetType = "Chess"
+        elif piece_set_type == 0:
+            self.__pieceSetType = GAME_TYPE_CHESS
             self.__livePieces = [Pieces.King(colour),
                                  Pieces.Queen(colour),
                                  Pieces.Rook(colour), Pieces.Rook(colour),
