@@ -406,6 +406,79 @@ def test_possible_moves():
     lomking = PossibleMoves(my_game.get_board().get_game_square(7, 4), my_game).build_list_of_moves()
     assert sorted([x.get_row_and_column() for x in lomking]) == sorted([(7, 3), (7, 5), (7, 0)])
 
+    # -----------TEST CHECKERS PIECES POSSIBLE MOVES ----------------------------------------------------
+    # checkers = 1
+    my_game_2 = Game(1, ColourCodes.RED_BLACK)
+    assert my_game_2.get_dark_player() is None
+    assert my_game_2.get_light_player() is None
+    assert my_game_2.get_current_player() is None
+
+    # create dark player
+    my_game_2.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game_2.get_dark_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
+
+    # create light player
+    my_game_2.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    assert my_game_2.get_light_player().get_piece_set().get_colour() == \
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+
+    # check if players are correctly assigned
+    assert my_game_2.get_current_player() is my_game_2.get_light_player()
+    my_game_2.change_current_player()
+    assert my_game_2.get_current_player() is my_game_2.get_dark_player()
+    assert my_game_2.get_board().get_size() == 8
+
+    # set up the pieces in the board
+
+    dark_set2 = my_game_2.get_dark_player().get_piece_set().get_live_pieces()
+    light_set2 = my_game_2.get_light_player().get_piece_set().get_live_pieces()
+
+    # goes through a piece set
+    # goes through specified indexes in index_piece
+    # checks what piece it is and then creates a possible moves list
+    # converts the possible moves list to a tuple list and compare to
+    # the fixed list of moves like pc_moves_...
+    # both are sorted first then compared
+
+    pc_moves_coin = [sorted([]), sorted([(6, 1)]), sorted([]), sorted([(6, 5), (6, 7)]), sorted([(3, 2), (3, 4)])]
+    # edge cases
+    index_piece_test2 = [(0, 1), (7, 0), (0, 7), (7, 6), (4, 3)]
+
+    for test_tuple in range(len(index_piece_test2)):
+        my_game_2.get_board().get_game_square(
+            index_piece_test2[test_tuple][0], index_piece_test2[test_tuple][1]).put_piece_here(dark_set2[0])
+        if type(my_game_2.get_board().get_game_square(
+                index_piece_test2[test_tuple][0],
+                index_piece_test2[test_tuple][1]).get_occupying_piece()).__name__ is "CheckersCoin":
+            pm_gs = PossibleMoves(my_game_2.get_board().get_game_square(index_piece_test2[test_tuple][0],
+                                                                        index_piece_test2[test_tuple][1]),
+                                  my_game_2).build_list_of_moves()
+            assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_coin[test_tuple]
+        my_game_2.get_board().get_game_square(
+            index_piece_test2[test_tuple][0],
+            index_piece_test2[test_tuple][1]).remove_occupying_piece()
+
+    # build a chess game with all pieces on the board
+    my_game_2.get_board().build_checkers_board(dark_set2, light_set2)
+
+    # move enemy coin from 1, 0 to 4, 1
+    my_game_2.get_board().get_game_square(4, 1).put_piece_here(my_game_2.get_board().
+                                                               get_game_square(1, 0).get_occupying_piece())
+    my_game_2.get_board().get_game_square(1, 0).remove_occupying_piece()
+
+    # move enemy coin from 1, 4 to 4, 3
+    my_game_2.get_board().get_game_square(4, 3).put_piece_here(my_game_2.get_board().
+                                                               get_game_square(1, 4).get_occupying_piece())
+    my_game_2.get_board().get_game_square(1, 4).remove_occupying_piece()
+
+    # double jumps + more
+    lomcoinb = PossibleMoves(my_game_2.get_board().get_game_square(5, 0), my_game_2).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomcoinb]) == sorted([(3, 2), (1, 0), (1, 4)])
+
+    lomcoinb2 = PossibleMoves(my_game_2.get_board().get_game_square(5, 4), my_game_2).build_list_of_moves()
+    assert sorted([x.get_row_and_column() for x in lomcoinb2]) == sorted([(3, 2), (1, 0), (1, 4), (4, 5)])
+
 
 def test_move():
     piece1 = King("Black")
@@ -1261,9 +1334,7 @@ def test_integration_5():
 
     load_chess_game = Game(0, ColourCodes.WHITE_BLACK)
     load_chess_game.load_from_file()
-    """
-
-    """
+    
     for row_gs in my_checkers_game.get_board().get_game_board():
         col = 0
         for col_gs in row_gs:
