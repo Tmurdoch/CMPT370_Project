@@ -3,6 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
+from GameType import GameType
 from Player import Player
 from Board import Board
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
@@ -13,9 +14,6 @@ import struct
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
 FILENAME = "test_save.bin"
-
-# assuming 8 bits/timer and 2 timers
-# TODO verify these assumptions
 FILE_VER_ZERO_HEADER_SIZE = 39
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
@@ -33,7 +31,7 @@ class Game:
     The game object is ...
 
     Attributes:
-        __game_type: string: Either "chess" or "checkers"
+        __game_type: int: GameType enum
         __colour_mode:
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
@@ -41,24 +39,16 @@ class Game:
     """
 
     def __init__(self, game_type, colour_mode):
-
-        # I think based on PieceSet.py and the domain model
-        # that this is going to be a string but i'm not
-        # sure
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        # chess = 0, checkers = 1
-        if game_type == 0:
-            self.__game_type = GAME_TYPE_CHESS
-        elif game_type.lower() == 1:
-            self.__game_type = GAME_TYPE_CHECKERS
-        else:
+        if game_type>1:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
             raise Exception(
                 "GameTypeErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
+        self.__game_type = game_type
         # common for both chess and checkers
         if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
@@ -79,7 +69,7 @@ class Game:
         """
         Build the light coloured object.
         :param name: string: Player name
-        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
+        :param player_type: int: The type of PlayerType enum of what type of player they ar
         :param timer: Timer: The player's timer object
         :param castled: Bool: True is the player has castled, False otherwise
         """
@@ -176,7 +166,7 @@ class Game:
                     elif isinstance(cur_piece, Pawn):
                         if cur_piece.get_moved_yet_status():
                             # The pawn is a moved pawn
-                            output_piece += ord("Q")
+                            output_piece += ord("Q") # TODO fix collison with Queen
                         else:
                             # The pawn is an unmoved pawn
                             output_piece += ord("P")
