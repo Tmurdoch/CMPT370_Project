@@ -7,6 +7,7 @@ from Player import Player
 from Board import Board
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from Timer import Timer
+from GameStatus import GameStatus
 import struct
 
 MAGIC = b"cmpt370checkerschess"
@@ -363,7 +364,7 @@ class Game:
                 "ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
-        return
+        return self.__current_player
 
     def declare_result(self):
         return
@@ -379,13 +380,35 @@ class Game:
         return self.__game_type
 
     def change_current_player(self):
+        """Thought to be executed after a turn to switch to the other player"""
         if self.__current_player is self.__dark_player:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
+        if self.__game_type == GAME_TYPE_CHECKERS:
+            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
+                if self.__current_player is self.__light_player:
+                    self.__game_status = GameStatus.DARK_VICTORIOUS
+                else:
+                    self.__game_status = GameStatus.LIGHT_VICTORIOUS
+        elif self.__game_type == GAME_TYPE_CHESS:
+            # TODO CHESS
+            print("do stuff")
+        else:
+            # unknown game
+            assert 0
+        return
+                    
 
     def check_for_game_over(self):
-        return
+        """
+        Checks to see if the game is over
+        :param name: string: Player name
+        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
+        :param timer: Timer: The player's timer object
+        :param castled: Bool: True is the player has castled, False otherwise
+        :return: Bool: if the game is over"""
+        return bool(self.__game_status)
 
 
 # if (__name__ == "__main__"):
