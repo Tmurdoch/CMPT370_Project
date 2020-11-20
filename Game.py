@@ -373,7 +373,7 @@ class Game:
         else:
             self.__current_player = self.__dark_player
         if self.__game_type == GAME_TYPE_CHECKERS:
-            if (0 = len(self.__current_player.build_possible_moves_for_all_pieces(self))):
+            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
                 if self.__current_player is self.__light_player:
                     self.__game_status = GameStatus.DARK_VICTORIOUS
                 else:
