@@ -8,3 +8,7 @@ from enum import IntEnum
 class GameType(IntEnum):
     CHESS = 0
     CHECKERS = 1
+
+class GamePlayerMode(IntEnum):
+    SINGLEPLAYER = 0
+    LOCAL_MULTIPLAYER =1
