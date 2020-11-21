@@ -3,7 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from PieceSet import PieceSet
-from PossibleMoves import PossibleMoves
+from PossibleMoves import build_list_of_moves
 
 
 class Player(object):
@@ -40,9 +40,10 @@ class Player(object):
         :param: Game object, for getting player and board
         :return: List of GameSquares for a single square
         """
-        possible_moves_for_square_here = PossibleMoves(game_square, game)
-        possible_moves_for_square_here.build_list_of_moves()
-        return possible_moves_for_square_here.get_list_of_squares_you_can_move_to()
+        #possible_moves_for_square_here = PossibleMoves(game_square, game)
+        #possible_moves_for_square_here.build_list_of_moves()
+        #return possible_moves_for_square_here.get_list_of_squares_you_can_move_to()
+        return PossibleMoves.build_list_of_moves(game_square, game)
 
     def build_possible_moves_for_all_pieces(self, game):
         """Generates and returns all possible moves for all current player's pieces on the board.
@@ -54,9 +55,10 @@ class Player(object):
                 square_here = game.get_board().get_game_square(row, col)
                 if not (square_here.get_occupying_piece() is None and square_here.get_occupying_piece().get_colour()
                         == game.get_current_player().get_piece_set().get_colour()):
-                    possible_moves_for_square_here = PossibleMoves(square_here, game)
-                    possible_moves_for_square_here.build_list_of_moves()
-                    game_squares_movable_to.append(possible_moves_for_square_here.get_list_of_squares_you_can_move_to())
+                    #possible_moves_for_square_here = PossibleMoves(square_here, game)
+                    #possible_moves_for_square_here.build_list_of_moves()
+                    #game_squares_movable_to.append(possible_moves_for_square_here.get_list_of_squares_you_can_move_to())
+                    game_squares_movable_to.append(PossibleMoves.build_list_of_moves(square_here, game))
         return game_squares_movable_to
 
     def make_move(self, origin_square, dest_square, board):
