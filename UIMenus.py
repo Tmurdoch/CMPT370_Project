@@ -290,7 +290,7 @@ class CustomizationGrid(Gtk.Grid):
         self.hide()
 
 
-class BoardWindow(Gtk.Window):
+class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type):
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
