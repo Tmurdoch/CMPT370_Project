@@ -9,6 +9,9 @@ class ColourCodes(IntEnum):
     WHITE_BLACK = 0
     RED_BLACK = 1
 
+class ColourBoardCodes(IntEnum):
+    WHITE_BLACK = 0
+    RED_BLACK = 1
 
 class ColourOffset(IntEnum):
     OFFSET_LIGHT = 0

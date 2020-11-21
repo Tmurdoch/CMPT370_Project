@@ -4,6 +4,7 @@ from PlayerType import PlayerType
 from Game import Game
 from PieceSet import PieceSet
 from Timer import Timer
+from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from GameType import GameType
@@ -34,11 +35,18 @@ class TheWindow(Gtk.Window):
                 self.player_type.single_button.connect("clicked", self.player_type_single_clicked)
                 self.player_type.multiplayer_button.connect("clicked", self.player_type_multi_clicked)
                 self.player_type.back_button.connect("clicked", self.player_type_back_clicked)
+                self.player_type.hide()
+
+                self.customization = CustomizationGrid()
+                self.customization.back_button.connect("clicked", self.customization_back_clicked)
+                self.customization.start_button.connect("clicked", self.customization_start_clicked)
+                self.customization.hide()
 
                 self.grid = Gtk.Grid()
                 self.grid.attach(self.main_box,0,0,1,1)
                 self.grid.attach(self.game_choice_box,0,0,1,1)
                 self.grid.attach(self.player_type,0,0,1,1)
+                self.grid.attach(self.customization,0,0,1,1)
                 self.add(self.grid)
                 self.main_box.show()
 
@@ -74,21 +82,32 @@ class TheWindow(Gtk.Window):
         def player_type_single_clicked(self, button):
                 print('Single Player was chosen')  # put next window here
                 self.player_type.hide()
-                customization = CustomizationWindow(self.__game, "Single-Player")
-                customization.show_all()
+                self.customization.show()
 
 
         def player_type_multi_clicked(self, button):
                 print('Multi Player was chosen')  # put next window here
                 self.player_type.hide()
-                customization = CustomizationWindow(self.__game, "Multi-Player")
-                customization.show_all()
+                self.customization.show()
 
 
         def player_type_back_clicked(self, button):
                 print("This should go back to Game Choice Window")
                 self.player_type.hide()
                 self.game_type.show()
+
+        def customization_back_clicked(self, button):
+                print("This should go back to Game Choice Window")
+                self.customization.hide()
+                self.player_type.show()
+
+        def customization_start_clicked(self, button):
+                print("This should go to Board Window")
+                #board = BoardWindow(self.__game, self.__game_type)
+                board = BoardWindow("Test", "multiplayer")
+                board.show_all()
+
+
 
 
 
@@ -175,11 +194,11 @@ class PlayerTypeBox(Gtk.Box):
 
 
 class CustomizationGrid(Gtk.Grid):
-    def __init__(self, game, game_type):
-        self.__game = game
-        self.__game_type = game_type
+    def __init__(self):#, game, game_type):
+        #self.__game = game
+        #self.__game_type = game_type
 
-        Gtk.Grid.__init__()
+        Gtk.Grid.__init__(self)
         self.set_column_spacing(10)
         self.set_row_spacing(20)
         title = Gtk.Label()
@@ -200,75 +219,38 @@ class CustomizationGrid(Gtk.Grid):
         label_board.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.attach(label_board, 4, 1, 1, 1)
 
-        black_white = Gtk.RadioButton.new_with_label_from_widget(None, "P1-Black P2-White")
-        black_white.connect("toggled", self.on_button_toggled, "Black/White")
-        black_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach(black_white, 0, 2, 2, 1)
+        x=0
+        self.piece_radio_buttons = []
+        self.piece_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+        x+=1
+        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+                self.piece_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.piece_radio_buttons[0], COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+                x+=1
+        x=0
+        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+                self.attach(self.piece_radio_buttons[x],0,2+x,1,1)
+                x+=1
 
-        white_black = Gtk.RadioButton.new_with_label_from_widget(black_white, "P1-White P2-Black")
-        white_black.connect("toggled", self.on_button_toggled, "White/Black")
-        white_black.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(white_black, black_white, Gtk.PositionType.RIGHT, 2, 1)
+        x=0
+        self.board_radio_buttons = []
+        self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+        x+=1
+        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+                self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0], COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+                x+=1
+        x=0
+        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+                self.attach(self.board_radio_buttons[x],3,2+x,1,1)
+                x+=1
 
-        red_white = Gtk.RadioButton.new_with_label_from_widget(black_white, "P1-Red P2-White")
-        red_white.connect("toggled", self.on_button_toggled, "Red/White")
-        red_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(red_white, black_white, Gtk.PositionType.BOTTOM, 2, 1)
+        
 
-        white_red = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-White P2-Red")
-        white_red.connect("toggled", self.on_button_toggled, "White/Red")
-        white_red.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(white_red, red_white, Gtk.PositionType.RIGHT, 1, 1)
+        self.back_button = Gtk.Button.new_with_label("Back")
+        self.attach(self.back_button, 0, 8, 1, 1)
 
-        blue_green = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Blue P2- Green")
-        blue_green.connect("toggled", self.on_button_toggled, "Blue/Green")
-        blue_green.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(blue_green, red_white, Gtk.PositionType.BOTTOM, 2, 1)
+        self.start_button = Gtk.Button.new_with_label("Start")
+        self.attach(self.start_button, 4, 8, 1, 1)
 
-        green_blue = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Green P2-Blue")
-        green_blue.connect("toggled", self.on_button_toggled, "Green/Blue")
-        green_blue.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(green_blue, blue_green, Gtk.PositionType.RIGHT, 2, 1)
-
-        red_blue = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Red P2-Blue")
-        red_blue.connect("toggled", self.on_button_toggled, "Red/Blue")
-        red_blue.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(red_blue, blue_green, Gtk.PositionType.BOTTOM, 2, 1)
-
-        blue_red = Gtk.RadioButton.new_with_label_from_widget(red_white, "P1-Blue P2-Red")
-        blue_red.connect("toggled", self.on_button_toggled, "Green/Blue")
-        blue_red.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(blue_red, green_blue, Gtk.PositionType.BOTTOM, 2, 1)
-
-        b_black_white = Gtk.RadioButton.new_with_label_from_widget(None, "Black and White")
-        b_black_white.connect("toggled", self.on_button_toggled, "Black and White")
-        b_black_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(b_black_white, white_black, Gtk.PositionType.RIGHT, 2, 1)
-
-        b_brown_white = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Brown and White")
-        b_brown_white.connect("toggled", self.on_button_toggled, "Brown and White")
-        b_brown_white.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(b_brown_white, b_black_white, Gtk.PositionType.BOTTOM, 2, 1)
-
-        b_green_yellow = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Green and Yellow")
-        b_green_yellow.connect("toggled", self.on_button_toggled, "Green and Yellow")
-        b_green_yellow.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(b_green_yellow, b_brown_white, Gtk.PositionType.BOTTOM, 2, 1)
-
-        b_light_dark_brown = Gtk.RadioButton.new_with_label_from_widget(b_black_white, "Light Brown and Dark Brown")
-        b_light_dark_brown.connect("toggled", self.on_button_toggled, "Light Brown and Dark Brown")
-        b_light_dark_brown.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(b_light_dark_brown, b_green_yellow, Gtk.PositionType.BOTTOM, 2, 1)
-
-        back_button = Gtk.Button.new_with_label("Back")
-        back_button.connect("clicked", self.back_clicked)
-        self.attach(back_button, 0, 8, 1, 1)
-
-        start_button = Gtk.Button.new_with_label("Start")
-        back_button.connect("clicked", self.start_clicked)
-        self.attach(start_button, 4, 8, 1, 1)
-
-        self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
     def on_button_toggled(self, button, name):
         if button.get_active():
@@ -277,17 +259,6 @@ class CustomizationGrid(Gtk.Grid):
             state = "off"
         print(name, "was turned", state)
 
-    def back_clicked(self, button):
-        print("This should go back to Game Choice Window")
-        player_type = PlayerTypeWindow(self.__game)
-        player_type.show_all()
-        self.hide()
-
-    def start_clicked(self, button):
-        print("This should go to Board Window")
-        board = BoardWindow(self.__game, self.__game_type)
-        board.show_all()
-        self.hide()
 
 
 class BoardGrid(Gtk.Grid):
