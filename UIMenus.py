@@ -34,7 +34,7 @@ class MainMenuWindow(Gtk.Window):
             checkers_button.set_property("height-request", 100)
             main_box.pack_start(checkers_button, True, True, 0)
 
-        exit_button = Gtk.Button.new_with_mnemonic("_Exit")
+        exit_button = Gtk.Button.new_with_label("Exit")
         exit_button.connect("clicked", self.exit_clicked)
         main_box.pack_start(exit_button, True, True, 0)
 
@@ -128,7 +128,7 @@ class PlayerTypeWindow(Gtk.Window):
         multiplayer_button.set_property("height-request", 100)
         player_box.pack_start(multiplayer_button, True, True, 0)
 
-        back_button = Gtk.Button.new_with_mnemonic("_Back")
+        back_button = Gtk.Button.new_with_label("Back")
         back_button.connect("clicked", self.back_clicked)
         player_box.pack_start(back_button, True, True, 0)
 
@@ -337,9 +337,10 @@ class BoardWindow(Gtk.Window):
         help_button.connect("clicked", self.help_clicked)
         board_box.attach(help_button, 2, 4, 1, 1)
 
-        promote_button = Gtk.Button.new_with_label("promote?")
-        promote_button.connect("clicked", self.promote_clicked)
-        board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
+        # just to see if promotion works
+        #promote_button = Gtk.Button.new_with_label("promote?")
+        #promote_button.connect("clicked", self.promote_clicked)
+        #board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
 
         save_quit_button = Gtk.Button.new_with_label("Save and Quit")
         save_quit_button.connect("clicked", self.save_quit_clicked)
