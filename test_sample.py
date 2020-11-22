@@ -7,8 +7,6 @@ import random
 from unittest import mock
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
-from Move import CheckersMove, ChessMove
-#from PossibleMoves import build_list_of_moves
 import PossibleMoves
 from Timer import Timer
 import time  # For testing the timer
@@ -19,7 +17,6 @@ from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
 from Game import Game
 from PlayerType import PlayerType
 from Player import Player
-from Pieces import PieceInterface
 
 
 def test_pieces():
