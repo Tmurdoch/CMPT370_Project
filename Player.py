@@ -8,8 +8,8 @@ from PossibleMoves import build_list_of_moves
 
 class Player(object):
     """
-    A Player is an object that has a name, a colour and controls pieces inside a piece set by making moves
-    to play a game of Chess or Checkers. ????
+    The player represents a game player, every game has two players.  The players use helper functions to build the
+    list of possible moves and then make the move.
 
     Attributes:
         __piece_set: PieceSet: The players piece set
@@ -22,10 +22,11 @@ class Player(object):
     def __init__(self, name, colour, game_type, player_type, timer):
         """
         Initializes a Player object.
-        :param: string: name: The name of a Player.
-        :param: PlayerType: player_type: The type of Player the Player is PlayerType.AI or PlayerType.HUMAN
-        :param: Timer: timer: The Timer object for a Player
-        :param: Boolean: castled: A boolean to see if the player has been castled or not.
+        :param name: string: The name of a Player.
+        :param colour:
+        :param game_type: GameType:
+        :param: player_type: PlayerType: The type of Player the Player is PlayerType.AI or PlayerType.HUMAN
+        :param timer: Timer: The Timer object for a Player
         """
         self.__piece_set = PieceSet(game_type, colour)
         self.__name = name
@@ -60,9 +61,9 @@ class Player(object):
         """
         Actually executes a move (and capture)
         Precondition: Assuming that dest_square is a legal move for the origin_square
-        :param: origin_square: GameSquare we are moving from
-        :param: dest_square: GameSquare we are moving to
-        :param: board: Board object, need to look at the squares we are jumping for checkers
+        :param origin_square: GameSquare: Where we are moving from
+        :param dest_square: GameSquare: Where we are moving to
+        :param board: Board: Needed to look at the squares we are jumping to for checkers
         """
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
@@ -154,7 +155,14 @@ class Player(object):
                     # There are more than one jumps needing to take place
                     raise Exception("Cannot handle more than one jump right now")
 
+            # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
+            if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
+                origin_square.get_occupying_piece().promote()
+
         elif self.__piece_set.get_piece_set_type().lower() == "chess":
+
+            # TODO: Make a castle move and set self.__castled = True
+
             if dest_square.get_occupying_piece() is None:
                 # We can go ahead and make the move
                 dest_square.put_piece_here(origin_square.get_occupying_piece())
@@ -167,9 +175,10 @@ class Player(object):
             else:
                 # Illegal move, trying to move a square that has a friendly piece
                 raise Exception("Illegal move, trying to move a square that has a friendly piece")
+
         else:
             # Couldn't identify the type of game
-            raise Exception("Piece set is neither of type checkers or type chess")
+            raise Exception("The players piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
         """:return: The players PieceSet"""
