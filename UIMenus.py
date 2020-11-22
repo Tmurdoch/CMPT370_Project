@@ -211,12 +211,14 @@ class CustomizationGrid(Gtk.Grid):
         title.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.attach(title, 3, 0, 1, 1)
 
+        # Pieces choices label
         label_piece = Gtk.Label()
         label_piece.set_markup("<b>Pieces</b>")
         # label_piece.set_justify(Gtk.Justification.CENTER)
         label_piece.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.attach(label_piece, 1, 1, 1, 1)
 
+        # Board choices label
         label_board = Gtk.Label()
         label_board.set_markup("<b>Board</b>")
         label_board.set_justify(Gtk.Justification.CENTER)
@@ -259,6 +261,7 @@ class CustomizationGrid(Gtk.Grid):
     def on_button_toggled(self, button, name):
         if button.get_active():
             state = "on"
+            #self.colour()
         else:
             state = "off"
         print(name, "was turned", state)
@@ -269,70 +272,232 @@ class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type):
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
-        self.set_border_width(200)
+        self.surface = None
+
+        self.set_resizable(False)
         self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.set_border_width(80)
+        col = Gdk.Color(2000, 6000, 200)
         self.modify_bg(Gtk.StateType.NORMAL, col)
-        grid = Gtk.Grid()
-        self.add(grid)
 
-        row_1_0 = Gtk.Button(label=" ")
-        row_1_0 = Gtk.Button(label=" ")
+        board_box = Gtk.Grid()
+        self.add(board_box)
 
-        single_button = Gtk.Button.new_with_label("Single-Player")
-        single_button.connect("clicked", self.single_clicked)
-        single_button.set_property("width-request", 300)
-        single_button.set_property("height-request", 100)
-        # flowbox.pack_start(single_button, True, True, 0)
+        # create checkerboard area
+        board_frame = Gtk.Frame()
+        board_frame.set_shadow_type(Gtk.ShadowType.IN)
+        board_box.add(board_frame)
 
-        # look at EventBox() to see if that works for this
+        checkerboard_area = Gtk.DrawingArea()
+        checkerboard_area.set_size_request(400, 400)
+        board_frame.add(checkerboard_area)
+        checkerboard_area.connect('draw', self.checkerboard_draw_event)
+        checkerboard_area.connect('configure-event', self.click_configure_event)
+        checkerboard_area.connect('button-press-event', self.mouse_press_event)
+        checkerboard_area.set_events(checkerboard_area.get_events()
+                                     | Gdk.EventMask.LEAVE_NOTIFY_MASK
+                                     | Gdk.EventMask.BUTTON_PRESS_MASK)
 
-        self.connect("destroy", Gtk.main_quit)
+        timer_frame = Gtk.Frame()
+        timer_frame.set_shadow_type(Gtk.ShadowType.IN)
+        board_box.add(timer_frame)
 
-    def single_clicked(self, button):
-        print('Single Player was chosen')  # put next window here
-        customization = CustomizationWindow(self.__game, "Single-Player")
-        customization.show_all()
-        self.hide()
+        self.timer_area = Gtk.Label()
+        board_box.add(self.timer_area)
 
-    def multi_clicked(self, button):
-        print('Multi Player was chosen')  # put next window here
-        customization = CustomizationWindow(self.__game, "Multi-Player")
-        customization.show_all()
-        self.hide()
+        help_button = Gtk.Button.new_with_label("help?")
+        help_button.connect("clicked", self.help_clicked)
+        board_box.attach(help_button, 2, 4, 1, 1)
 
-    def back_clicked(self, button):
-        print("This should go back to Game Choice Window")
-        game_type = GameChoiceWindow()
-        game_type.show_all()
-        self.hide()
+        # just to see if promotion works
+        #promote_button = Gtk.Button.new_with_label("promote?")
+        #promote_button.connect("clicked", self.promote_clicked)
+        #board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
+
+        save_quit_button = Gtk.Button.new_with_label("Save and Quit")
+        save_quit_button.connect("clicked", self.save_quit_clicked)
+        board_box.attach_next_to(save_quit_button,help_button, Gtk.PositionType.RIGHT, 1, 1)
+        self.startclocktimer()
+        self.show_all()
+        self.connect('destroy', Gtk.main_quit)
+
+    def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
+
+        # At the start of a draw handler, a clip region has been set on
+        # the Cairo context, and the contents have been cleared to the
+        # widget's background color. The docs for
+        # gdk_window_begin_paint_region() give more details on how this
+        # works.
+        check_size = 50
+        spacing = 0
+
+        xcount = 0
+        i = spacing
+        width = checkerboard_area.get_allocated_width()
+        height = checkerboard_area.get_allocated_height()
+
+        while i < width:
+            j = spacing
+            ycount = xcount % 2  # start with even/odd depending on row
+            while j < height:
+                if ycount % 2:
+                    cairo_ctx.set_source_rgb(0.300, .155, 0.119)
+                else:
+                    cairo_ctx.set_source_rgb(0, 1, 1)
+                # If we're outside the clip this will do nothing.
+                cairo_ctx.rectangle(i, j,
+                                    check_size,
+                                    check_size)
+                cairo_ctx.fill()
+
+                j += check_size + spacing
+                ycount += 1
+
+            i += check_size + spacing
+            xcount += 1
+
+        return True
+
+    def mouse_pointer(self, widget, x, y):
+        # this might need to be used since it cant work without this but it works with nothing in it
+        pass
+
+    def click_configure_event(self, checkerboard_area, event):
+
+        allocation = checkerboard_area.get_allocation()
+        self.surface = checkerboard_area.get_window().create_similar_surface(cairo.CONTENT_COLOR,
+                                                                             allocation.width,
+                                                                             allocation.height)
+
+        cairo_ctx = cairo.Context(self.surface)
+        cairo_ctx.set_source_rgb(1, 1, 1)
+        cairo_ctx.paint()
+
+        return True
+
+    def mouse_press_event(self, checkerboard_area, event):
+        if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
+            return False
+
+        if event.button == 1:
+            self.mouse_pointer(checkerboard_area, event.x, event.y)
+            list_list = [[50,50],[50,100],[50,150]]
+            y=1
+            for x in list_list:
+                if event.x <= x[0] and event.y <= x[1]:
+                    print(event.x, event.y)
+                    print("square ", y)
+                    y+=1
+
+        return True
+
+    def displayclock(self):
+        #  putting our datetime into a var and setting our label to the result.
+        #  we need to return "True" to ensure the timer continues to run, otherwise it will only run once.
+        datetimenow = str(datetime.now().second)
+        self.timer_area.set_label(datetimenow)
+        self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        return True
+
+        # Initialize Timer
+
+    def startclocktimer(self):
+        #  this takes 2 args: (how often to update in millisec, the method to run)
+        GObject.timeout_add(1000, self.displayclock)
+
+    def help_clicked(self, button):
+        print("This should go to HowToPlay Window")
+        board = HowToPlayWindow(self.__game)
+        board.show_all()
+        #self.hide()
+
+    def promote_clicked(self, button):
+        print("This should go to PromotePawn Window")
+        board = PromotePawnWindow()
+        board.show_all()
+        # self.hide()
+
+    def save_quit_clicked(self, button):
+        print("This should exit")
+        Gtk.main_quit()
 
 
-class HowToPlayMenu(Gtk.Window):
+class HowToPlayWindow(Gtk.Window):
+    def __init__(self, game):
+        Gtk.Window.__init__(self, title="How to Play " + game)
+        self.set_border_width(50)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_size_request(200,400)
+        col = Gdk.Color(2000, 6000, 200)
+        self.modify_bg(Gtk.StateType.NORMAL, col)
+        help_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(help_box)
+        # if we want there to be text in the window
+
+        scrolled = Gtk.ScrolledWindow(vexpand=True)
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        label = Gtk.Label()
+        if game == "Chess":
+            file = open("chessrules.txt", encoding="utf8")
+            chess_rules = file.read()
+            label.set_markup(chess_rules)
+        else:
+            file = open("checkersrules.txt", encoding="utf8")
+            checkers_rules = file.read()
+            label.set_markup(checkers_rules)
+
+        label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+
+        scrolled.add(label)
+        help_box.add(scrolled)
+
+        self.connect("destroy", self.hide)  # this gives error message but still does it??
+
+
+""" will we want to pause timer while this is happening? """
+class PromotePawnWindow(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="How to Play ")
+        Gtk.Window.__init__(self, title="Choose Promotion ")
         self.set_border_width(50)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
         self.modify_bg(Gtk.StateType.NORMAL, col)
-        player_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.add(player_box)
-        # if we want there to be text in the window
+        promote_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.add(promote_box)
 
-        # scrolled = Gtk.ScrolledWindow()
-        # scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        queen_button = Gtk.Button.new_with_label("Queen")
+        queen_button.connect("clicked", self.queen_clicked)
 
-        label = Gtk.Label()
-        label.set_markup("<a href='https://www.chess.com/learn-how-to-play-chess'"
-                         "title='Click to find out more'>Chess Rules</a>")
+        knight_button = Gtk.Button.new_with_label("Knight")
+        knight_button.connect("clicked", self.knight_clicked)
 
-        label1 = Gtk.Label()
-        label1.set_markup("<a href='https://www.fgbradleys.com/rules/Checkers.pdf'"
-                          "title='Click to find out more'>Checkers Rules</a>")
-        player_box.add(label)
-        player_box.add(label1)
+        bishop_button = Gtk.Button.new_with_label("Bishop")
+        bishop_button.connect("clicked", self.bishop_clicked)
 
-        self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
+        rook_button = Gtk.Button.new_with_label("Queen")
+        rook_button.connect("clicked", self.rook_clicked)
+
+        promote_box.add(queen_button)
+        promote_box.add(knight_button)
+        promote_box.add(bishop_button)
+        promote_box.add(rook_button)
+        self.connect("destroy", self.hide)
+
+    def queen_clicked(self, button):
+        print('Queen was chosen')
+        self.hide()
+
+    def knight_clicked(self, button):
+        print('Knight was chosen')
+        self.hide()
+
+    def bishop_clicked(self, button):
+        print('Bishop was chosen')
+        self.hide()
+
+    def rook_clicked(self, button):
+        print('Rook was chosen')
+        self.hide()
 
 
 class PlayAgainWindow(Gtk.Window):
@@ -340,7 +505,7 @@ class PlayAgainWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Play Again?")
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
+        col = Gdk.Color(2000, 6000, 200)
         self.modify_bg(Gtk.StateType.NORMAL, col)
         # b = Button()
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
