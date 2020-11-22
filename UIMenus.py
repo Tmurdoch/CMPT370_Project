@@ -6,9 +6,9 @@ from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf
 from GameType import GameType
-from datetime import datetime
+
 resume = True
 
 class TheWindow(Gtk.Window):
@@ -268,7 +268,7 @@ class CustomizationGrid(Gtk.Grid):
 
 
 
-class BoardWindow(Gtk.Window):
+class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type):
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
