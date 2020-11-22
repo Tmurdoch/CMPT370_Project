@@ -34,6 +34,8 @@ def build_list_of_moves(input_game_square, input_game):
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                   input_col + 1))
 
+        # TODO: If the coin is promoted, it can also move backwards
+
         # Check for possible jumps moves
         checkers_jump(input_board, input_piece, input_game_square, list_of_candidate_game_squares)
 
@@ -613,13 +615,8 @@ def build_list_of_moves(input_game_square, input_game):
         elif type(input_piece).__name__ == "Rook":
             # The rook can be moved any number of unoccupied squares in a straight line vertically or horizontally
 
-            # check from the piece to a direction: up, down, left, right
-            # will stop until sees a peace
-            # if piece friendly stop
-            # if non friendly add add (row, col) to possible moves but also stops
-            # if empty then add it to list and keep going
-
-            # Vertical movements
+            # First check fow check for horizontal movements, again stop if we see a piece.  If piece is unfriendly
+            # add the capture move to the list.
 
             # Vertical UP
             # check from piece to top row -- (row, col) -> (0, col)
@@ -632,9 +629,11 @@ def build_list_of_moves(input_game_square, input_game):
                         break
                     if input_board.get_game_board()[row_pos][input_col].get_occupying_piece().get_colour() != \
                             input_piece.get_colour():
+                        # Capture move, add it to the list
                         list_of_candidate_game_squares.append(input_board.get_game_board()[row_pos][input_col])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[row_pos][input_col])
 
             # Vertical DOWN
@@ -648,12 +647,15 @@ def build_list_of_moves(input_game_square, input_game):
                         break
                     if input_board.get_game_board()[row_neg][input_col].get_occupying_piece().get_colour() != \
                             input_piece.get_colour():
+                        # Capture move, add it to the list
                         list_of_candidate_game_squares.append(input_board.get_game_board()[row_neg][input_col])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[row_neg][input_col])
 
-            # Horizontal movements
+            # Now check for horizontal movements, again stop if we see a piece.  If piece is unfriendly add the capture
+            # move to the list.
 
             # Horizontal RIGHT
             # check from piece to right col -- (row, col) -> (row, 7)
@@ -661,15 +663,16 @@ def build_list_of_moves(input_game_square, input_game):
             while col_pos != input_board.get_size() - 1:
                 col_pos += 1
                 if input_board.get_game_board()[input_row][col_pos].get_occupying_piece() is not None:
-
                     if input_board.get_game_board()[input_row][col_pos].get_occupying_piece().get_colour() == \
                             input_piece.get_colour():
                         break
                     if input_board.get_game_board()[input_row][col_pos].get_occupying_piece().get_colour() != \
                             input_piece.get_colour():
+                        # Capture move, add it to the list
                         list_of_candidate_game_squares.append(input_board.get_game_board()[input_row][col_pos])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[input_row][col_pos])
 
             # Horizontal LEFT
@@ -678,17 +681,16 @@ def build_list_of_moves(input_game_square, input_game):
             while col_neg != 0:
                 col_neg -= 1
                 if input_board.get_game_board()[input_row][col_neg].get_occupying_piece() is not None:
-                    if input_board.get_game_board()[input_row][
-                        col_neg].get_occupying_piece().get_colour() == \
+                    if input_board.get_game_board()[input_row][col_neg].get_occupying_piece().get_colour() == \
                             input_piece.get_colour():
                         break
-                    if input_board.get_game_board()[input_row][
-                        col_neg].get_occupying_piece().get_colour() != \
+                    if input_board.get_game_board()[input_row][col_neg].get_occupying_piece().get_colour() != \
                             input_piece.get_colour():
-                        list_of_candidate_game_squares.append(
-                            input_board.get_game_board()[input_row][col_neg])
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_board()[input_row][col_neg])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(
                         input_board.get_game_board()[input_row][col_neg])
 
@@ -698,48 +700,42 @@ def build_list_of_moves(input_game_square, input_game):
             #  initial two-square advance to jump over an occupied square, or to capture. Any piece immediately 
             #  in front of a pawn, friend or foe, blocks its advance.
 
-            # Normal movements
+            # Normal non-capture movements
             # forward 1 step and 2 step
-            if input_row > 0:
-                # 1 step
+            if input_row - 1 >= 0:
+                # 1 step forward
                 if input_board.get_game_square(input_row - 1, input_col).get_occupying_piece() is None:
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1, input_col))
 
-                # 2 step
+                # 2 steps forward (assuming we have not moved yet)
                 if not input_piece.get_moved_yet_status():
                     if input_board.get_game_square(input_row - 2, input_col).get_occupying_piece() is None:
                         list_of_candidate_game_squares.append(
                             input_board.get_game_square(input_row - 2, input_col))
 
-            # diagonal movements
-            # only used when non friendly piece on the front diagonal sides
-            # check if inside the board
-            # check for edge case for columns 0 and 7
-            # if they are just check one diagonal side
-            # check if there is a non friendly
-            # then add it
-            if input_row > 0 and 0 <= input_col <= input_board.get_size() - 1:
+            if input_row - 1 >= 0 and 0 <= input_col <= input_board.get_size() - 1:
 
-                # left most case
+                # left most case (edge case for columns 0)
                 if input_col == 0:
                     if input_board.get_game_square(input_row - 1,
                                                    input_col + 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
+                            # Capture move, add it to the list
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                               input_col + 1))
 
-                # right most case:
+                # right most case (edge case for columns 7)
                 elif input_col == input_board.get_size() - 1:
                     if input_board.get_game_square(input_row - 1,
                                                    input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
+                            # Capture move, add it to the list
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                               input_col - 1))
 
-                # Non edge case
-                # checks for both sides of the diagonal front
+                # Now we are working with middle pawns. Checks for both front diagonals and
                 # if there is a non friendly add it to the list
                 else:
                     # front left
@@ -747,6 +743,7 @@ def build_list_of_moves(input_game_square, input_game):
                                                    input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
+                            # Capture move, add it to the list
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                               input_col - 1))
                     # front right
@@ -754,12 +751,14 @@ def build_list_of_moves(input_game_square, input_game):
                                                    input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
+                            # Capture move, add it to the list
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                               input_col - 1))
+                # TODO: Look for "en passant" pawn capture opportunity
 
         else:
             # Could not identify the type of piece
-            return -1
+            raise Exception("Could not identify the type of piece")
 
         return list_of_candidate_game_squares
 
@@ -818,6 +817,10 @@ def checkers_jump(input_board, input_piece, input_game_square, list_moves):
                                   input_board.get_game_square(input_game_square.get_row() - 2,
                                                               input_game_square.get_col() + 2), list_moves)
 
-    # TODO: If the coin is promoted, we need to also check for the backwards jumps
+    if input_piece.get_promotion_status():
+        # The coin is promoted and can also move backwards
+        # TODO: If the coin is promoted, we need to also check for the backwards jumps.
+        #  Can't just add on the same logic used for forward jumps or it will result in an infinite loop.
+        pass
 
     return
