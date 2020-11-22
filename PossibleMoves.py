@@ -3,47 +3,39 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
-import random
-
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 
 
 def build_list_of_moves(input_game_square, input_game):
     """
-    Determine based on the piece where it can potentially move and load it into the __squares_you_can_move_to
-    attribute
-    Note: Even on success, the list of possible moves for a game-square might be an empty list
-    :return: 0 on success, -1 on failure
+    For a given game square, build a list of all the legal game squares you can move to. Note: Even on success,
+    the list of possible moves might be an empty list.  An empty list means that piece has not legal moves :return:
+    :return list_of_candidate_game_squares: (GameSquare[]): List of destination squares you can legally move to
     """
-    # redid refactor due to noticing variable name collisions
     input_piece = input_game_square.get_occupying_piece()
     input_row = input_game_square.get_row()
     input_col = input_game_square.get_col()
     input_game_type = input_game.get_game_type()
     input_board = input_game.get_board()
-
     list_of_candidate_game_squares = []
-    # 1 == checkers
-    if input_game_type == GAME_TYPE_CHECKERS:
-        # Generate possible moves for checkers
 
-        # normal movement no capture
-        # Direction Up Left
+    if input_game_type == GAME_TYPE_CHECKERS:
+        # First check for normal movement with no capture
+        # Check the square immediately forward and to the left
         if input_row > 0 and input_col > 0:
             if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() is None:
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                   input_col - 1))
 
-        # Direction Up Right
+        # Check the square immediately forward and to the right
         if input_row > 0 and input_col < input_board.get_size() - 1:
             if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() is None:
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                   input_col + 1))
 
-        # capture movements
-        checkers_jump(input_board, input_piece, input_board.get_game_square(input_row, input_col),
-                      list_of_candidate_game_squares)
+        # Check for possible jumps moves
+        checkers_jump(input_board, input_piece, input_game_square, list_of_candidate_game_squares)
 
         return list_of_candidate_game_squares
 
@@ -776,51 +768,56 @@ def build_list_of_moves(input_game_square, input_game):
         return input_game_type.lower()
 
 
-def checkers_jump(input_board, input_piece, input_gamesquare, list_moves):
-    # Direction Up Left
-
-    # checks if top left is on the board
-    if input_gamesquare.get_row() - 1 > 0 and input_gamesquare.get_col() - 1 > 0:
-        # check if there is a coin there
-        if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                       input_gamesquare.get_col() - 1).get_occupying_piece() is not None:
-            # check if its an enemy piece
-            if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                           input_gamesquare.get_col() - 1).get_occupying_piece().get_colour() is not \
+def checkers_jump(input_board, input_piece, input_game_square, list_moves):
+    """
+    Recursive function to identify any checkers jumps
+    Used to help build the list of checkers jump moves
+    Does not return anything, just keeps appending to the list of candidate moves
+    :param input_piece: Piece: The original piece we are moving, doesn't change as we recurse
+    :param input_board: GameBoard: The game board
+    :param input_game_square: GameSquare: The input game square
+    :param list_moves: The working list of candidate game squares
+    """
+    # Check for the jump and up and to the left
+    if input_game_square.get_row() - 2 >= 0 and input_game_square.get_col() - 2 >= 0:
+        # The square jump squares are on the board, check if there is a coin there
+        if input_board.get_game_square(input_game_square.get_row() - 1,
+                                       input_game_square.get_col() - 1).get_occupying_piece() is not None:
+            # There is a coin there, check if its an enemy piece
+            if input_board.get_game_square(input_game_square.get_row() - 1,
+                                           input_game_square.get_col() - 1).get_occupying_piece().get_colour() is not \
                     input_piece.get_colour():
-                # check if up left of the enemy coin is on the board
-                if input_gamesquare.get_row() >= 0 and input_gamesquare.get_col() - 2 >= 0:
-                    # check if up left of the enemy coin is empty
-                    if input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                   input_gamesquare.get_col() - 2).get_occupying_piece() is None:
-                        # can move there
-                        list_moves.append(
-                            input_board.get_game_square(input_gamesquare.get_row() - 2, input_gamesquare.get_col() - 2))
-                        # check if coin can jump more
-                        checkers_jump(input_board, input_piece,
-                                      input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                                  input_gamesquare.get_col() - 2), list_moves)
+                # It is an enemy piece, check if the jump spot is clear
+                if input_board.get_game_square(input_game_square.get_row() - 2,
+                                               input_game_square.get_col() - 2).get_occupying_piece() is None:
+                    # Legal jump identified, add it to the list
+                    list_moves.append(
+                        input_board.get_game_square(input_game_square.get_row() - 2, input_game_square.get_col() - 2))
+                    # Iterate and check if coin can jump more
+                    checkers_jump(input_board, input_piece,
+                                  input_board.get_game_square(input_game_square.get_row() - 2,
+                                                              input_game_square.get_col() - 2), list_moves)
 
-                        # look for another enemy to capture
-
-    # checks if top right is on the board
-    if input_gamesquare.get_row() - 1 > 0 and input_gamesquare.get_col() + 1 < input_board.get_size() - 1:
-        # check if there is a coin there
-        if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                       input_gamesquare.get_col() + 1).get_occupying_piece() is not None:
-            # check if its an enemy piece
-            if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                           input_gamesquare.get_col() + 1).get_occupying_piece().get_colour() is not \
+    # Check for the jump up and to the right
+    if input_game_square.get_row() - 2 >= 0 and input_game_square.get_col() + 2 < input_board.get_size():
+        # The square jump squares are on the board, check if there is a coin there
+        if input_board.get_game_square(input_game_square.get_row() - 1,
+                                       input_game_square.get_col() + 1).get_occupying_piece() is not None:
+            # There is a coin there, check if its an enemy piece
+            if input_board.get_game_square(input_game_square.get_row() - 1,
+                                           input_game_square.get_col() + 1).get_occupying_piece().get_colour() is not \
                     input_piece.get_colour():
-                # check if up left of the enemy coin is on the board
-                if input_gamesquare.get_row() >= 0 and input_gamesquare.get_col() + 2 <= input_board.get_size() - 1:
-                    # check if up left of the enemy coin is empty
-                    if input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                   input_gamesquare.get_col() + 2).get_occupying_piece() is None:
-                        # can move there
-                        list_moves.append(
-                            input_board.get_game_square(input_gamesquare.get_row() - 2, input_gamesquare.get_col() + 2))
-                        # check if coin can jump more
-                        checkers_jump(input_board, input_piece,
-                                      input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                                  input_gamesquare.get_col() + 2), list_moves)
+                # It is an enemy piece, check if the jump spot is clear
+                if input_board.get_game_square(input_game_square.get_row() - 2,
+                                               input_game_square.get_col() + 2).get_occupying_piece() is None:
+                    # Legal jump identified, add it to the list
+                    list_moves.append(
+                        input_board.get_game_square(input_game_square.get_row() - 2, input_game_square.get_col() + 2))
+                    # Iterate and check if coin can jump more from there
+                    checkers_jump(input_board, input_piece,
+                                  input_board.get_game_square(input_game_square.get_row() - 2,
+                                                              input_game_square.get_col() + 2), list_moves)
+
+    # TODO: If the coin is promoted, we need to also check for the backwards jumps
+
+    return
