@@ -9,26 +9,6 @@ GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 
 
-# class PossibleMoves:
-#     """
-#     The class defining possible moves for a piece
-#     Attributes:
-#         __piece: piece object wishing to move, moves to be calculated
-#         __squares_you_can_move_to: List of GameSquares you can to move to
-#         __game: game object to get player locations, etc
-#         __board: board object, created during initialization
-#     """
-
-#     def __init__(self, game_square, game_obj):
-#         self.__game_square = game_square
-#         self.__piece = game_square.get_occupying_piece()
-#         self.__squares_you_can_move_to = []  # Will be a list of GameSquare Objects
-#         self.__game = game_obj
-#         self.__row = game_square.get_row()
-#         self.__col = game_square.get_col()
-#         self.__game_type = game_obj.get_game_type()  # will come back as either "chess" or "checkers"
-#         self.__board = self.__game.get_board()
-
 def build_list_of_moves(input_game_square, input_game):
     """
     Determine based on the piece where it can potentially move and load it into the __squares_you_can_move_to
@@ -42,7 +22,7 @@ def build_list_of_moves(input_game_square, input_game):
     input_col = input_game_square.get_col()
     input_game_type = input_game.get_game_type()
     input_board = input_game.get_board()
-    
+
     list_of_candidate_game_squares = []
     # 1 == checkers
     if input_game_type == GAME_TYPE_CHECKERS:
@@ -53,17 +33,17 @@ def build_list_of_moves(input_game_square, input_game):
         if input_row > 0 and input_col > 0:
             if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() is None:
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                   input_col - 1))
+                                                                                  input_col - 1))
 
         # Direction Up Right
         if input_row > 0 and input_col < input_board.get_size() - 1:
             if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() is None:
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                   input_col + 1))
+                                                                                  input_col + 1))
 
         # capture movements
-        checkers_jump(input_board, input_piece, input_board.get_game_square(input_row, input_col), list_of_candidate_game_squares)
-
+        checkers_jump(input_board, input_piece, input_board.get_game_square(input_row, input_col),
+                      list_of_candidate_game_squares)
 
         return list_of_candidate_game_squares
 
@@ -95,7 +75,7 @@ def build_list_of_moves(input_game_square, input_game):
             # Direction Up
             if input_row > 0:
                 if input_board.get_game_square(input_row - 1,
-                                                input_col).get_occupying_piece() is not None:
+                                               input_col).get_occupying_piece() is not None:
                     if input_board.get_game_square(input_row - 1, input_col).get_occupying_piece() \
                             .get_colour() is not input_piece.get_colour():
                         list_of_candidate_game_squares.append(
@@ -107,7 +87,7 @@ def build_list_of_moves(input_game_square, input_game):
             # Direction Left
             if input_col > 0:
                 if input_board.get_game_square(input_row,
-                                                input_col - 1).get_occupying_piece() is not None:
+                                               input_col - 1).get_occupying_piece() is not None:
                     if input_board.get_game_square(input_row, input_col - 1).get_occupying_piece() \
                             .get_colour() is not input_piece.get_colour():
                         list_of_candidate_game_squares.append(
@@ -119,7 +99,7 @@ def build_list_of_moves(input_game_square, input_game):
             # Direction Right
             if input_col < input_board.get_size() - 1:
                 if input_board.get_game_square(input_row,
-                                                input_col + 1).get_occupying_piece() is not None:
+                                               input_col + 1).get_occupying_piece() is not None:
                     if input_board.get_game_square(input_row, input_col + 1).get_occupying_piece() \
                             .get_colour() is not input_piece.get_colour():
                         list_of_candidate_game_squares.append(
@@ -137,7 +117,7 @@ def build_list_of_moves(input_game_square, input_game):
                             input_board.get_game_square(input_row + 1, input_col - 1))
                 else:
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1,
-                                                                                       input_col - 1))
+                                                                                      input_col - 1))
 
             # Direction Down Right
             if input_row < input_board.get_size() - 1 and input_col < input_board.get_size() - 1:
@@ -148,7 +128,7 @@ def build_list_of_moves(input_game_square, input_game):
                             input_board.get_game_square(input_row + 1, input_col + 1))
                 else:
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1,
-                                                                                       input_col + 1))
+                                                                                      input_col + 1))
 
             # Direction Up Left
             if input_row > 0 and input_col > 0:
@@ -159,7 +139,7 @@ def build_list_of_moves(input_game_square, input_game):
                             input_board.get_game_square(input_row - 1, input_col - 1))
                 else:
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                       input_col - 1))
+                                                                                      input_col - 1))
 
             # Direction Up Right
             if input_row > 0 and input_col < input_board.get_size() - 1:
@@ -170,7 +150,7 @@ def build_list_of_moves(input_game_square, input_game):
                             input_board.get_game_square(input_row - 1, input_col + 1))
                 else:
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                       input_col + 1))
+                                                                                      input_col + 1))
 
             # Requirements for Castling
             # The castling must be kingside or queenside.
@@ -187,6 +167,7 @@ def build_list_of_moves(input_game_square, input_game):
             # check if rook has not moved yet
             # TODO: create a function that will go over the enemy pieces and check for a checkmate
             #  so if checkmate it will not add to the list
+
             # add the location of the rook to be a possible move
             if not input_piece.get_moved_yet_status():
                 # Kingside
@@ -209,8 +190,6 @@ def build_list_of_moves(input_game_square, input_game):
                                 .get_colour() is input_piece.get_colour():
                             if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
                                 list_of_candidate_game_squares.append(input_board.get_game_square(7, 0))
-
-
 
         elif type(input_piece).__name__ == "Queen":
             # The queen can be moved any number of unoccupied squares in a straight line
@@ -329,8 +308,6 @@ def build_list_of_moves(input_game_square, input_game):
                                             input_board.get_game_board()[row][col])
                         else:
                             break
-
-
             # Top Left
             row_pos = input_row
             col_neg = input_col
@@ -358,8 +335,6 @@ def build_list_of_moves(input_game_square, input_game):
                                             input_board.get_game_board()[row][col])
                         else:
                             break
-
-
             # Bottom Right
             row_neg = input_row
             col_pos = input_col
@@ -415,8 +390,6 @@ def build_list_of_moves(input_game_square, input_game):
                                             input_board.get_game_board()[row][col])
                         else:
                             break
-
-
 
         elif type(input_piece).__name__ == "Bishop":
             # The bishop can be moved any number of unoccupied squares in a straight line diagonally
@@ -456,8 +429,6 @@ def build_list_of_moves(input_game_square, input_game):
                         else:
                             break
 
-
-
             # Top Left
             row_pos = input_row
             col_neg = input_col
@@ -485,7 +456,6 @@ def build_list_of_moves(input_game_square, input_game):
                                             input_board.get_game_board()[row][col])
                         else:
                             break
-
 
             # Bottom Right
             row_neg = input_row
@@ -542,8 +512,6 @@ def build_list_of_moves(input_game_square, input_game):
                                             input_board.get_game_board()[row][col])
                         else:
                             break
-
-
 
         elif type(input_piece).__name__ == "Knight":
 
@@ -732,7 +700,6 @@ def build_list_of_moves(input_game_square, input_game):
                     list_of_candidate_game_squares.append(
                         input_board.get_game_board()[input_row][col_neg])
 
-
         elif type(input_piece).__name__ == "Pawn":
             # Normally a pawn moves by advancing a single square,
             #  but the first time a pawn moves, it has the option of advancing two squares. Pawns may not use the
@@ -764,20 +731,20 @@ def build_list_of_moves(input_game_square, input_game):
                 # left most case
                 if input_col == 0:
                     if input_board.get_game_square(input_row - 1,
-                                                    input_col + 1).get_occupying_piece() is not None:
+                                                   input_col + 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                               input_col + 1))
+                                                                                              input_col + 1))
 
                 # right most case:
                 elif input_col == input_board.get_size() - 1:
                     if input_board.get_game_square(input_row - 1,
-                                                    input_col - 1).get_occupying_piece() is not None:
+                                                   input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                               input_col - 1))
+                                                                                              input_col - 1))
 
                 # Non edge case
                 # checks for both sides of the diagonal front
@@ -785,19 +752,18 @@ def build_list_of_moves(input_game_square, input_game):
                 else:
                     # front left
                     if input_board.get_game_square(input_row - 1,
-                                                    input_col - 1).get_occupying_piece() is not None:
+                                                   input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                               input_col - 1))
+                                                                                              input_col - 1))
                     # front right
                     if input_board.get_game_square(input_row - 1,
-                                                    input_col - 1).get_occupying_piece() is not None:
+                                                   input_col - 1).get_occupying_piece() is not None:
                         if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                               input_col - 1))
-
+                                                                                              input_col - 1))
 
         else:
             # Could not identify the type of piece
@@ -809,35 +775,7 @@ def build_list_of_moves(input_game_square, input_game):
         # Game mode is neither "chess" nor "checkers"
         return input_game_type.lower()
 
-# COMMENTED OUT UNTILL GROUP EXPLICITLY CALLS FOR REMOVAL
-# def select_best(self, candidate_game_squares):
-#     """
-#     Chooses and return the best game square to move to from a list of candidate squares
-#     :param: List of GameSquares to choose from
-#     :return: GameSquare, the best game square to move to. Returns None if there are no moves for that square
-#     """
-#     if not candidate_game_squares:
-#         # List of moves is empty
-#         return None
-#     elif len(candidate_game_squares) == 1:
-#         # The is only one move, it has to be the best
-#         return candidate_game_squares[0]
-#     else:
-#         # TODO: Some AI code to evaluate the list of moves to choose the best one, in the mean time we are jsut
-#         #  returning the first one in the list
-#         # Right now we will just return a random one
-#         random_index = (random.randrange(0, len(candidate_game_squares), 1))
-#         return candidate_game_squares[random_index]
 
-# COMMENTED OUT UNTILL GROUP EXPLICITLY CALLS FOR REMOVAL
-# def get_list_of_squares_you_can_move_to(self):
-#     """
-#     :return: GameSquare[]: A list of game squares that are legal to move to
-#     """
-#     return input_squares_you_can_move_to
-
-# Added functions might not be in the domain model yet
-# ------------------------------------------------------------------------------------------------
 def checkers_jump(input_board, input_piece, input_gamesquare, list_moves):
     # Direction Up Left
 
@@ -845,22 +783,23 @@ def checkers_jump(input_board, input_piece, input_gamesquare, list_moves):
     if input_gamesquare.get_row() - 1 > 0 and input_gamesquare.get_col() - 1 > 0:
         # check if there is a coin there
         if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                        input_gamesquare.get_col() - 1).get_occupying_piece() is not None:
+                                       input_gamesquare.get_col() - 1).get_occupying_piece() is not None:
             # check if its an enemy piece
             if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                            input_gamesquare.get_col() - 1).get_occupying_piece().get_colour() is not \
+                                           input_gamesquare.get_col() - 1).get_occupying_piece().get_colour() is not \
                     input_piece.get_colour():
                 # check if up left of the enemy coin is on the board
                 if input_gamesquare.get_row() >= 0 and input_gamesquare.get_col() - 2 >= 0:
                     # check if up left of the enemy coin is empty
                     if input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                    input_gamesquare.get_col() - 2).get_occupying_piece() is None:
+                                                   input_gamesquare.get_col() - 2).get_occupying_piece() is None:
                         # can move there
                         list_moves.append(
                             input_board.get_game_square(input_gamesquare.get_row() - 2, input_gamesquare.get_col() - 2))
                         # check if coin can jump more
-                        checkers_jump(input_board, input_piece, input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                                        input_gamesquare.get_col() - 2), list_moves)
+                        checkers_jump(input_board, input_piece,
+                                      input_board.get_game_square(input_gamesquare.get_row() - 2,
+                                                                  input_gamesquare.get_col() - 2), list_moves)
 
                         # look for another enemy to capture
 
@@ -868,21 +807,20 @@ def checkers_jump(input_board, input_piece, input_gamesquare, list_moves):
     if input_gamesquare.get_row() - 1 > 0 and input_gamesquare.get_col() + 1 < input_board.get_size() - 1:
         # check if there is a coin there
         if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                        input_gamesquare.get_col() + 1).get_occupying_piece() is not None:
+                                       input_gamesquare.get_col() + 1).get_occupying_piece() is not None:
             # check if its an enemy piece
             if input_board.get_game_square(input_gamesquare.get_row() - 1,
-                                            input_gamesquare.get_col() + 1).get_occupying_piece().get_colour() is not \
+                                           input_gamesquare.get_col() + 1).get_occupying_piece().get_colour() is not \
                     input_piece.get_colour():
                 # check if up left of the enemy coin is on the board
                 if input_gamesquare.get_row() >= 0 and input_gamesquare.get_col() + 2 <= input_board.get_size() - 1:
                     # check if up left of the enemy coin is empty
                     if input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                    input_gamesquare.get_col() + 2).get_occupying_piece() is None:
+                                                   input_gamesquare.get_col() + 2).get_occupying_piece() is None:
                         # can move there
                         list_moves.append(
                             input_board.get_game_square(input_gamesquare.get_row() - 2, input_gamesquare.get_col() + 2))
                         # check if coin can jump more
-                        checkers_jump(input_board, input_piece, input_board.get_game_square(input_gamesquare.get_row() - 2,
-                                                                        input_gamesquare.get_col() + 2), list_moves)
-
-# ------------------------------------------------------------------------------------------------
+                        checkers_jump(input_board, input_piece,
+                                      input_board.get_game_square(input_gamesquare.get_row() - 2,
+                                                                  input_gamesquare.get_col() + 2), list_moves)
