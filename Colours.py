@@ -20,3 +20,7 @@ class ColourOffset(IntEnum):
 
 COLOUR_STRING_LOOK_UP_TABLE = [("White", "Black"),
                                ("Red", "Black")]
+
+COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black"),
+                                     ("Red", "Black"),
+                                     ("Yellow", "Blue")]

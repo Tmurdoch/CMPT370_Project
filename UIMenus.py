@@ -4,7 +4,7 @@ from PlayerType import PlayerType
 from Game import Game
 from PieceSet import PieceSet
 from Timer import Timer
-from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
+from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from GameType import GameType
@@ -29,24 +29,28 @@ class TheWindow(Gtk.Window):
                 self.game_choice_box.chess_button.connect("clicked", self.game_choice_chess_clicked)
                 self.game_choice_box.checkers_button.connect("clicked", self.game_choice_checkers_clicked)
                 self.game_choice_box.back_button.connect("clicked", self.game_choice_back_clicked)
-                self.game_choice_box.hide()
+
 
                 self.player_type = PlayerTypeBox()
                 self.player_type.single_button.connect("clicked", self.player_type_single_clicked)
                 self.player_type.multiplayer_button.connect("clicked", self.player_type_multi_clicked)
                 self.player_type.back_button.connect("clicked", self.player_type_back_clicked)
-                self.player_type.hide()
+
 
                 self.customization = CustomizationGrid()
                 self.customization.back_button.connect("clicked", self.customization_back_clicked)
                 self.customization.start_button.connect("clicked", self.customization_start_clicked)
-                self.customization.hide()
+
 
                 self.grid = Gtk.Grid()
                 self.grid.attach(self.main_box,0,0,1,1)
                 self.grid.attach(self.game_choice_box,0,0,1,1)
                 self.grid.attach(self.player_type,0,0,1,1)
                 self.grid.attach(self.customization,0,0,1,1)
+
+                self.game_choice_box.hide()
+                self.player_type.hide()
+                self.customization.hide()
                 self.add(self.grid)
                 self.main_box.show()
 
@@ -233,13 +237,13 @@ class CustomizationGrid(Gtk.Grid):
 
         x=0
         self.board_radio_buttons = []
-        self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+        self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
         x+=1
-        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
-                self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0], COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+                self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0], COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
                 x+=1
         x=0
-        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
                 self.attach(self.board_radio_buttons[x],3,2+x,1,1)
                 x+=1
 
