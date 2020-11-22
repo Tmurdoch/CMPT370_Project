@@ -510,35 +510,36 @@ def build_list_of_moves(input_game_square, input_game):
                             break
 
         elif type(input_piece).__name__ == "Knight":
-
-            # check if the possible move (row, col) is in the board or check for bounds
-            # check if game square has a piece
-            # check if it has a non friendly piece if so add to list of moves
-            # if game sqaure is empty add it to list of moves
+            # Compared to other chess pieces, the knight's movement is unique: it may move two squares vertically and
+            # one square horizontally, or two squares horizontally and one square vertically (with both forming the
+            # shape of an L). While moving, the knight can jump over pieces to reach its destination.
+            # Here are the steps taken in checking for kngiht movements:
+            #   1. check if the possible move (row, col) is in the board or check for bounds
+            #   2. check if game square has a piece
+            #   3. check if it has a non friendly piece if so add to list of moves
+            #   4. if game sqaure is empty add it to list of moves
 
             # moves up then right
             if ((input_row - 2) >= 0) and ((input_col + 1) <= input_board.get_size() - 1):
                 if input_board.get_game_square(input_row - 2, input_col + 1).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row - 2, input_col + 1).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        up_right_square = input_board.get_game_square(input_row - 2, input_col + 1)
-                        list_of_candidate_game_squares.append(up_right_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 2, input_col + 1))
                 elif input_board.get_game_square(input_row - 2, input_col + 1).get_occupying_piece() is None:
-                    up_right_square = input_board.get_game_square(input_row - 2, input_col + 1)
-                    list_of_candidate_game_squares.append(up_right_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 2, input_col + 1))
 
             # moves up then left
             if ((input_row - 2) >= 0) and ((input_col - 1) >= 0):
                 if input_board.get_game_square(input_row - 2, input_col - 1).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row - 2, input_col - 1).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        up_left_square = input_board.get_game_square(input_row - 2, input_col - 1)
-                        list_of_candidate_game_squares.append(up_left_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 2, input_col - 1))
                 elif input_board.get_game_square(input_row - 2, input_col - 1).get_occupying_piece() is None:
-                    up_left_square = input_board.get_game_square(input_row - 2, input_col - 1)
-                    list_of_candidate_game_squares.append(up_left_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 2, input_col - 1))
 
             # moves down then right
             if ((input_row + 2) <= input_board.get_size() - 1) \
@@ -546,36 +547,33 @@ def build_list_of_moves(input_game_square, input_game):
                 if input_board.get_game_square(input_row + 2, input_col + 1).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row + 2, input_col + 1).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        down_right_square = input_board.get_game_square(input_row + 2, input_col + 1)
-                        list_of_candidate_game_squares.append(down_right_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 2, input_col + 1))
                 elif input_board.get_game_square(input_row + 2, input_col + 1).get_occupying_piece() is None:
-                    down_right_square = input_board.get_game_square(input_row + 2, input_col + 1)
-                    list_of_candidate_game_squares.append(down_right_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 2, input_col + 1))
 
             # moves down then left
             if ((input_row + 2) <= input_board.get_size() - 1) and ((input_col - 1) >= 0):
                 if input_board.get_game_square(input_row + 2, input_col - 1).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row + 2, input_col - 1).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        down_left_square = input_board.get_game_square(input_row + 2, input_col - 1)
-                        list_of_candidate_game_squares.append(down_left_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 2, input_col - 1))
                 elif input_board.get_game_square(input_row + 2, input_col - 1).get_occupying_piece() is None:
-                    down_left_square = input_board.get_game_square(input_row + 2, input_col - 1)
-                    list_of_candidate_game_squares.append(down_left_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 2, input_col - 1))
 
             # moves right then up
             if ((input_row - 1) >= 0) and ((input_col + 2) <= input_board.get_size() - 1):
                 if input_board.get_game_square(input_row - 1, input_col + 2).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row - 1, input_col + 2).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        right_up_square = input_board.get_game_square(input_row - 1, input_col + 2)
-                        list_of_candidate_game_squares.append(right_up_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1, input_col + 2))
                 elif input_board.get_game_square(input_row - 1, input_col + 2).get_occupying_piece() is None:
-                    right_up_square = input_board.get_game_square(input_row - 1, input_col + 2)
-                    list_of_candidate_game_squares.append(right_up_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1, input_col + 2))
 
             # moves right then down
             if ((input_row + 1) <= input_board.get_size() - 1) \
@@ -583,36 +581,34 @@ def build_list_of_moves(input_game_square, input_game):
                 if input_board.get_game_square(input_row + 1, input_col + 2).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row + 1, input_col + 2).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        right_down_square = input_board.get_game_square(input_row + 1, input_col + 2)
-                        list_of_candidate_game_squares.append(right_down_square)
+                        # Capture move, add it to the list
+                        input_board.get_game_square(input_row - 1, input_col + 2)
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1, input_col + 2))
                 elif input_board.get_game_square(input_row + 1, input_col + 2).get_occupying_piece() is None:
-                    right_down_square = input_board.get_game_square(input_row + 1, input_col + 2)
-                    list_of_candidate_game_squares.append(right_down_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1, input_col + 2))
 
             # moves left then up
             if ((input_row - 1) >= 0) and ((input_col - 2) >= 0):
                 if input_board.get_game_square(input_row - 1, input_col - 2).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row - 1, input_col - 2).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        left_up_square = input_board.get_game_square(input_row - 1, input_col - 2)
-                        list_of_candidate_game_squares.append(left_up_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1, input_col - 2))
                 elif input_board.get_game_square(input_row - 1, input_col - 2).get_occupying_piece() is None:
-                    left_up_square = input_board.get_game_square(input_row - 1, input_col - 2)
-                    list_of_candidate_game_squares.append(left_up_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1, input_col - 2))
 
             # moves left then down
             if ((input_row + 1) <= input_board.get_size() - 1) and ((input_col - 2) >= 0):
                 if input_board.get_game_square(input_row + 1, input_col - 2).get_occupying_piece() is not None:
                     if (input_board.get_game_square(input_row + 1, input_col - 2).get_occupying_piece()
                             .get_colour() is not input_piece.get_colour()):
-                        # need to find out how to capture a piece
-                        left_down_square = input_board.get_game_square(input_row + 1, input_col - 2)
-                        list_of_candidate_game_squares.append(left_down_square)
+                        # Capture move, add it to the list
+                        list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1, input_col - 2))
                 elif input_board.get_game_square(input_row + 1, input_col - 2).get_occupying_piece() is None:
-                    left_down_square = input_board.get_game_square(input_row + 1, input_col - 2)
-                    list_of_candidate_game_squares.append(left_down_square)
+                    # Square was empty, add it to the list
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1, input_col - 2))
 
         elif type(input_piece).__name__ == "Rook":
             # The rook can be moved any number of unoccupied squares in a straight line vertically or horizontally
