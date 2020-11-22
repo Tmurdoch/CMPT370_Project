@@ -33,7 +33,8 @@ class Player(object):
         self.__timer = timer
         self.__castled = False
 
-    def build_possible_moves_for_single_square(self, game_square, game):
+    @staticmethod
+    def build_possible_moves_for_single_square(game_square, game):
         """
         Generates and returns a list of possible moves for a single game square.
         :param: GameSquare object, for getting game square to build list of moves for
@@ -42,7 +43,8 @@ class Player(object):
         """
         return build_list_of_moves(game_square, game)
 
-    def build_possible_moves_for_all_pieces(self, game):
+    @staticmethod
+    def build_possible_moves_for_all_pieces(game):
         """Generates and returns all possible moves for all current player's pieces on the board.
             :param: Game object, for getting player and board
             :return: List of GameSquares for all the current player's pieces"""
