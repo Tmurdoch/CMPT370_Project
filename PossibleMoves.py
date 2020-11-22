@@ -178,16 +178,11 @@ def build_list_of_moves(input_game_square, input_game):
             # TODO: Review the list of candidate moves, and filter out any that would place the king in check
 
         elif type(input_piece).__name__ == "Queen":
-            # The queen can be moved any number of unoccupied squares in a straight line
-            # vertically, horizontally, or diagonally, thus combining the moves of the rook and bishop
-            # Vertical movements
-            # check from the piece to a direction: up, down, left, right
-            # will stop until sees a peace
-            # if piece friendly stop
-            # if non friendly add add (row, col) to possible moves but also stops
-            # if empty then add it to list and keep going
+            # The queen can be moved any number of unoccupied squares in a straight line vertically, horizontally,
+            # or diagonally, will stop until sees a peace
 
-            # Vertical movements
+            # First check for vertical movements, stop if we see a piece.  If piece is unfriendly add the capture
+            # move to the list.
 
             # Vertical UP
             # check from piece to top row -- (row, col) -> (0, col)
@@ -203,6 +198,7 @@ def build_list_of_moves(input_game_square, input_game):
                         list_of_candidate_game_squares.append(input_board.get_game_board()[row_pos][input_col])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[row_pos][input_col])
 
             # Vertical DOWN
@@ -219,9 +215,11 @@ def build_list_of_moves(input_game_square, input_game):
                         list_of_candidate_game_squares.append(input_board.get_game_board()[row_neg][input_col])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[row_neg][input_col])
 
-            # Horizontal movements
+            # Now check for horizontal movements, again stop if we see a piece.  If piece is unfriendly add the capture
+            # move to the list.
 
             # Horizontal RIGHT
             # check from piece to right col -- (row, col) -> (row, 7)
@@ -238,6 +236,7 @@ def build_list_of_moves(input_game_square, input_game):
                         list_of_candidate_game_squares.append(input_board.get_game_board()[input_row][col_pos])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(input_board.get_game_board()[input_row][col_pos])
 
             # Horizontal LEFT
@@ -257,15 +256,18 @@ def build_list_of_moves(input_game_square, input_game):
                             input_board.get_game_board()[input_row][col_neg])
                         break
                 else:
+                    # Square was empty, add it to the list
                     list_of_candidate_game_squares.append(
                         input_board.get_game_board()[input_row][col_neg])
 
-            # check if the row or column are out of bounds
-            # check specific corner from piece
-            # will stop until sees a peace
-            # if piece friendly stop
-            # if non friendly add add (row, col) to possible moves but also stops
-            # if empty then add it to list and keep going
+            # Now check for diagonal movements, again stop if we see a piece.  If piece is unfriendly add the capture
+            # move to the list.  Here are the step taken:
+            #   1. check if the row or column are out of bounds
+            #   2. check specific corner from piece
+            #   3. will stop until sees a peace
+            #   4. if piece friendly stop
+            #   5. if non friendly add add (row, col) to possible moves but also stops
+            #   6. if empty then add it to list and keep going
 
             # Top Right
             row_pos = input_row
@@ -290,6 +292,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -317,6 +320,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -344,6 +348,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -372,6 +377,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
