@@ -384,14 +384,14 @@ def build_list_of_moves(input_game_square, input_game):
                             break
 
         elif type(input_piece).__name__ == "Bishop":
-            # The bishop can be moved any number of unoccupied squares in a straight line diagonally
-
-            # check if the row or column are out of bounds
-            # check specific corner from piece
-            # will stop until sees a peace
-            # if piece friendly stop
-            # if non friendly add add (row, col) to possible moves but also stops
-            # if empty then add it to list and keep going
+            # The bishop can be moved any number of unoccupied squares in a straight line diagonally.
+            # Stop if we see a piece. If piece is unfriendly add the capture move to the list. Here are the step taken:
+            #   1. check if the row or column are out of bounds
+            #   2. check specific corner from piece
+            #   3. will stop until sees a peace
+            #   4. if piece friendly stop
+            #   5. if non friendly add add (row, col) to possible moves but also stops
+            #   6. if empty then add it to list and keep going
 
             # Top Right
             row_pos = input_row
@@ -416,6 +416,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -444,6 +445,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -472,6 +474,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
@@ -500,6 +503,7 @@ def build_list_of_moves(input_game_square, input_game):
                                             stopper = True
                                             break
                                     else:
+                                        # Square was empty, add it to the list
                                         list_of_candidate_game_squares.append(
                                             input_board.get_game_board()[row][col])
                         else:
