@@ -168,12 +168,12 @@ class Player(object):
                 # The king was chosen, check to see if the destination squares were rooks
 
                 # Check king-side
-                if origin_square.get_row() == 7 and origin_square.get_col() == 7 \
-                        and isinstance(origin_square.get_occupying_piece(), Rook):
+                if dest_square.get_row() == 7 and dest_square.get_col() == 7 \
+                        and isinstance(dest_square.get_occupying_piece(), Rook):
                     # We have the right pieces, let's confirm that neither piece have moved yet
                     if not origin_square.get_occupying_piece().get_moved_yet_status() \
                             and not dest_square.get_occupying_piece().get_moved_yet_status():
-                        # We are good to go ahead and make the king side castle
+                        # We are good to go ahead and make the king-side castle
                         king_dest_square = board.get_game_square(7, 6)
                         rook_dest_square = board.get_game_square(7, 5)
 
@@ -191,12 +191,12 @@ class Player(object):
                                             "in the way, King-side error")
 
                 # Check queen-side
-                if origin_square.get_row() == 7 and origin_square.get_col() == 0 and \
-                        isinstance(origin_square.get_occupying_piece(), Rook):
+                if dest_square.get_row() == 7 and dest_square.get_col() == 0 and \
+                        isinstance(dest_square.get_occupying_piece(), Rook):
                     # We have the right pieces, let's confirm that neither piece have moved yet
                     if not origin_square.get_occupying_piece().get_moved_yet_status() and \
                             not dest_square.get_occupying_piece().get_moved_yet_status():
-                        # We are good to go ahead and make the queen side castle
+                        # We are good to go ahead and make the queen-side castle
                         king_dest_square = board.get_game_square(7, 3)
                         rook_dest_square = board.get_game_square(7, 2)
 
