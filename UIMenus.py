@@ -48,9 +48,6 @@ class TheWindow(Gtk.Window):
                 self.grid.attach(self.player_type,0,0,1,1)
                 self.grid.attach(self.customization,0,0,1,1)
 
-                self.game_choice_box.hide()
-                self.player_type.hide()
-                self.customization.hide()
                 self.add(self.grid)
                 self.main_box.show()
 
@@ -555,4 +552,7 @@ if __name__ == "__main__":
     win = TheWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
+    win.game_choice_box.hide()
+    win.player_type.hide()
+    win.customization.hide()
     Gtk.main()
