@@ -7,7 +7,6 @@ import random
 from unittest import mock
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
-from Move import CheckersMove, ChessMove
 from PossibleMoves import PossibleMoves
 from Timer import Timer
 import time  # For testing the timer
@@ -480,13 +479,6 @@ def test_possible_moves():
     assert sorted([x.get_row_and_column() for x in lomcoinb2]) == sorted([(3, 2), (1, 0), (1, 4), (4, 5)])
 
 
-def test_move():
-    piece1 = King("Black")
-    checkers_move = CheckersMove()
-    checkers_move.set_piece(piece1)
-    assert checkers_move.get_piece() == piece1
-
-
 def test_timer():
     timer1_that_is_enabled = Timer(90, True)
     assert 89.9 < timer1_that_is_enabled.get_time_remaining_s() < 90.1
@@ -506,14 +498,6 @@ def test_timer():
 
     timer4_that_is_enabled = Timer(-1, True)
     assert timer4_that_is_enabled.timed_out()
-
-    chess_move = ChessMove()
-    chess_move.set_castled()
-    try:
-        chess_move.set_castled()
-    except RuntimeError:
-        assert True
-
 
 def test_board():
     for x in range(1, 101):
