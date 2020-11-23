@@ -700,7 +700,7 @@ def build_list_of_moves(input_game_square, input_game):
         elif type(input_piece).__name__ == "Pawn":
             # Normally a pawn moves by advancing a single square,
             #  but the first time a pawn moves, it has the option of advancing two squares. Pawns may not use the
-            #  initial two-square advance to jump over an occupied square, or to capture. Any piece immediately 
+            #  initial two-square advance to jump over an occupied square, or to capture. Any piece immediately
             #  in front of a pawn, friend or foe, blocks its advance.
 
             # Normal non-capture movements
@@ -751,12 +751,12 @@ def build_list_of_moves(input_game_square, input_game):
                                                                                               input_col - 1))
                     # front right
                     if input_board.get_game_square(input_row - 1,
-                                                   input_col - 1).get_occupying_piece() is not None:
-                        if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
+                                                   input_col + 1).get_occupying_piece() is not None:
+                        if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() \
                                 .get_colour() is not input_piece.get_colour():
                             # Capture move, add it to the list
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
-                                                                                              input_col - 1))
+                                                                                              input_col + 1))
                 # TODO: Look for "en passant" pawn capture opportunity.
 
         else:
@@ -829,97 +829,106 @@ def checkers_jump(input_board, input_piece, input_game_square, list_moves):
     return
 
 
-def filter_check_moves(gamesquare, game, list_of_moves):
-    print("\nFiltering: ", type(gamesquare.get_occupying_piece()).__name__, " at ", gamesquare.get_row_and_column())
-    board = game.get_board()
+def temp_move(origin_square, destination_square):
+    """
+    mimics a movement of a piece in the board.
+    once used should use undo temp to undo the move
+    origin_square: gamesquare where the piece is comming form
+    destination_square: gamesquare where the piece is going
+    return: piece or None from the destination_sqaure
+    """
+    previous_destination_piece = None
+    # make a copy of the piece on destination if there is one
+    if destination_square.get_occupying_piece() is not None:
+        previous_destination_piece = copy.deepcopy(destination_square.get_occupying_piece())
+    destination_square.put_piece_here(origin_square.get_occupying_piece())
+    origin_square.remove_occupying_piece()
+    return previous_destination_piece
 
+
+def undo_temp_move(previous_origin_square, previous_destination_square, previous_destination_piece):
+    """
+    Undo the move that temp_move did
+    previous_origin_square: gamesquare what you had for origin_square from temp_move
+    previous_destination_square: gamesquare what you had for destination_square from temp_move
+    previous_destination_square: None or a piece previously on the destination_square
+    """
+    previous_origin_square.put_piece_here(previous_destination_square.get_occupying_piece())
+    previous_destination_square.put_piece_here(previous_destination_piece)
+
+
+def make_move_and_check(origin_gamesquare, destination_gamesquare, game):
+    """
+    This mimics moving the a piece from an origin to a destination
+    origin_square: gamesquare where the piece is comming form
+    destination_square: gamesquare where the piece is going
+    return: True if the move cause a check and False if it does not
+    """
+    board = game.get_board()
+    # my temp move
+    prev_piece_from_destination = temp_move(origin_gamesquare, destination_gamesquare)
+
+    # board switches as if i have actually made that move
+    board.switch_sides()
+
+    # my king location
+    my_king = None
+
+    # enemy moves currently at the bottom of the board
+    # get all their moves
+    # also look for where my king is
+    enemy_moves = []
+    for row in board.get_game_board():
+        for gamesquare in row:
+            if gamesquare.get_occupying_piece() is not None:
+                # get moves of enemy pieces
+                if gamesquare.get_occupying_piece().get_colour() is not destination_gamesquare.get_occupying_piece().get_colour():
+                    enemy_moves += build_list_of_moves(gamesquare, game)
+                # find my king
+                if gamesquare.get_occupying_piece().get_colour() is destination_gamesquare.get_occupying_piece().get_colour():
+                    if type(gamesquare.get_occupying_piece()).__name__ is "King":
+                        my_king = gamesquare
+
+    # make sure you find your king
+    if my_king is not None:
+        for an_enemy_move in enemy_moves:
+            if (my_king.get_row(), my_king.get_col()) == (an_enemy_move.get_row(), an_enemy_move.get_col()):
+                # we have to return everything back before the move
+                board.switch_sides()
+                undo_temp_move(origin_gamesquare, destination_gamesquare, prev_piece_from_destination)
+                return True
+    else:
+        # we have to return everything back before the move
+        board.switch_sides()
+        undo_temp_move(origin_gamesquare, destination_gamesquare, prev_piece_from_destination)
+        raise Exception("Did not find the King")
+
+    # we have to return everything back before the move
+    board.switch_sides()
+    undo_temp_move(origin_gamesquare, destination_gamesquare, prev_piece_from_destination)
+    return False
+
+
+def filter_check_moves(my_gamesquare, game, list_of_moves_to_be_filtered):
+    """
+    This creates a filtered list of gamesquares from list_of_moves_to_be_filtered that filter
+    all the moves that cause a check
+    my_gamesquare: a gamesquare where the piece is moving from
+    game: a chess game
+    list_of_moves_to_be_filtered: list of gamesquares that is from build_list_of_moves
+    returns: filtered_moves which is a list of gamesquares
+    """
+    # new list
     filtered_moves = []
 
-    if gamesquare.get_occupying_piece() is not None:
-
-        # all of enemy list of moves
-        enemy_moves = build_enemy_list_of_moves(gamesquare, game)
-
-        # if king moves being filtered
-        if type(gamesquare.get_occupying_piece()).__name__ is "King":
-            # try to look for a game square in enemy moves that is same as king move
-            # if a king move is not found on the enemy moves add it to new king moves
-            for king_move in list_of_moves:
-                found = False
-                for enemy_move in enemy_moves:
-                    if (king_move.get_row(), king_move.get_col()) == (
-                    enemy_move.get_row(), enemy_move.get_col()):
-                        found = True
-                if not found:
-                    filtered_moves.append(king_move)
-
-        # if anyother piece is being filtered
-        else:
-            # look for my king to check identify moves that can cause a check
-            for row in board.get_game_board():
-                for col in row:
-                    if col.get_occupying_piece() is not None:
-                        if col.get_occupying_piece().get_colour() is gamesquare.get_occupying_piece().get_colour():
-                            if type(col.get_occupying_piece()).__name__ is "King":
-                                my_king = col
-
-            currently_check_on_king = False
-            # identify if your king is checked
-            # if so, you can only move the king so everything for this gamesquare piece
-            # are removed
-            for enemy_move in enemy_moves:
-                if (my_king.get_row(), my_king.get_col()) == (enemy_move.get_row(), enemy_move.get_col()):
-                    currently_check_on_king = True
-
-            if currently_check_on_king:
-                # your king is check at this point
-                # now check if you have a move to either block or capture the pieces that has a threat on the king
-                temp_gs = copy.deepcopy(gamesquare)
-                for moves in list_of_moves:
-                    # temporarily remove piece on game square trying to move and then check if moving this
-                    # will result in a check
-                    prev_piece = board.get_game_square(moves.get_row(), moves.get_col()).get_occupying_piece()
-                    board.get_game_square(moves.get_row(), moves.get_col()).put_piece_here(
-                        gamesquare.get_occupying_piece())
-                    board.get_game_square(gamesquare.get_row(), gamesquare.get_col()).remove_occupying_piece()
-
-                    enemy_moves = build_enemy_list_of_moves(temp_gs, game)
-
-                    board.get_game_square(gamesquare.get_row(), gamesquare.get_col()).put_piece_here(
-                        temp_gs.get_occupying_piece())
-                    board.get_game_square(moves.get_row(), moves.get_col()).put_piece_here(prev_piece)
-                    still_check_on_king = []
-                    list_of_same = [x.get_row_and_column() for x in enemy_moves]
-                    for enemy_move in enemy_moves:
-                        if (my_king.get_row(), my_king.get_col()) == (enemy_move.get_row(), enemy_move.get_col()):
-                            list_of_same.append(enemy_move.get_row_and_column())
-                            still_check_on_king.append(True)
-                    print(list_of_same)
-                    if len(still_check_on_king) == 0:
-                        filtered_moves.append(moves)
-
-            else:
-                # your king is not check at this point
-                # now check if the move will cause a check
-                temp_gs = copy.deepcopy(gamesquare)
-                for moves in list_of_moves:
-                    # temporarily remove piece on game square trying to move and then check if moving this
-                    # will result in a check
-                    prev_piece = board.get_game_square(moves.get_row(), moves.get_col()).get_occupying_piece()
-                    board.get_game_square(moves.get_row(), moves.get_col()).put_piece_here(gamesquare.get_occupying_piece())
-                    board.get_game_square(gamesquare.get_row(), gamesquare.get_col()).remove_occupying_piece()
-                    enemy_moves = build_enemy_list_of_moves(temp_gs, game)
-                    board.get_game_square(gamesquare.get_row(), gamesquare.get_col()).put_piece_here(
-                        temp_gs.get_occupying_piece())
-                    board.get_game_square(moves.get_row(), moves.get_col()).put_piece_here(prev_piece)
-                    check_on_king = False
-                    for enemy_move in enemy_moves:
-                        if (my_king.get_row(), my_king.get_col()) == (enemy_move.get_row(), enemy_move.get_col()):
-                            check_on_king = True
-                    if not check_on_king:
-                        filtered_moves.append(moves)
+    # check every move if moves cause a check
+    for my_move in list_of_moves_to_be_filtered:
+        if not make_move_and_check(my_gamesquare, my_move, game):
+            filtered_moves.append(my_move)
 
     return filtered_moves
+
+# For testing -------------------------------------------
 
 
 def build_enemy_list_of_moves(gamesquare, game):
@@ -946,3 +955,32 @@ def build_enemy_list_of_moves(gamesquare, game):
 
     return enemy_moves
 
+
+def is_king_checked(your_king_gamesquare, game):
+    # get all enemy moves
+    # compare enemy moves to king position
+    # all of enemy list of moves
+    enemy_moves = []
+    board = game.get_board()
+
+    # switch board to identify enemy moves
+    board.switch_sides()
+
+    # checks every game piece in the switched board
+    # for every moves that the enemy can make
+    for row in board.get_game_board():
+        for gamesquare in row:
+            if gamesquare.get_occupying_piece() is not None:
+                if gamesquare.get_occupying_piece().get_colour() is not your_king_gamesquare.get_occupying_piece().get_colour():
+                    # add the game square one by one to the enemy moves
+                    enemy_moves += build_list_of_moves(gamesquare, game)
+
+    # check if one of the enemy moves is equal to your kings gamesquare
+    for move in enemy_moves:
+        if (move.get_row(), move.get_col()) == (your_king_gamesquare.get_row(), your_king_gamesquare.get_col()):
+            board.switch_sides()
+            return True
+    board.switch_sides()
+    return False
+
+# -----------------------------------------------------------

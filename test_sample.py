@@ -1634,14 +1634,12 @@ def test_check():
     my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
                                                 my_chess_game.get_dark_player().get_piece_set().get_live_pieces())
 
-    my_chess_game.get_board().print_game_board()
-
+    # test filter moves using old tests
     my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(7, 4),
                                                  my_chess_game)
     filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4), my_chess_game, my_moves)
 
     assert sorted([x.get_row_and_column() for x in filtered_moves]) == []
-
 
     # testing Chess
     # list of moves in particular row
@@ -1656,31 +1654,23 @@ def test_check():
                     [(3, 7), (3, 5), (4, 4), (7, 5), (7, 7)],
                     [(4, 7), (3, 7), (2, 7), (1, 7)]]
     chess_r2_tar = [[],
-                    [(1, 3)],
-                    [(1, 3)],
-                    [(1, 3)],
+                    [],
+                    [],
+                    [],
                     [(3, 3), (3, 4), (3, 5)],
                     [],
                     [],
                     []]
-    chess_r3_tar = [[(4, 0), (3, 0), (5, 0), (1, 0)],
-                    [(0, 0), (0, 2), (1, 3), (4, 0), (4, 2), (3, 3)],
-                    [(1, 1), (1, 3), (3, 1), (3, 3), (4, 0), (4, 4), (5, 5)],
-                    [(1, 2), (1, 3), (1, 4), (3, 2), (3, 3), (3, 4), (4, 1), (4, 3), (4, 5), (5, 0), (5, 6), (5, 3)],
-                    [(1, 3), (1, 4), (1, 5), (3, 3), (3, 4), (3, 5)],
-                    [(1, 4), (1, 6), (3, 4), (3, 6), (4, 3), (4, 7), (5, 2)],
-                    [(0, 5), (0, 7), (4, 5), (4, 7), (3, 4), (1, 4)],
-                    [(4, 7), (3, 7), (5, 7), (1, 7)]]
     # move pieces from prev_row to rows 5 to 2
     # prev_row is where the pecies are currently
+    
     prev_row = 7
-    for row in range(5, 1, -3):
+    for row in range(5, -1, -3):
         # gets all pieces
         for col in range(8):
             # move piece from (prev_row, col) to (row, col))
-            my_chess_game.get_board().get_game_square(row, col).put_piece_here(my_chess_game.get_board().
-                                                                               get_game_square(prev_row,
-                                                                                               col).get_occupying_piece())
+            my_chess_game.get_board().get_game_square(row, col).\
+                put_piece_here(my_chess_game.get_board().get_game_square(prev_row,col).get_occupying_piece())
             # remove piece from (prev_row, col)
             my_chess_game.get_board().get_game_square(prev_row, col).remove_occupying_piece()
             # prev row now goes to the row because it just relocated the pieces there
@@ -1691,8 +1681,8 @@ def test_check():
             if row == 5:
                 my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
                                                              my_chess_game)
-                filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(row, col2), my_chess_game,
-                                                 my_moves)
+                filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(row, col2),
+                                                                  my_chess_game, my_moves)
                 assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted(chess_r5_tar[col2])
             elif row == 2:
                 my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
@@ -1701,4 +1691,66 @@ def test_check():
                                                                   my_chess_game,
                                                                   my_moves)
                 assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted(chess_r2_tar[col2])
+
+    # test checks and redo the board
+    gt_chess = 0
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    # Build Chess Board on my_chess_game using the games light and dark player piece set
+    my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
+                                                my_chess_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # creating scenarios where king get check if a particular piece moves
+    # queen checks if pawn at (1, 3) moves
+
+    # moves queen to position
+    my_chess_game.get_board().get_game_square(4, 0). \
+        put_piece_here(my_chess_game.get_board().get_game_square(7, 3).get_occupying_piece())
+    my_chess_game.get_board().get_game_square(7, 3).remove_occupying_piece()
+
+    my_chess_game.get_board().switch_sides()
+    # pawn at (6, 4)
+    my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
+                                                 my_chess_game)
+    filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
+                                                      my_chess_game,
+                                                      my_moves)
+    assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted([])
+
+    # switch back
+    my_chess_game.get_board().switch_sides()
+
+    # moves queen to un checked position with the same scenario
+    my_chess_game.get_board().get_game_square(4, 1). \
+        put_piece_here(my_chess_game.get_board().get_game_square(4, 0).get_occupying_piece())
+    my_chess_game.get_board().get_game_square(4, 0).remove_occupying_piece()
+
+    my_chess_game.get_board().switch_sides()
+    # pawn at (6, 4)
+    my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
+                                                 my_chess_game)
+    filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
+                                                      my_chess_game,
+                                                      my_moves)
+    assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted([(5, 4), (4, 4)])
+
     my_chess_game.get_board().print_game_board()
