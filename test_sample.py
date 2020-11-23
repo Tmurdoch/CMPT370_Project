@@ -1607,3 +1607,98 @@ def test_integration_6():
 
 
 # ---------------------------------------------------------------------------
+def test_check():
+    gt_chess = 0
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    # Build Chess Board on my_chess_game using the games light and dark player piece set
+    my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
+                                                my_chess_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    my_chess_game.get_board().print_game_board()
+
+    my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(7, 4),
+                                                 my_chess_game)
+    filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4), my_chess_game, my_moves)
+
+    assert sorted([x.get_row_and_column() for x in filtered_moves]) == []
+
+
+    # testing Chess
+    # list of moves in particular row
+    # ["Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"]
+    # chess row5 test all row
+    chess_r5_tar = [[(4, 0), (3, 0), (2, 0), (1, 0)],
+                    [(3, 0), (3, 2), (4, 3), (7, 2), (7, 0)],
+                    [(4, 1), (3, 0), (4, 3), (3, 4), (2, 5), (1, 6)],
+                    [(4, 3), (3, 3), (2, 3), (1, 3), (4, 4), (3, 5), (2, 6), (1, 7), (4, 2), (3, 1), (2, 0)],
+                    [(4, 3), (4, 4), (4, 5)],
+                    [(4, 6), (3, 7), (4, 4), (3, 3), (2, 2), (1, 1)],
+                    [(3, 7), (3, 5), (4, 4), (7, 5), (7, 7)],
+                    [(4, 7), (3, 7), (2, 7), (1, 7)]]
+    chess_r2_tar = [[],
+                    [(1, 3)],
+                    [(1, 3)],
+                    [(1, 3)],
+                    [(3, 3), (3, 4), (3, 5)],
+                    [],
+                    [],
+                    []]
+    chess_r3_tar = [[(4, 0), (3, 0), (5, 0), (1, 0)],
+                    [(0, 0), (0, 2), (1, 3), (4, 0), (4, 2), (3, 3)],
+                    [(1, 1), (1, 3), (3, 1), (3, 3), (4, 0), (4, 4), (5, 5)],
+                    [(1, 2), (1, 3), (1, 4), (3, 2), (3, 3), (3, 4), (4, 1), (4, 3), (4, 5), (5, 0), (5, 6), (5, 3)],
+                    [(1, 3), (1, 4), (1, 5), (3, 3), (3, 4), (3, 5)],
+                    [(1, 4), (1, 6), (3, 4), (3, 6), (4, 3), (4, 7), (5, 2)],
+                    [(0, 5), (0, 7), (4, 5), (4, 7), (3, 4), (1, 4)],
+                    [(4, 7), (3, 7), (5, 7), (1, 7)]]
+    # move pieces from prev_row to rows 5 to 2
+    # prev_row is where the pecies are currently
+    prev_row = 7
+    for row in range(5, 1, -3):
+        # gets all pieces
+        for col in range(8):
+            # move piece from (prev_row, col) to (row, col))
+            my_chess_game.get_board().get_game_square(row, col).put_piece_here(my_chess_game.get_board().
+                                                                               get_game_square(prev_row,
+                                                                                               col).get_occupying_piece())
+            # remove piece from (prev_row, col)
+            my_chess_game.get_board().get_game_square(prev_row, col).remove_occupying_piece()
+            # prev row now goes to the row because it just relocated the pieces there
+
+        prev_row = 5
+        for col2 in range(8):
+            # check pieces possible moves in their new positions
+            if row == 5:
+                my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
+                                                             my_chess_game)
+                filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(row, col2), my_chess_game,
+                                                 my_moves)
+                assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted(chess_r5_tar[col2])
+            elif row == 2:
+                my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
+                                                             my_chess_game)
+                filtered_moves = PossibleMoves.filter_check_moves(my_chess_game.get_board().get_game_square(row, col2),
+                                                                  my_chess_game,
+                                                                  my_moves)
+                assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted(chess_r2_tar[col2])
+    my_chess_game.get_board().print_game_board()
