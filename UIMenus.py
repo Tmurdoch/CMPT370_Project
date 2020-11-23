@@ -9,6 +9,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 from GameType import GameType
 from datetime import datetime
+import cairo
 
 resume = True
 
@@ -379,7 +380,7 @@ class BoardWindow(Gtk.Window):
 
         if event.button == 1:
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            list_list = [[50,50],[50,100],[50,150]]
+            list_list = create_location_list(self.__game.get_board().get_size())
             y=1
             for x in list_list:
                 if event.x <= x[0] and event.y <= x[1]:
@@ -388,6 +389,23 @@ class BoardWindow(Gtk.Window):
                     y+=1
 
         return True
+
+    def create_location_list(size):
+        """
+        creates a 2d list of size n where each i in the list is [x, y] and 
+        denotes a location to be placed on the UI window
+        @return: 2d list of integers
+        """
+        cur_width = 50 #start at 50
+        cur_length = 50
+        rv_list = []
+
+        for i in range(size):
+            for j in range(size):
+                rv_list.append([cur_width, cur_length])
+                cur_width += 50
+            cur_length += 50
+        return rv_list
 
     def displayclock(self):
         #  putting our datetime into a var and setting our label to the result.
