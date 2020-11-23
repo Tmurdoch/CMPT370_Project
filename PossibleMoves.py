@@ -3,10 +3,11 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
+import copy
+
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 
-import copy
 
 def build_list_of_moves(input_game_square, input_game):
     """
@@ -928,11 +929,11 @@ def filter_check_moves(my_gamesquare, game, list_of_moves_to_be_filtered):
 
     return filtered_moves
 
+
 # For testing -------------------------------------------
 
 
 def build_enemy_list_of_moves(gamesquare, game):
-
     # all of enemy list of moves
     enemy_moves = []
     tmp_game = copy.deepcopy(game)
