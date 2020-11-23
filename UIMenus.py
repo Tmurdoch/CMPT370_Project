@@ -382,6 +382,11 @@ class BoardWindow(Gtk.Window):
         return True
 
     def mouse_press_event(self, checkerboard_area, event):
+        """
+        prints board coordinates for
+        returns True on success
+        False on Failure
+        """
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
