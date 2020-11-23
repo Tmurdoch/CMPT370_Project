@@ -387,18 +387,8 @@ class BoardWindow(Gtk.Window):
 
         if event.button == 1:
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            size = self.__game_obj.get_board().get_size()
-            list_list = self.create_location_list(size)
-            
-            game_col = 0
-            for col in list_list:
-                game_row = 0
-                for row in col:
-                    if event.x <= row[0] and event.y <= row[1]:
-                        #print(event.x, event.y)
-                        print("grid location: ", game_col, game_row)
-                    game_row+=1
-                game_col += 1    
+            print(event.x//50)
+            print(event.y//50)
 
         return True
 
