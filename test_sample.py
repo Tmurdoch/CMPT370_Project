@@ -678,7 +678,7 @@ def test_game():
 
     # test saving
     # chess
-    my_chess_game.save_to_file()
+    # my_chess_game.save_to_file()
 
     # test loading
     # load_chess_game = Game(gt_chess, gc_wb)
