@@ -757,7 +757,7 @@ def test_player():
     assert pt_ai.get_timer() == timer2
     assert pt_ai.get_piece_set() is not None
     assert pt_ai.get_player_type() == PlayerType.AI
-    assert not pt_ai.get_castled() is False
+    assert not pt_ai.get_castled()
 
 
 
