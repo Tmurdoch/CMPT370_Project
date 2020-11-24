@@ -9,6 +9,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 from GameType import GameType
 from datetime import datetime
+import cairo
 
 resume = True
 
@@ -106,7 +107,10 @@ class TheWindow(Gtk.Window):
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
                 #board = BoardWindow(self.__game, self.__game_type)
-                board = BoardWindow("Test", "multiplayer")
+                temp_game = Game(1, 0)
+                #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
+                #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
+                board = BoardWindow("Test", "multiplayer", temp_game)
                 board.show_all()
 
 
@@ -267,9 +271,13 @@ class CustomizationGrid(Gtk.Grid):
 
 
 class BoardWindow(Gtk.Window):
-    def __init__(self, game, game_type):
+    def __init__(self, game, game_type, game_obj):
+        """
+        @param game_obj: actual game object, initialize by Game()
+        """
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
+        self.__game_obj = game_obj
         self.surface = None
 
         self.set_resizable(False)
@@ -374,20 +382,40 @@ class BoardWindow(Gtk.Window):
         return True
 
     def mouse_press_event(self, checkerboard_area, event):
+        """
+        prints board coordinates for
+        returns True on success
+        False on Failure
+        """
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
         if event.button == 1:
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            list_list = [[50,50],[50,100],[50,150]]
-            y=1
-            for x in list_list:
-                if event.x <= x[0] and event.y <= x[1]:
-                    print(event.x, event.y)
-                    print("square ", y)
-                    y+=1
+            print(event.x//50)
+            print(event.y//50)
 
         return True
+
+    def create_location_list(self, size):
+        """
+        creates a 2d list of size n where each i in the list is [x, y] and 
+        denotes a location to be placed on the UI window
+        @return: 2d list of integers
+        """
+        cur_length = 50
+        rv_list = []
+
+        for i in range(size):
+            col_list = []
+            cur_width = 50
+            for j in range(size):
+                col_list.append([cur_width, cur_length])
+                cur_width += 50
+            cur_length += 50
+            rv_list.append(col_list)
+    
+        return rv_list
 
     def displayclock(self):
         #  putting our datetime into a var and setting our label to the result.

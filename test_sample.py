@@ -20,6 +20,9 @@ from Player import Player
 
 
 def test_pieces():
+    """
+    Unit testing each of the pieces
+    """
     piece_set_colour1 = "Red"
     piece_set_colour2 = "White"
     piece_set_colour3 = "Black"
@@ -94,6 +97,9 @@ def test_pieces():
 
 
 def test_piece_set():
+    """
+    Unit testing the piece set
+    """
     # checkers = 1, chess = 0
     piece_set_colour = "White"
     piece_set1 = PieceSet(1, piece_set_colour)
@@ -141,6 +147,9 @@ def test_piece_set():
 
 
 def test_possible_moves():
+    """
+    Testing the possible moves class
+    """
     # make sure that game is created correctly
     # chess = 0
     my_game = Game(0, ColourCodes.WHITE_BLACK)
@@ -486,6 +495,10 @@ def test_possible_moves():
 
 
 def test_timer():
+    """
+    Unit testing the timer
+    This test has a sleep() call within that slows it down
+    """
     timer1_that_is_enabled = Timer(90, True)
     assert 89.9 < timer1_that_is_enabled.get_time_remaining_s() < 90.1
     assert timer1_that_is_enabled.get_enabled()
@@ -507,6 +520,9 @@ def test_timer():
 
 
 def test_board():
+    """
+    Board unit testing
+    """
     for x in range(1, 101):
         my_board = Board(x)
         row = random.randint(0, x - 1)
@@ -531,6 +547,9 @@ def test_board():
 
 
 def test_game_square():
+    """
+    Initial testing for 8by8 board of game squares
+    """
     # initial testing for 8by8 board
     gs_test_1 = GameSquare(8, 8)
 
@@ -579,7 +598,9 @@ def test_game_square():
 
 
 def test_show_board():
-    # Test mock board and adding pieces and moving them
+    """
+    Test mock board and adding pieces and moving them
+    """
     my_board = Board(8)
     # chess = 0
     black_set = PieceSet(0, "Black")
@@ -603,6 +624,9 @@ def test_show_board():
 
 
 def test_game():
+    """
+    Unit testing of the Game class
+    """
     # TODO: Finish up Game Saving and Loading one or the other does not work properly
 
     # game types chess = 0 checkers = 1
@@ -696,6 +720,10 @@ def test_game():
 
 
 def test_player():
+    """
+    Unit testing of the Player class
+    """
+    
     # game types chess = 0 checkers = 1
     gt_chess = 0
     gt_checkers = 1
@@ -736,8 +764,11 @@ def test_player():
     assert pt_ai.get_castled() is True
 
 
+
 def test_integration_1():
-    # Testing the integration of GameSquare.py and Boards.py
+    """
+    Testing the integration of GameSquare.py and Boards.py
+    """
     s = 8
     my_board = Board(s)
     a_game_square = GameSquare(0, 0)
@@ -761,7 +792,9 @@ def test_integration_1():
 
 
 def test_integration_2():
-    # Testing the integration of GameSquare.py, Boards.py, and Pieces.py, PieceSet.py
+    """
+    Testing the integration of GameSquare.py, Boards.py, and Pieces.py, PieceSet.py
+    """
 
     # ------Chess-----------
     # Game Type 0 is Chess
@@ -946,8 +979,11 @@ def test_integration_2():
     assert my_board_checkers.get_game_square(7, 0).get_occupying_piece().get_colour() is "White"
 
 
-# starting from here it goes off the test plan -----------------------------
 def test_integration_3():
+    """
+    Testing Player.py and PieceSet.py
+    Note: Does not follow the test plan
+    """
     # testing Player.py and PieceSet.py
     p1_name = "DarkPlayer"
     p2_name = "LightPlayer"
@@ -1027,7 +1063,10 @@ def test_integration_3():
 
 
 def test_integration_4():
-    # Testing the integration of Player.py, PieceSet.py, Pieces.py, and Game.py
+    """
+    Testing the integration of Player.py, PieceSet.py, Pieces.py, and Game.py
+    Note: Does not follow the test plan
+    """
 
     # game types chess = 0 checkers = 1
     gt_chess = 0
@@ -1185,8 +1224,11 @@ def test_integration_4():
 
 
 def test_integration_5():
-    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, and Game.py
-    # basically combining test_integration_2 and test_integration_4
+    """
+    Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, and Game.py
+    basically combining test_integration_2 and test_integration_4
+    Note: Does not follow the test plan
+    """
 
     # game types chess = 0 checkers = 1
     gt_chess = 0
@@ -1430,7 +1472,10 @@ def test_integration_5():
 
 
 def test_integration_6():
-    # Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, Game.py, PossibleMoves.py
+    """
+    Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, Game.py, PossibleMoves.py
+    Note: Does not follow the test plan
+    """
     # game types chess = 0 checkers = 1
     gt_chess = 0
     gt_checkers = 1
@@ -1702,6 +1747,7 @@ def test_integration_6():
 
 
 # ---------------------------------------------------------------------------
+
 def test_check():
     gt_chess = 0
     # Piece Set colours for players
@@ -1850,3 +1896,4 @@ def test_check():
     assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted([(5, 4), (4, 4)])
 
     my_chess_game.get_board().print_game_board()
+
