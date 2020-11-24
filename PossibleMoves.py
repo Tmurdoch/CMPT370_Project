@@ -3,6 +3,8 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
+import copy
+
 GAME_TYPE_CHESS = 0
 GAME_TYPE_CHECKERS = 1
 
@@ -794,10 +796,22 @@ def checkers_jump(input_board, input_piece, input_game_square, list_moves):
                     # Legal jump identified, add it to the list
                     list_moves.append(
                         input_board.get_game_square(input_game_square.get_row() - 2, input_game_square.get_col() - 2))
+
+                    # remove the enemy coin temporarily
+                    coin_removed = copy.deepcopy(input_board.get_game_square(
+                        input_game_square.get_row() - 1, input_game_square.get_col() - 1).get_occupying_piece())
+
+                    input_board.get_game_square(input_game_square.get_row() - 1,
+                                                input_game_square.get_col() - 1).remove_occupying_piece()
+
                     # Iterate and check if coin can jump more
                     checkers_jump(input_board, input_piece,
                                   input_board.get_game_square(input_game_square.get_row() - 2,
                                                               input_game_square.get_col() - 2), list_moves)
+
+                    # put back the coin removed
+                    input_board.get_game_square(input_game_square.get_row() - 1,
+                                                input_game_square.get_col() - 1).put_piece_here(coin_removed)
 
     # Check for the jump up and to the right
     if input_game_square.get_row() - 2 >= 0 and input_game_square.get_col() + 2 < input_board.get_size():
@@ -814,15 +828,89 @@ def checkers_jump(input_board, input_piece, input_game_square, list_moves):
                     # Legal jump identified, add it to the list
                     list_moves.append(
                         input_board.get_game_square(input_game_square.get_row() - 2, input_game_square.get_col() + 2))
+
+                    # remove the enemy coin temporarily
+                    coin_removed = copy.deepcopy(input_board.get_game_square(
+                        input_game_square.get_row() - 1, input_game_square.get_col() + 1).get_occupying_piece())
+
+                    input_board.get_game_square(input_game_square.get_row() - 1,
+                                                input_game_square.get_col() + 1).remove_occupying_piece()
+
                     # Iterate and check if coin can jump more from there
                     checkers_jump(input_board, input_piece,
                                   input_board.get_game_square(input_game_square.get_row() - 2,
                                                               input_game_square.get_col() + 2), list_moves)
+                    # put back the coin removed
+                    input_board.get_game_square(input_game_square.get_row() - 1,
+                                                input_game_square.get_col() + 1).put_piece_here(coin_removed)
 
     if input_piece.get_promotion_status():
         # The coin is promoted and can also jump backwards.
-        # TODO: If the coin is promoted, we need to also check for the backwards jumps.
-        #  Can't just add on the same logic used for forward jumps or it will result in an infinite loop.
-        pass
+
+        # Check for the jump and down and to the left
+        if input_game_square.get_row() + 2 < input_board.get_size() and input_game_square.get_col() - 2 >= 0:
+            # The square jump squares are on the board, check if there is a coin there
+            if input_board.get_game_square(input_game_square.get_row() + 1,
+                                           input_game_square.get_col() - 1).get_occupying_piece() is not None:
+                # There is a coin there, check if its an enemy piece
+                if input_board.get_game_square(input_game_square.get_row() + 1,
+                                               input_game_square.get_col() - 1).get_occupying_piece().get_colour() is not \
+                        input_piece.get_colour():
+                    # It is an enemy piece, check if the jump spot is clear
+                    if input_board.get_game_square(input_game_square.get_row() + 2,
+                                                   input_game_square.get_col() - 2).get_occupying_piece() is None:
+                        # Legal jump identified, add it to the list
+                        list_moves.append(
+                            input_board.get_game_square(input_game_square.get_row() + 2,
+                                                        input_game_square.get_col() - 2))
+
+                        # remove the enemy coin temporarily
+                        coin_removed = copy.deepcopy(input_board.get_game_square(
+                            input_game_square.get_row() + 1, input_game_square.get_col() - 1).get_occupying_piece())
+
+                        input_board.get_game_square(input_game_square.get_row() + 1,
+                                                    input_game_square.get_col() - 1).remove_occupying_piece()
+
+                        # Iterate and check if coin can jump more
+                        checkers_jump(input_board, input_piece,
+                                      input_board.get_game_square(input_game_square.get_row() + 2,
+                                                                  input_game_square.get_col() - 2), list_moves)
+
+                        # put back the coin removed
+                        input_board.get_game_square(input_game_square.get_row() + 1,
+                                                    input_game_square.get_col() - 1).put_piece_here(coin_removed)
+
+        # Check for the jump up and to the right
+        if input_game_square.get_row() + 2 < input_board.get_size() and input_game_square.get_col() + 2 < input_board.get_size():
+            # The square jump squares are on the board, check if there is a coin there
+            if input_board.get_game_square(input_game_square.get_row() + 1,
+                                           input_game_square.get_col() + 1).get_occupying_piece() is not None:
+                # There is a coin there, check if its an enemy piece
+                if input_board.get_game_square(input_game_square.get_row() + 1,
+                                               input_game_square.get_col() + 1).get_occupying_piece().get_colour() is not \
+                        input_piece.get_colour():
+                    # It is an enemy piece, check if the jump spot is clear
+                    if input_board.get_game_square(input_game_square.get_row() + 2,
+                                                   input_game_square.get_col() + 2).get_occupying_piece() is None:
+                        # Legal jump identified, add it to the list
+                        list_moves.append(
+                            input_board.get_game_square(input_game_square.get_row() + 2,
+                                                        input_game_square.get_col() + 2))
+
+                        # remove the enemy coin temporarily
+                        coin_removed = copy.deepcopy(input_board.get_game_square(
+                            input_game_square.get_row() + 1, input_game_square.get_col() + 1).get_occupying_piece())
+
+                        input_board.get_game_square(input_game_square.get_row() + 1,
+                                                    input_game_square.get_col() + 1).remove_occupying_piece()
+
+                        # Iterate and check if coin can jump more from there
+                        checkers_jump(input_board, input_piece,
+                                      input_board.get_game_square(input_game_square.get_row() + 2,
+                                                                  input_game_square.get_col() + 2), list_moves)
+                        # put back the coin removed
+                        input_board.get_game_square(input_game_square.get_row() + 1,
+                                                    input_game_square.get_col() + 1).put_piece_here(coin_removed)
 
     return
+
