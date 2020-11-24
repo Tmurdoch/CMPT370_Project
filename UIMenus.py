@@ -343,14 +343,14 @@ class BoardWindow(Gtk.Window):
         
         if self.__game_obj.get_game_type() == 0:
             print("is Chess")
-            pcs_player1 = PieceSet(1, 0) #TODO: implement different colours 
-            pcs_player2 = PieceSet(1, 0) #TODO: implement different colours 
+            pcs_player1 = PieceSet(0, 0) #TODO: implement different colours 
+            pcs_player2 = PieceSet(0, 0) #TODO: implement different colours 
             self.__game_obj.get_board().build_chess_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
         if self.__game_obj.get_game_type() == 1:
             print("is Checkers")
-            pcs_player1 = PieceSet(0, 0) #TODO: implement different colours 
-            pcs_player2 = PieceSet(0, 0) #TODO: implement different colours 
+            pcs_player1 = PieceSet(1, 0) #TODO: implement different colours 
+            pcs_player2 = PieceSet(1, 0) #TODO: implement different colours 
             self.__game_obj.get_board().build_checkers_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
     def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
