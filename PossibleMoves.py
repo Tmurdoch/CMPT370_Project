@@ -38,7 +38,19 @@ def build_list_of_moves(input_game_square, input_game):
                 list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                   input_col + 1))
 
-        # TODO: If the coin is promoted, it can also move backwards
+        # In the case that the coin is promoted can move backwards as well
+        if input_piece.get_promotion_status():
+            # Check the square immediately backward and to the left
+            if input_row < input_board.get_size() - 1 and input_col > 0:
+                if input_board.get_game_square(input_row + 1, input_col - 1).get_occupying_piece() is None:
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1,
+                                                                                      input_col - 1))
+
+            # Check the square immediately backward and to the right
+            if input_row < input_board.get_size() - 1 and input_col < input_board.get_size() - 1:
+                if input_board.get_game_square(input_row + 1, input_col + 1).get_occupying_piece() is None:
+                    list_of_candidate_game_squares.append(input_board.get_game_square(input_row + 1,
+                                                                                      input_col + 1))
 
         # Check for possible jumps moves
         checkers_jump(input_board, input_piece, input_game_square, list_of_candidate_game_squares)

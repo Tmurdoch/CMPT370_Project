@@ -473,6 +473,31 @@ def test_possible_moves():
             index_piece_test2[test_tuple][0],
             index_piece_test2[test_tuple][1]).remove_occupying_piece()
 
+    # test edge cases when coin is promoted
+    pc_moves_coin_promoted = [sorted([(1, 0), (1, 2)]), sorted([(6, 1)]), sorted([(1, 6)]), sorted([(6, 5), (6, 7)]),
+                              sorted([(3, 2), (3, 4), (5, 2), (5, 4)])]
+
+    for test_tuple in range(len(index_piece_test2)):
+        my_game_2.get_board().get_game_square(
+            index_piece_test2[test_tuple][0], index_piece_test2[test_tuple][1]).put_piece_here(dark_set2[0])
+        if type(my_game_2.get_board().get_game_square(
+                index_piece_test2[test_tuple][0],
+                index_piece_test2[test_tuple][1]).get_occupying_piece()).__name__ is "CheckersCoin":
+
+            # promote coin first
+            my_game_2.get_board().get_game_square(index_piece_test2[test_tuple][0], index_piece_test2[test_tuple][1])\
+                .get_occupying_piece().promote()
+
+            # check the moves
+            pm_gs = PossibleMoves.build_list_of_moves(
+                my_game_2.get_board().get_game_square(index_piece_test2[test_tuple][0],
+                                                      index_piece_test2[test_tuple][1]),
+                my_game_2)
+            assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_coin_promoted[test_tuple]
+        my_game_2.get_board().get_game_square(
+            index_piece_test2[test_tuple][0],
+            index_piece_test2[test_tuple][1]).remove_occupying_piece()
+
     # build a chess game with all pieces on the board
     my_game_2.get_board().build_checkers_board(dark_set2, light_set2)
 
