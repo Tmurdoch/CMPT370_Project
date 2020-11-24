@@ -54,7 +54,6 @@ class TheWindow(Gtk.Window):
                 self.board.save_quit_button.connect("clicked", self.board_save_clicked)
                 self.board.pause_button.connect("clicked", self.pause_clicked)
 
-
                 self.grid = Gtk.Grid()
                 self.grid.attach(self.main_box, 0, 0, 1, 1)
                 self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
@@ -122,13 +121,12 @@ class TheWindow(Gtk.Window):
 
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
-                #board = BoardGrid("Test", "multiplayer")
+                BoardGrid.start_clock_timer(self.board)
                 self.customization.hide()
                 self.board.show()
 
         def board_save_clicked(self, button):
                 print("This should exit and save")
-                #board = BoardWindow(self.__game, self.__game_type)
                 Gtk.main_quit()
 
         def pause_clicked(self, button):
@@ -137,7 +135,6 @@ class TheWindow(Gtk.Window):
 
         def board_help_clicked(self, button):
                 print("This should go to Help Window")
-                #board = BoardWindow(self.__game, self.__game_type)
                 board = HowToPlayWindow("Chess")
                 board.show_all()
 
@@ -188,7 +185,7 @@ class GameChoiceBox(Gtk.Box):
 
 class PlayerTypeBox(Gtk.Box):
     def __init__(self):
-        Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
         self.single_button = Gtk.Button.new_with_label("Single-Player")
         # single_button.get_style_context().add_class("suggested-action") changes button to blue
@@ -206,7 +203,8 @@ class PlayerTypeBox(Gtk.Box):
 
 
 class CustomizationGrid(Gtk.Grid):
-    def __init__(self):#, game, game_type):
+    def __init__(self):
+        #, game, game_type):
         #self.__game = game
         #self.__game_type = game_type
 
@@ -233,31 +231,31 @@ class CustomizationGrid(Gtk.Grid):
         label_board.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.attach(label_board, 4, 1, 1, 1)
 
-        x=0
+        x = 0
         self.piece_radio_buttons = []
         self.piece_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-        x+=1
-        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
+        x += 1
+        while x != len(COLOUR_STRING_LOOK_UP_TABLE):
                 self.piece_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.piece_radio_buttons[0], COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-                x+=1
-        x=0
-        while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
-                self.attach(self.piece_radio_buttons[x],0,2+x,1,1)
+                x += 1
+        x = 0
+        while x != len(COLOUR_STRING_LOOK_UP_TABLE):
+                self.attach(self.piece_radio_buttons[x], 0, 2+x, 1, 1)
                 self.piece_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-                x+=1
+                x += 1
 
-        x=0
+        x = 0
         self.board_radio_buttons = []
         self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-        x+=1
-        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+        x += 1
+        while x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
                 self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0], COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-                x+=1
-        x=0
-        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-                self.attach(self.board_radio_buttons[x],3,2+x,1,1)
+                x += 1
+        x = 0
+        while x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
+                self.attach(self.board_radio_buttons[x], 4, 2+x, 1, 1)
                 self.board_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-                x+=1
+                x += 1
 
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
@@ -268,7 +266,7 @@ class CustomizationGrid(Gtk.Grid):
     def on_button_toggled(self, button, name):
         if button.get_active():
             state = "on"
-            #self.colour()
+            # self.colour()
         else:
             state = "off"
         print(name, "was turned", state)
@@ -320,8 +318,6 @@ class BoardGrid(Gtk.Grid):
         player2_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.attach_next_to(player2_label, player1_label, Gtk.PositionType.RIGHT, 1, 1)
 
-
-
         # just to see if promotion works
         # promote_button = Gtk.Button.new_with_label("promote?")
         # promote_button.connect("clicked", self.promote_clicked)
@@ -342,7 +338,6 @@ class BoardGrid(Gtk.Grid):
         self.attach_next_to(self.save_quit_button, self.help_button, Gtk.PositionType.BOTTOM, 1, 1)
 
         self.show_all()
-        self.start_clock_timer()
         self.connect('destroy', Gtk.main_quit)
 
     def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
