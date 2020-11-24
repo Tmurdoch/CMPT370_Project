@@ -3,13 +3,14 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from PieceSet import PieceSet
-from PossibleMoves import PossibleMoves
+from Pieces import King, Rook
+from PossibleMoves import build_list_of_moves
 
 
 class Player(object):
     """
-    A Player is an object that has a name, a colour and controls pieces inside a piece set by making moves
-    to play a game of Chess or Checkers. ????
+    The player represents a game player, every game has two players.  The players use helper functions to build the
+    list of possible moves and then make the move.
 
     Attributes:
         __piece_set: PieceSet: The players piece set
@@ -22,10 +23,11 @@ class Player(object):
     def __init__(self, name, colour, game_type, player_type, timer):
         """
         Initializes a Player object.
-        :param: string: name: The name of a Player.
-        :param: PlayerType: player_type: The type of Player the Player is PlayerType.AI or PlayerType.HUMAN
-        :param: Timer: timer: The Timer object for a Player
-        :param: Boolean: castled: A boolean to see if the player has been castled or not.
+        :param name: string: The name of a Player.
+        :param colour:
+        :param game_type: GameType:
+        :param: player_type: PlayerType: The type of Player the Player is PlayerType.AI or PlayerType.HUMAN
+        :param timer: Timer: The Timer object for a Player
         """
         self.__piece_set = PieceSet(game_type, colour)
         self.__name = name
@@ -33,18 +35,18 @@ class Player(object):
         self.__timer = timer
         self.__castled = False
 
-    def build_possible_moves_for_single_square(self, game_square, game):
+    @staticmethod
+    def build_possible_moves_for_single_square(game_square, game):
         """
         Generates and returns a list of possible moves for a single game square.
         :param: GameSquare object, for getting game square to build list of moves for
         :param: Game object, for getting player and board
         :return: List of GameSquares for a single square
         """
-        possible_moves_for_square_here = PossibleMoves(game_square, game)
-        possible_moves_for_square_here.build_list_of_moves()
-        return possible_moves_for_square_here.get_list_of_squares_you_can_move_to()
+        return build_list_of_moves(game_square, game)
 
-    def build_possible_moves_for_all_pieces(self, game):
+    @staticmethod
+    def build_possible_moves_for_all_pieces(game):
         """Generates and returns all possible moves for all current player's pieces on the board.
             :param: Game object, for getting player and board
             :return: List of GameSquares for all the current player's pieces"""
@@ -52,20 +54,17 @@ class Player(object):
         for row in range(game.get_board().get_size()):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
-                if not (square_here.get_occupying_piece() is None and square_here.get_occupying_piece().get_colour()
-                        == game.get_current_player().get_piece_set().get_colour()):
-                    possible_moves_for_square_here = PossibleMoves(square_here, game)
-                    possible_moves_for_square_here.build_list_of_moves()
-                    game_squares_movable_to.append(possible_moves_for_square_here.get_list_of_squares_you_can_move_to())
+                if (square_here.get_occupying_piece() is not None) and (square_here.get_occupying_piece().get_colour()):
+                    game_squares_movable_to.append(build_list_of_moves(square_here, game))
         return game_squares_movable_to
 
     def make_move(self, origin_square, dest_square, board):
         """
         Actually executes a move (and capture)
         Precondition: Assuming that dest_square is a legal move for the origin_square
-        :param: origin_square: GameSquare we are moving from
-        :param: dest_square: GameSquare we are moving to
-        :param: board: Board object, need to look at the squares we are jumping for checkers
+        :param origin_square: GameSquare: Where we are moving from
+        :param dest_square: GameSquare: Where we are moving to
+        :param board: Board: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
@@ -157,22 +156,81 @@ class Player(object):
                     # There are more than one jumps needing to take place
                     raise Exception("Cannot handle more than one jump right now")
 
+            # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
+            if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
+                origin_square.get_occupying_piece().promote()
+
         elif self.__piece_set.get_piece_set_type().lower() == "chess":
-            if dest_square.get_occupying_piece() is None:
-                # We can go ahead and make the move
-                dest_square.put_piece_here(origin_square.get_occupying_piece())
-                origin_square.remove_occupying_piece()
-            elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
-                # Enemy piece there, make the capture move
-                dest_square.get_occupying_piece().capture_piece()
-                dest_square.put_piece_here(origin_square.get_occupying_piece())
-                origin_square.remove_occupying_piece()
+
+            # First check if the move is a castle
+            if origin_square.get_row() == 7 and origin_square.get_col() == 4 \
+                    and isinstance(origin_square.get_occupying_piece(), King):
+                # The king was chosen, check to see if the destination squares were rooks
+
+                # Check king-side
+                if dest_square.get_row() == 7 and dest_square.get_col() == 7 \
+                        and isinstance(dest_square.get_occupying_piece(), Rook):
+                    # We have the right pieces, let's confirm that neither piece have moved yet
+                    if not origin_square.get_occupying_piece().get_moved_yet_status() \
+                            and not dest_square.get_occupying_piece().get_moved_yet_status():
+                        # We are good to go ahead and make the king-side castle
+                        king_dest_square = board.get_game_square(7, 6)
+                        rook_dest_square = board.get_game_square(7, 5)
+
+                        # These destination squares should be empty, but let's check
+                        if king_dest_square.get_occupying_piece() is None \
+                                and rook_dest_square.get_occupying_piece() is None:
+                            # We are good to go, execute the castle
+                            king_dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
+                            origin_square.remove_occupying_piece()
+                            dest_square.remove_occupying_piece()
+                            self.__castle()
+                        else:
+                            raise Exception("The castle move should not have been generated because there are pieces "
+                                            "in the way, King-side error")
+
+                # Check queen-side
+                if dest_square.get_row() == 7 and dest_square.get_col() == 0 and \
+                        isinstance(dest_square.get_occupying_piece(), Rook):
+                    # We have the right pieces, let's confirm that neither piece have moved yet
+                    if not origin_square.get_occupying_piece().get_moved_yet_status() and \
+                            not dest_square.get_occupying_piece().get_moved_yet_status():
+                        # We are good to go ahead and make the queen-side castle
+                        king_dest_square = board.get_game_square(7, 3)
+                        rook_dest_square = board.get_game_square(7, 2)
+
+                        # These destination squares should be empty, but let's check
+                        if king_dest_square.get_occupying_piece() is None \
+                                and rook_dest_square.get_occupying_piece() is None:
+                            # We are good to go, execute the castle
+                            king_dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
+                            origin_square.remove_occupying_piece()
+                            dest_square.remove_occupying_piece()
+                            self.__castle()
+                        else:
+                            raise Exception("The castle move should not have been generated because there are pieces "
+                                            "in the way, Queen-side error")
+
+            # Else it is just a normal move
             else:
-                # Illegal move, trying to move a square that has a friendly piece
-                raise Exception("Illegal move, trying to move a square that has a friendly piece")
+                if dest_square.get_occupying_piece() is None:
+                    # We can go ahead and make the move
+                    dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    origin_square.remove_occupying_piece()
+                elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
+                    # Enemy piece there, make the capture move
+                    dest_square.get_occupying_piece().capture_piece()
+                    dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    origin_square.remove_occupying_piece()
+                else:
+                    # Illegal move, trying to move a square that has a friendly piece
+                    raise Exception("Illegal move, trying to move a square that has a friendly piece")
+
         else:
             # Couldn't identify the type of game
-            raise Exception("Piece set is neither of type checkers or type chess")
+            raise Exception("The players piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
         """:return: The players PieceSet"""
@@ -183,7 +241,7 @@ class Player(object):
         return self.__piece_set.get_colour()
 
     def get_name(self):
-        """:return: The players name"""
+        """:return: The player's name"""
         return self.__name
 
     def get_player_type(self):
@@ -198,6 +256,7 @@ class Player(object):
         """:return: Bool, True if the player has already castled, False otherwise"""
         return self.__castled
 
-    def castle(self):
-        """Marks that the player has castled so we can make sure they don't castle again"""
+    def __castle(self):
+        """Marks that the player has castled so we can make sure they don't castle again
+        Can only be called in make_move() when executing the castle"""
         self.__castled = True

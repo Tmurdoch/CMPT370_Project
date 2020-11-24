@@ -166,7 +166,7 @@ class Game:
                     elif isinstance(cur_piece, Pawn):
                         if cur_piece.get_moved_yet_status():
                             # The pawn is a moved pawn
-                            output_piece += ord("Q") # TODO fix collison with Queen
+                            output_piece += ord("M")
                         else:
                             # The pawn is an unmoved pawn
                             output_piece += ord("P")
@@ -304,7 +304,7 @@ class Game:
                             # The pawn is an unmoved pawn
                             cur_square.put_piece_here(
                                 Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
-                        elif chr(board_data[board_data_index]).lower() == "q":
+                        elif chr(board_data[board_data_index]).lower() == "m":
                             # The pawn is an moved pawn
                             cur_square.put_piece_here(
                                 Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))

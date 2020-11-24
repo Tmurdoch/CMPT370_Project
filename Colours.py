@@ -9,6 +9,9 @@ class ColourCodes(IntEnum):
     WHITE_BLACK = 0
     RED_BLACK = 1
 
+class ColourBoardCodes(IntEnum):
+    WHITE_BLACK = 0
+    RED_BLACK = 1
 
 class ColourOffset(IntEnum):
     OFFSET_LIGHT = 0
@@ -17,3 +20,7 @@ class ColourOffset(IntEnum):
 
 COLOUR_STRING_LOOK_UP_TABLE = [("White", "Black"),
                                ("Red", "Black")]
+
+COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black"),
+                                     ("Red", "Black"),
+                                     ("Yellow", "Blue")]
