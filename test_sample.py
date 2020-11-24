@@ -750,8 +750,6 @@ def test_player():
     assert pt_human.get_piece_set() is not None
     assert pt_human.get_player_type() == PlayerType.HUMAN
     assert pt_human.get_castled() is False
-    pt_human.castle()
-    assert pt_human.get_castled() is True
 
     # test ai player
     assert pt_ai.get_name() == "AI 1"
@@ -760,8 +758,6 @@ def test_player():
     assert pt_ai.get_piece_set() is not None
     assert pt_ai.get_player_type() == PlayerType.AI
     assert pt_ai.get_castled() is False
-    pt_ai.castle()
-    assert pt_ai.get_castled() is True
 
 
 
