@@ -679,6 +679,7 @@ if __name__ == "__main__":
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     win.game_choice_box.hide()
+    win.resume_choice_box.hide()
     win.player_type.hide()
     win.customization.hide()
     Gtk.main()
