@@ -773,20 +773,18 @@ def build_list_of_moves(input_game_square, input_game):
                             list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                               input_col + 1))
 
-            # checks if an en pessant move can be executed
-            # In order for a en pessant move to happen following conditions needs to be met
+            # checks if an en passant move can be executed
+            # In order for a en passant move to happen following conditions needs to be met
             # - the capturing pawn must be on its fifth rank
             # - the captured pawn must be on an adjacent file and must have just move 2 squares in a single move
             # - the capture can only be made on the move immediately after the enemy pawn makes the double step
-            # move; otherwise; the right to capture it en pessant is lost
+            # move; otherwise; the right to capture it en passant is lost
             # 3rd row means 5th rank in this board
 
             # need row to be in the board
             if 0 <= input_col <= input_board.get_size() - 1:
-                print("\n1")
                 # on row 3 is the only row where you can do the en passant move
                 if input_row == 3:
-                    print("\n2")
                     # edge case left most just check right
                     if input_col == 0:
                         if input_board.get_game_square(input_row, input_col + 1).get_occupying_piece() is not None:
@@ -808,6 +806,7 @@ def build_list_of_moves(input_game_square, input_game):
                                         list_of_candidate_game_squares.append(input_board
                                                                               .get_game_square(input_row - 1,
                                                                                                input_col + 1))
+                    # edge case right most just check left
                     elif input_col == input_board.get_size() - 1:
                         if input_board.get_game_square(input_row, input_col - 1).get_occupying_piece() is not None:
                             if input_board.get_game_square(input_row, input_col - 1) \
@@ -822,40 +821,42 @@ def build_list_of_moves(input_game_square, input_game):
                                                                  (input_row, input_col - 1)):
                                         list_of_candidate_game_squares\
                                             .append(input_board.get_game_square(input_row - 1, input_col - 1))
+                    # anywhere in the middle of the board
                     else:
-                        print("\n3")
+                        # check right
+                        # there need to be an enemy pawn to the right of my pawn
                         if input_board.get_game_square(input_row, input_col + 1).get_occupying_piece() is not None:
-                            print("\n4")
                             if input_board.get_game_square(input_row,
                                                            input_col + 1).get_occupying_piece().get_colour() is not \
                                     input_piece.get_colour():
-                                print("\n5")
                                 if type(input_board.get_game_square(input_row, input_col + 1).get_occupying_piece())\
                                         .__name__ == "Pawn":
-                                    print("\n6")
+                                    # check the enemy pawn if they did 2 step move last turn
                                     if input_game.get_light_player().get_colour() == input_piece.get_colour():
-                                        print("\n6 dark")
                                         enemy = input_game.get_dark_player()
                                     else:
-                                        print("\n6 light")
                                         enemy = input_game.get_light_player()
-                                    print(enemy.get_last_move())
-                                    print((input_row - 2, input_col + 1), (input_row, input_col + 1))
+                                    # if conditions are met then move 1 diagonal to right and capture the enemy
+                                    # adjacent to rigt before the move
                                     if enemy.get_last_move() == (
                                             (input_row - 2, input_col + 1), (input_row, input_col + 1)):
-                                        print("\n7")
                                         list_of_candidate_game_squares\
                                             .append(input_board.get_game_square(input_row - 1, input_col + 1))
+                        # check left
+                        # there need to be an enemy pawn to the left of my pawn
                         if input_board.get_game_square(input_row, input_col - 1).get_occupying_piece() is not None:
                             if input_board.get_game_square(input_row,
                                                            input_col - 1).get_occupying_piece().get_colour() is not \
                                     input_piece.get_colour():
                                 if type(input_board.get_game_square(input_row, input_col - 1).get_occupying_piece())\
                                         .__name__ == "Pawn":
+                                    # check the enemy pawn if they did 2 step move last turn
                                     if input_game.get_light_player().get_colour() == input_piece.get_colour():
                                         enemy = input_game.get_dark_player()
                                     else:
                                         enemy = input_game.get_light_player()
+                                    # if conditions are met then move 1 diagonal to left and capture the enemy
+                                    # adjacent to left before the move
                                     if enemy.get_last_move() == (
                                             (input_row - 2, input_col - 1), (input_row, input_col - 1)):
                                         list_of_candidate_game_squares\

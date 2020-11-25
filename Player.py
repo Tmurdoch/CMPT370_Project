@@ -62,7 +62,7 @@ class Player(object):
 
     def make_move(self, origin_square, dest_square, board):
         """
-        Actually executes a move (and capture)
+        Actually executes a move (and capture) also registers what the player last move was
         Precondition: Assuming that dest_square is a legal move for the origin_square
         :param origin_square: GameSquare: Where we are moving from
         :param dest_square: GameSquare: Where we are moving to
