@@ -32,7 +32,7 @@ class Game:
 
     Attributes:
         __game_type: int: GameType enum
-        __colour_mode:
+        __colour_mode: A ColourCodes enum that encodes the players colours
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
         __board: Board: The game board
@@ -42,7 +42,7 @@ class Game:
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        if game_type>1:
+        if game_type>=2:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
