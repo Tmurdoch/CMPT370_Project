@@ -420,7 +420,7 @@ class BoardWindow(Gtk.Window):
             self.mouse_pointer(checkerboard_area, event.x, event.y)
             print(event.x//50)
             print(event.y//50)
-            print(self.__game_obj.get_board().get_game_square(int(event.x//50), int(event.y//50)).get_occupying_piece())
+            print(self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece())
 
         return True
 
