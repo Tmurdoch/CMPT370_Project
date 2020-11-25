@@ -108,14 +108,15 @@ class TheWindow(Gtk.Window):
 
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
+                self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
                 temp_game = Game(self.game_type, 0)
                 #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
-                board = BoardGrid("Test", "multiplayer", temp_game)
-                self.customization.hide()
-                board.show_all()
+                self.board = BoardGrid("Test", "multiplayer", temp_game)
+                self.grid.attach(self.board,0,0,1,1)
+                board.show()
 
 
 
@@ -284,13 +285,6 @@ class BoardGrid(Gtk.Grid):
         self.__game_obj = game_obj
         self.place_pieces()
         self.surface = None
-
-        self.set_resizable(False)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_border_width(80)
-        col = Gdk.Color(2000, 6000, 200)
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-
 
         # create checkerboard area
         board_frame = Gtk.Frame()
