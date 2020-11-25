@@ -34,9 +34,6 @@ class TheWindow(Gtk.Window):
                 self.main_box = MainMenuBox(self.has_chess_save, self.has_checkers_save)
                 if (self.has_chess_save or self.has_checkers_save):
                         self.main_box.resume_button.connect("clicked", self.main_resume_clicked)
-                else:
-                        self.main_box = MainMenuBox(0)
-
                 
                 self.main_box.play_button.connect("clicked", self.main_play_clicked)
 
@@ -185,7 +182,7 @@ class MainMenuBox(Gtk.Box):
                 Gtk.main_quit()
 
 
-class GameChoiceBox(Gtk.Box):
+class ResumeChoiceBox(Gtk.Box):
         def __init__(self, has_chess_save, has_checkers_save):
                 Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
@@ -206,7 +203,7 @@ class GameChoiceBox(Gtk.Box):
 
                 self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
-class ResumeChoiceBox(Gtk.Box):
+class GameChoiceBox(Gtk.Box):
         def __init__(self):
                 Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
