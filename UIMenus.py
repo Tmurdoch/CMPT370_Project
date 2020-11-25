@@ -15,25 +15,43 @@ import os
 resume = True
 
 class TheWindow(Gtk.Window):
-        def __init__(self):
+        def __init__(self, directory):
                 Gtk.Window.__init__(self, title="Main Menu")
                 self.set_border_width(70)
                 self.set_position(Gtk.WindowPosition.CENTER)
                 col = Gdk.Color(2000, 6000, 200)  # dark green
                 self.modify_bg(Gtk.StateType.NORMAL, col)
+
+                self.has_chess_save = 0
+                self.has_checkers_save = 0
                 
                 self.game_type = "Checkers" # assume checkers first, change later when clicked
 
-                self.main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-                self.main_box.play_button.connect("clicked", self.main_play_clicked)
-                if resume:
+                if (os.path.exists(directory+"/savedGame.cmpt370chess")):
+                        self.has_chess_save = 1
+                if (os.path.exists(directory+"/savedGame.cmpt370checkrs")):
+                        self.has_checkers_save = 1
+                self.main_box = MainMenuBox(self.has_chess_save, self.has_checkers_save)
+                if (self.has_chess_save or self.has_checkers_save):
                         self.main_box.resume_button.connect("clicked", self.main_resume_clicked)
+                else:
+                        self.main_box = MainMenuBox(0)
+
+                
+                self.main_box.play_button.connect("clicked", self.main_play_clicked)
 
 
                 self.game_choice_box = GameChoiceBox()
                 self.game_choice_box.chess_button.connect("clicked", self.game_choice_chess_clicked)
                 self.game_choice_box.checkers_button.connect("clicked", self.game_choice_checkers_clicked)
                 self.game_choice_box.back_button.connect("clicked", self.game_choice_back_clicked)
+
+                self.resume_choice_box = ResumeChoiceBox(self.has_chess_save, self.has_checkers_save)
+                if (self.has_chess_save):
+                        self.resume_choice_box.chess_button.connect("clicked", self.resume_choice_chess_clicked)
+                if (self.has_checkers_save):
+                        self.resume_choice_box.checkers_button.connect("clicked", self.esume_choice_checkers_clicked)
+                self.resume_choice_box.back_button.connect("clicked", self.resume_choice_back_clicked)
 
 
                 self.player_type = PlayerTypeBox()
@@ -85,6 +103,23 @@ class TheWindow(Gtk.Window):
                 self.game_choice_box.hide()
                 self.main_box.show()
 
+        def resume_choice_chess_clicked(self, button):
+                print('Chess was chosen')  # put next window here
+                self.game_type = GameType.CHESS
+                self.game_choice_box.hide()
+                self.player_type.show()
+
+        def resume_choice_checkers_clicked(self, button):
+                print('Checkers was chosen')  # put next window here
+                self.game_type = GameType.CHECKERS
+                self.game_choice_box.hide()
+                self.player_type.show()
+
+        def resume_choice_back_clicked(self, button):
+                print("This should go back to Main Menu Window")
+                self.game_choice_box.hide()
+                self.main_box.show()
+
         def player_type_single_clicked(self, button):
                 print('Single Player was chosen')  # put next window here
                 self.player_type.hide()
@@ -123,7 +158,7 @@ class TheWindow(Gtk.Window):
 
 
 class MainMenuBox(Gtk.Box):
-        def __init__(self):
+        def __init__(self,has_chess_save,has_checkers_save):
                 Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
                 # self.add(b)
                 self.play_button = Gtk.Button.new_with_label("Play")
@@ -131,8 +166,8 @@ class MainMenuBox(Gtk.Box):
                 self.play_button.set_property("width-request", 300)
                 self.play_button.set_property("height-request", 100)
                 self.pack_start(self.play_button, True, True, 0)
-                
-                if resume:
+
+                if (has_chess_save or has_checkers_save):
                         self.resume_button = Gtk.Button.new_with_label("Resume")
                         #checkers_button.connect("clicked", self.resume_clicked)
                         self.resume_button.set_property("width-request", 300)
@@ -151,6 +186,27 @@ class MainMenuBox(Gtk.Box):
 
 
 class GameChoiceBox(Gtk.Box):
+        def __init__(self, has_chess_save, has_checkers_save):
+                Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
+
+                if (has_chess_save):
+                        self.chess_button = Gtk.Button.new_with_label("Chess")
+                        self.chess_button.set_property("width-request", 300)
+                        self.chess_button.set_property("height-request", 100)
+                        self.pack_start(self.chess_button, True, True, 0)
+
+                if (has_checkers_save):
+                        self.checkers_button = Gtk.Button.new_with_label("Checkers")
+                        self.checkers_button.set_property("width-request", 300)
+                        self.checkers_button.set_property("height-request", 100)
+                        self.pack_start(self.checkers_button, True, True, 0)
+
+                self.back_button = Gtk.Button.new_with_label("Back")
+                self.pack_start(self.back_button, True, True, 0)
+
+                self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
+
+class ResumeChoiceBox(Gtk.Box):
         def __init__(self):
                 Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
@@ -605,23 +661,24 @@ class PlayAgainWindow(Gtk.Window):
 
 def initializeFS():
         """initialize filesystem for storing stuff
-        :returns: success bool"""
+        :returns: directory string"""
         if (os.name == "posix"):
                 home = os.path.expanduser("~")
                 if (not (os.path.exists(home+"/.cmpt370checkerschess"))):
                         os.mkdir(home+"/.cmpt370checkerschess")
-                return 1
+                return (home+"/.cmpt370checkerschess")
         elif (os.name == "nt"):
                 app_data = os.getenv("LOCALAPPDATA")
                 if (not (os.path.exists(app_data+"/.cmpt370checkerschess"))):
                         os.mkdir(app_data+"/.cmpt370checkerschess")
-                return 1
+                return (app_data+"/.cmpt370checkerschess")
         else:
-             print("uknown os")     
+             print("uknown os")
+             return
 
 
 if __name__ == "__main__":
-    win = TheWindow()
+    win = TheWindow(initializeFS())
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     win.game_choice_box.hide()
