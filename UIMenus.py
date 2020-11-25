@@ -6,10 +6,17 @@ from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg
 from GameType import GameType
 from datetime import datetime
 import cairo
+# make c-stdlib style definitions so
+# the code is readable and without
+# magic numbers
+SEEK_SET = 0
+SEEK_CUR = 1
+SEEK_END = 2
+
 
 resume = True
 
@@ -254,6 +261,29 @@ class CustomizationGrid(Gtk.Grid):
                 x+=1
 
         
+        chess_svg_light_data_array = []
+        light_chess_svg_targets = ["media/gfx/regular/wk.svg",
+                                   "media/gfx/regular/wq.svg",
+                                   "media/gfx/regular/wn.svg",
+                                   "media/gfx/regular/wb.svg",
+                                   "media/gfx/regular/wr.svg",
+                                   "media/gfx/regular/wp.svg"]
+        # load the data
+        svglc = 0
+        while (svglc != len light_chess_svg_targets):
+                # read binary to ensure no nonsense on windows
+                fp = open(light_chess_svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_light_data_array.append(fp.read(fps))
+                svglc += 1
+        # replace the colours
+        svglc = 0
+        while (svglc != len(chess_svg_light_data_arraY)):
+                chess_svg_light_data_array[svglc].replace(b"f9f9f9",
+
+        
 
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
@@ -388,6 +418,31 @@ class BoardWindow(Gtk.Window):
             i += check_size + spacing
             xcount += 1
 
+            game_type = self.__game_obj.get_game_type()
+            row = 0
+            while (row != size):
+                    col = 0
+                    while (col != size):
+                        cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
+                        
+                        if (not (cur_piece is None)):
+                                if (game_type == GameType.CHESS):
+                                        if (isinstance(cur_piece, King)):
+                                                piece = Rsvg
+                                        elif (isinstance(cur_piece, Queen)):
+                                                print("queen")
+                                        elif (isinstance(cur_piece, Knight)):
+                                                print("queen")
+                                        elif (isinstance(cur_piece, Bishop)):
+                                                print("queen")
+                                        elif (isinstance(cur_piece, Rook)):
+                                                print("queen")
+                                        elif (isinstance(cur_piece, Pawn)):
+                                                print("queen")                                              
+                                                
+                        col += 1
+                row +=1
+                                    
         return True
 
     def mouse_pointer(self, widget, x, y):
