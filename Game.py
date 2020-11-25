@@ -104,17 +104,16 @@ class Game:
         """:return: The current player """
         return self.__current_player
 
-    def save_to_file(self):
+    def save_to_file(self,path):
         """
         Save the current game state to a file
-        TODO: The file location is unknown at this time
-        expected *nix = ~/.cmpt370checkerschess/savegame.370checkerschess
-        expected windows = ????
+        path: string describing file path to save too
+        :return: None
         """
         # caller of save_to_file()
         # is responsible for the try except
         # error handling
-        fp = open(FILENAME, "wb")
+        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
         # write magic
         fp.write(MAGIC)
         game_mode = self.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
@@ -186,17 +185,21 @@ class Game:
             row += 1
         fp.close()
 
-    def load_from_file(self):
+    def load_from_file(self,path):
         """
         Load game state from file
-        This is expected to be called from the ui object?
+        This is expected to be called from the ui object
         Which has already checked for the existence of the save game
+        DELETES THE FILE IF IT IS SUCCESSFULLY LOADED AS DISCUSSED
+        AT SOME POINT IN OUR MEETINGS
+        path: string describing file path to save too
+        :return: None
         # TODO: Reconstruct piece set from the file
         """
         # caller of load_from_file()
         # is responsible for the try except
         # error handling
-        fp = open(FILENAME, "rb")
+        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "rb")
         read_magic = fp.read(20)
         if read_magic != MAGIC:
             raise Exception(
@@ -346,6 +349,9 @@ class Game:
                     )
             elif self.__game_type == GAME_TYPE_CHESS:
                 pass
+            # delete the file after loading as discussed at some point
+            os.remove(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
+            return
 
         else:
             fp.close()
