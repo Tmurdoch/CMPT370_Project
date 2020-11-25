@@ -18,7 +18,8 @@ class Player(object):
         __player_type: PlayerType.AI or PlayerType.HUMAN, whether the player is a human or computer engine
         __timer: Timer: The players timer object
         __castled: Bool: Whether or not the player has castled
-        __last_move: Tuple of Tuples of Integer: ((origin row, origin col), (dest row, dest col))
+        __last_move: Tuple of Tuples of Integer: ((origin row, origin col), (dest row, dest col)). This is only 
+                    used for the en passant move in chess. This is not used in checkers
     """
 
     def __init__(self, name, colour, game_type, player_type, timer):
@@ -214,6 +215,9 @@ class Player(object):
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, Queen-side error")
+                # register the castle move
+                self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
+                                    (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
             # Else it is just a normal move
             else:
