@@ -1952,3 +1952,52 @@ def test_check():
     assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted([(5, 4), (4, 4)])
 
 
+def test_en_passant():
+    gt_chess = 0
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    dark_pawns = []
+    light_pawns = []
+
+    for piece in my_chess_game.get_dark_player().get_piece_set().get_live_pieces():
+        if type(piece).__name__ is "Pawn":
+            dark_pawns.append(piece)
+
+    for piece in my_chess_game.get_light_player().get_piece_set().get_live_pieces():
+        if type(piece).__name__ is "Pawn":
+            light_pawns.append(piece)
+
+    # build board as en passant scenario
+    my_chess_game.get_board().get_game_square(1, 3).put_piece_here(dark_pawns[0])
+    my_chess_game.get_board().get_game_square(3, 2).put_piece_here(light_pawns[0])
+
+    my_chess_game.get_board().switch_sides()
+    print()
+    my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 4),
+                                              my_chess_game.get_board().get_game_square(4, 4),
+                                              my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    my_moves = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 2),
+                                                 my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves]) == sorted([(1, 2), (2, 2), (2, 3)])
+    my_chess_game.get_board().print_game_board()
+
