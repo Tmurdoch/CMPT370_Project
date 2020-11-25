@@ -409,25 +409,23 @@ class BoardWindow(Gtk.Window):
 
     def mouse_press_event(self, checkerboard_area, event):
         """
-        prints board coordinates for
-        returns True on success
-        False on Failure
+        prints game piece at clicked location
+        returns False on Failure
         """
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
         if event.button == 1:
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            print(event.x//50)
-            print(event.y//50)
             print(self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece())
 
-        return True
 
     def create_location_list(self, size):
         """
         creates a 2d list of size n where each i in the list is [x, y] and 
         denotes a location to be placed on the UI window
+        this is for locations the mouse will click on the grid, to later be
+        indexed to get gamesquare at that grid location
         @return: 2d list of integers
         """
         cur_length = 50
