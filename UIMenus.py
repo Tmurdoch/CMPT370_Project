@@ -20,6 +20,8 @@ class TheWindow(Gtk.Window):
                 self.set_position(Gtk.WindowPosition.CENTER)
                 col = Gdk.Color(2000, 6000, 200)  # dark green
                 self.modify_bg(Gtk.StateType.NORMAL, col)
+                
+                self.game_type = "Checkers" # assume checkers first, change later when clicked
 
                 self.main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
                 self.main_box.play_button.connect("clicked", self.main_play_clicked)
@@ -107,7 +109,7 @@ class TheWindow(Gtk.Window):
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
                 #board = BoardWindow(self.__game, self.__game_type)
-                temp_game = Game(1, 0)
+                temp_game = Game(self.game_type, 0)
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
                 board = BoardWindow("Test", "multiplayer", temp_game)
@@ -278,6 +280,7 @@ class BoardWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=game + " " + game_type)
         self.__game = game
         self.__game_obj = game_obj
+        self.place_pieces()
         self.surface = None
 
         self.set_resizable(False)
@@ -326,6 +329,29 @@ class BoardWindow(Gtk.Window):
         self.startclocktimer()
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
+
+    def place_pieces(self):
+        """
+        place the pieces on the board, stored in game->board
+        first try to load from file, if file does not exist, build starting board
+        """
+        try:
+            self.__game_obj.load_from_file()
+            return
+        except:
+            print("no save file found")
+        
+        if self.__game_obj.get_game_type() == 0:
+            print("is Chess")
+            pcs_player1 = PieceSet(0, 0) #TODO: implement different colours 
+            pcs_player2 = PieceSet(0, 0) #TODO: implement different colours 
+            self.__game_obj.get_board().build_chess_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
+
+        if self.__game_obj.get_game_type() == 1:
+            print("is Checkers")
+            pcs_player1 = PieceSet(1, 0) #TODO: implement different colours 
+            pcs_player2 = PieceSet(1, 0) #TODO: implement different colours 
+            self.__game_obj.get_board().build_checkers_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
     def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
 
@@ -383,24 +409,23 @@ class BoardWindow(Gtk.Window):
 
     def mouse_press_event(self, checkerboard_area, event):
         """
-        prints board coordinates for
-        returns True on success
-        False on Failure
+        prints game piece at clicked location
+        returns False on Failure
         """
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
         if event.button == 1:
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            print(event.x//50)
-            print(event.y//50)
+            print(self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece())
 
-        return True
 
     def create_location_list(self, size):
         """
         creates a 2d list of size n where each i in the list is [x, y] and 
         denotes a location to be placed on the UI window
+        this is for locations the mouse will click on the grid, to later be
+        indexed to get gamesquare at that grid location
         @return: 2d list of integers
         """
         cur_length = 50

@@ -28,7 +28,7 @@ class PieceSet:
     def __init__(self, piece_set_type, colour):
         """
         Purpose: Initialize a piece set normally at the start of a game
-        :param piece_set_type: string: either "Chess" or "Checkers"
+        :param piece_set_type: integer: either "1" for chess or "0" for Checkers
         :param colour: string: piece set __colour
         """
         # chess = 0, checkers = 1
