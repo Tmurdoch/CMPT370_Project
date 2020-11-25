@@ -4,10 +4,7 @@
 # Michael Luciuk, Thomas Murdoch
 
 import copy
-
-GAME_TYPE_CHESS = 0
-GAME_TYPE_CHECKERS = 1
-
+from GameType import GameType
 
 def build_list_of_moves(input_game_square, input_game):
     """
@@ -24,7 +21,7 @@ def build_list_of_moves(input_game_square, input_game):
     input_board = input_game.get_board()
     list_of_candidate_game_squares = []
 
-    if input_game_type == GAME_TYPE_CHECKERS:
+    if input_game_type == GameType.CHECKERS:
         # First check for normal movement with no capture
         # Check the square immediately forward and to the left
         if input_row > 0 and input_col > 0:
@@ -57,7 +54,7 @@ def build_list_of_moves(input_game_square, input_game):
 
         return list_of_candidate_game_squares
 
-    elif input_game_type == GAME_TYPE_CHESS:
+    elif input_game_type == GameType.CHESS:
 
         if type(input_piece).__name__ == "King":
             # A king can move one square in any direction (horizontally, vertically, or diagonally),
