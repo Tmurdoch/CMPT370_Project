@@ -10,6 +10,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 from GameType import GameType
 from datetime import datetime
 import cairo
+import os
 
 resume = True
 
@@ -601,6 +602,17 @@ class PlayAgainWindow(Gtk.Window):
     def __init__(self):
         super().Gtk.Button.new_with_label("Play")
         print("b")"""
+
+def initializeFS():
+        """initialize filesystem for storing stuff
+        :returns: success bool"""
+        if (os.name == "posix"):
+                home = os.path.expanduser("~")
+                if (not (os.path.exists(home+"/.cmpt370checkerschess"))):
+                        os.mkdir(home+"/.cmpt370checkerschess")
+        elif (os.name == "nt"):
+                #windows stuff here
+
 
 if __name__ == "__main__":
     win = TheWindow()
