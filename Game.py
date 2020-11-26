@@ -10,6 +10,7 @@ from Timer import Timer
 from GameStatus import GameStatus
 import struct
 import os
+from GameType import GameType
 
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
