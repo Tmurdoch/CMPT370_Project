@@ -11,6 +11,7 @@ from GameType import GameType
 from datetime import datetime
 import cairo
 import PossibleMoves
+import os
 
 resume = True
 
