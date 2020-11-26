@@ -6,12 +6,23 @@ from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, GLib
 from GameType import GameType
 from datetime import datetime
 import cairo
 
+
+# Temporary Globals for initializing objects
 resume = True
+current = "Player 1"
+player_1_timer = Timer(900, True)
+player_2_timer = Timer(900, True)
+player_2_type = None
+game_type = None
+player_1 = None
+p1_piece_set = PieceSet(1,None)
+board_colour = "board2"
+
 
 class TheWindow(Gtk.Window):
         def __init__(self):
@@ -99,7 +110,7 @@ class TheWindow(Gtk.Window):
         def player_type_back_clicked(self, button):
                 print("This should go back to Game Choice Window")
                 self.player_type.hide()
-                self.game_type.show()
+                self.game_choice_box.show_all()
 
         def customization_back_clicked(self, button):
                 print("This should go back to Game Choice Window")
@@ -116,9 +127,25 @@ class TheWindow(Gtk.Window):
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
                 self.board = BoardGrid("Test", "multiplayer", temp_game)
                 self.grid.attach(self.board,0,0,1,1)
-                board.show()
+                self.board.help_button.connect("clicked", self.board_help_clicked)
+                self.board.save_quit_button.connect("clicked", self.board_save_clicked)
+                self.board.pause_button.connect("clicked", self.board_pause_clicked)
+                self.board.show()
 
+        def board_save_clicked(self, button):
+                print("This should exit and save")
+                Gtk.main_quit()
 
+        def board_pause_clicked(self, button):
+                player_1_timer.stop()
+                player_2_timer.stop()
+
+        def board_help_clicked(self, button):
+                print("This should go to Help Window")
+                board = HowToPlayWindow("Checkers")
+                player_1_timer.stop()
+                player_2_timer.stop()
+                board.show_all()
 
 
 
@@ -285,7 +312,7 @@ class BoardGrid(Gtk.Grid):
         self.__game_obj = game_obj
         self.place_pieces()
         self.surface = None
-
+        self.start_clock_timer()
         # create checkerboard area
         board_frame = Gtk.Frame()
         board_frame.set_shadow_type(Gtk.ShadowType.IN)
@@ -301,26 +328,44 @@ class BoardGrid(Gtk.Grid):
                                      | Gdk.EventMask.LEAVE_NOTIFY_MASK
                                      | Gdk.EventMask.BUTTON_PRESS_MASK)
 
-        timer_frame = Gtk.Frame()
-        timer_frame.set_shadow_type(Gtk.ShadowType.IN)
-        self.add(timer_frame)
-
-        self.timer_area = Gtk.Label()
+        self.timer_area = Gtk.Label()  # Player 1 time
         self.add(self.timer_area)
 
-        help_button = Gtk.Button.new_with_label("help?")
-        help_button.connect("clicked", self.help_clicked)
-        self.attach(help_button, 2, 4, 1, 1)
+        self.timer_area_2 = Gtk.Label()  # Player 2 time
+        self.attach_next_to(self.timer_area_2, self.timer_area, Gtk.PositionType.RIGHT, 3, 1)
+
+        player1_label = Gtk.Label()
+        player1_label.set_markup("<b>Player 1 Time Remaining</b>")
+        player1_label.set_justify(Gtk.Justification.CENTER)
+        player1_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.attach_next_to(player1_label, self.timer_area, Gtk.PositionType.TOP, 1, 1)
+
+        player2_label = Gtk.Label()
+        player2_label.set_markup("<b>Player 2 Time Remaining</b>")
+        player2_label.set_justify(Gtk.Justification.CENTER)
+        player2_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.attach_next_to(player2_label, player1_label, Gtk.PositionType.RIGHT, 1, 1)
 
         # just to see if promotion works
-        #promote_button = Gtk.Button.new_with_label("promote?")
-        #promote_button.connect("clicked", self.promote_clicked)
-        #board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
+        # promote_button = Gtk.Button.new_with_label("promote?")
+        # promote_button.connect("clicked", self.promote_clicked)
+        # board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
 
-        save_quit_button = Gtk.Button.new_with_label("Save and Quit")
-        save_quit_button.connect("clicked", self.save_quit_clicked)
-        self.attach_next_to(save_quit_button,help_button, Gtk.PositionType.RIGHT, 1, 1)
-        self.startclocktimer()
+        self.pause_button = Gtk.Button.new_with_label("Pause Timer")
+        self.pause_button.connect("clicked", self.pause_clicked)
+        self.attach(self.pause_button, 1, 4, 1, 1)
+
+        self.resume_button = Gtk.Button.new_with_label("Resume Timer")
+        self.resume_button.connect("clicked", self.resume_clicked)
+        self.attach_next_to(self.resume_button, self.pause_button, Gtk.PositionType.BOTTOM, 1, 1)
+
+        self.help_button = Gtk.Button.new_with_label("Help?")
+        self.attach_next_to(self.help_button, self.pause_button, Gtk.PositionType.RIGHT, 1, 1)
+
+        self.save_quit_button = Gtk.Button.new_with_label("Save and Quit")
+        self.attach_next_to(self.save_quit_button, self.help_button, Gtk.PositionType.BOTTOM, 1, 1)
+
+        self.start_clock_timer()
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
 
@@ -366,18 +411,45 @@ class BoardGrid(Gtk.Grid):
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if ycount % 2:
-                    cairo_ctx.set_source_rgb(0.300, .155, 0.119)
-                else:
-                    cairo_ctx.set_source_rgb(0, 1, 1)
-                # If we're outside the clip this will do nothing.
-                cairo_ctx.rectangle(i, j,
-                                    check_size,
-                                    check_size)
-                cairo_ctx.fill()
+                if board_colour == "board0":
+                    if ycount % 2:
+                        cairo_ctx.set_source_rgb(1.000, 1.000, 1.000)
+                    else:
+                        cairo_ctx.set_source_rgb(0, 0, 0)
+                    # If we're outside the clip this will do nothing.
+                    cairo_ctx.rectangle(i, j,
+                                        check_size,
+                                        check_size)
+                    cairo_ctx.fill()
 
-                j += check_size + spacing
-                ycount += 1
+                    j += check_size + spacing
+                    ycount += 1
+                if board_colour == "board1":
+                    if ycount % 2:
+                        cairo_ctx.set_source_rgb(1, 0, 0)
+                    else:
+                        cairo_ctx.set_source_rgb(0, 0, 0)
+                    # If we're outside the clip this will do nothing.
+                    cairo_ctx.rectangle(i, j,
+                                        check_size,
+                                        check_size)
+                    cairo_ctx.fill()
+
+                    j += check_size + spacing
+                    ycount += 1
+                if board_colour == "board2":
+                    if ycount % 2:
+                        cairo_ctx.set_source_rgb(0.300, .155, 0.119)
+                    else:
+                        cairo_ctx.set_source_rgb(0, 1, 1)
+                    # If we're outside the clip this will do nothing.
+                    cairo_ctx.rectangle(i, j,
+                                        check_size,
+                                        check_size)
+                    cairo_ctx.fill()
+
+                    j += check_size + spacing
+                    ycount += 1
 
             i += check_size + spacing
             xcount += 1
@@ -436,19 +508,44 @@ class BoardGrid(Gtk.Grid):
     
         return rv_list
 
-    def displayclock(self):
-        #  putting our datetime into a var and setting our label to the result.
-        #  we need to return "True" to ensure the timer continues to run, otherwise it will only run once.
-        datetimenow = str(datetime.now().second)
-        self.timer_area.set_label(datetimenow)
+    def display_timer(self):
+        # needs to have True or it only runs once
+
+        player1_time = player_1_timer.get_time_remaining_s() // 60  # get the minutes from Players' time remaining
+        player1_time_sec = player_1_timer.get_time_remaining_s() % 60  # get the seconds from Player's time remaining
+        player2_time = player_2_timer.get_time_remaining_s() // 60
+        player2_time_sec = player_2_timer.get_time_remaining_s() % 60
+        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)  # format the minutes and seconds to be
+        p2_time = "{:2d}:{:02d}".format(player2_time, player2_time_sec)  # normal clock looking
+
+        # bold the times and set the to be white
+        self.timer_area.set_markup("<b>" + p1_time + "</b>")
         self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
+        self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         return True
 
         # Initialize Timer
 
-    def startclocktimer(self):
-        #  this takes 2 args: (how often to update in millisec, the method to run)
-        GObject.timeout_add(1000, self.displayclock)
+    def start_clock_timer(self):
+        if current == "Player 1":
+            player_1_timer.start()
+            GLib.timeout_add(1000, self.display_timer)
+        else:
+            player_2_timer.start()
+            GLib.timeout_add(1000, self.display_timer)
+
+    def pause_clicked(self, button):
+        player_1_timer.stop()
+        player_2_timer.stop()
+        return True
+
+    def resume_clicked(self, button):
+        if current == "Player 1":
+            player_1_timer.start()
+        else:
+            player_2_timer.start()
+        return True
 
     def help_clicked(self, button):
         print("This should go to HowToPlay Window")
@@ -499,7 +596,7 @@ class HowToPlayWindow(Gtk.Window):
         self.connect("destroy", self.hide)  # this gives error message but still does it??
 
 
-""" will we want to pause timer while this is happening? """
+
 class PromotePawnWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Choose Promotion ")
@@ -530,18 +627,34 @@ class PromotePawnWindow(Gtk.Window):
 
     def queen_clicked(self, button):
         print('Queen was chosen')
+        if current == "Player 1":
+            player_1_timer.start()
+        else:
+            player_2_timer.start()
         self.hide()
 
     def knight_clicked(self, button):
         print('Knight was chosen')
+        if current == "Player 1":
+            player_1_timer.start()
+        else:
+            player_2_timer.start()
         self.hide()
 
     def bishop_clicked(self, button):
         print('Bishop was chosen')
+        if current == "Player 1":
+            player_1_timer.start()
+        else:
+            player_2_timer.start()
         self.hide()
 
     def rook_clicked(self, button):
         print('Rook was chosen')
+        if current == "Player 1":
+            player_1_timer.start()
+        else:
+            player_2_timer.start()
         self.hide()
 
 
@@ -576,13 +689,13 @@ class PlayAgainWindow(Gtk.Window):
 
     def play_clicked(self, button):
         print('Play was chosen')
-        game_type = GameChoiceWindow()  # do we want it to go back to the board or back through menus?
+        game_type = GameChoiceBox()
         game_type.show_all()
         self.hide()
 
     def main_menu_clicked(self, button):
         print('This should go to resumed game')
-        main_menu = MainMenuWindow()
+        main_menu = MainMenuBox()
         main_menu.show_all()
         self.hide()
 
