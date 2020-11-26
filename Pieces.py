@@ -39,6 +39,7 @@ class King(PieceInterface):
     """
     Implements PieceInterface. Represents a King chess piece.
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -67,6 +68,7 @@ class Queen(PieceInterface):
     """
     Implements PieceInterface. Represents a Queen chess piece.
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -82,6 +84,7 @@ class Knight(PieceInterface):
     """
     Implements PieceInterface. Represents a Knight chess piece.
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -97,6 +100,7 @@ class Bishop(PieceInterface):
     """
     Implements PieceInterface. Represents a Bishop chess piece.
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -112,6 +116,7 @@ class Rook(PieceInterface):
     """
     Implements PieceInterface. Represents a Rook chess piece.
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -145,6 +150,7 @@ class Pawn(PieceInterface):
         __movedYet: A bool indicating if the pawn has moved yet, True if it has
                 (Pawns can move twice only on their first move)
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour
@@ -198,6 +204,7 @@ class CheckersCoin(PieceInterface):
     Checkers coin Specific Attributes:
         __promoted: A bool representing promotion status, True if the checkers coin has been promoted
     """
+
     def __init__(self, colour):
         super().__init__(colour)
         self.__colour = colour

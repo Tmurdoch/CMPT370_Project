@@ -14,6 +14,7 @@ class GameSquare:
      - col: Integer value that is col coordinate in the board array
      - occupyingPiece: A type piece currently occupying the square
     """
+
     def __init__(self, row, col):
         """
         This will initialize the GameSquare.

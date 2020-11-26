@@ -109,7 +109,8 @@ class Game:
         # caller of save_to_file()
         # is responsible for the try except
         # error handling
-        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
+        fp = open(path+"/save-game.370" +
+                  GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
         # write magic
         fp.write(MAGIC)
         game_mode = self.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
@@ -195,7 +196,8 @@ class Game:
         # caller of load_from_file()
         # is responsible for the try except
         # error handling
-        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "rb")
+        fp = open(path+"/save-game.370" +
+                  GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "rb")
         read_magic = fp.read(20)
         if read_magic != MAGIC:
             raise Exception(
@@ -352,7 +354,8 @@ class Game:
             elif self.__game_type == GameType.CHESS:
                 pass
             # delete the file after loading
-            os.remove(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
+            os.remove(path+"/save-game.370" +
+                      GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
             return
 
         else:
@@ -374,18 +377,20 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
-        if self.__game_type == GameType.CHECKERS:
+        if self.__game_type == GameType.CHECKERS or self.__game_type == GameType.CHESS:
             if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
                 if self.__current_player is self.__light_player:
                     self.__game_status = GameStatus.DARK_VICTORIOUS
                 else:
                     self.__game_status = GameStatus.LIGHT_VICTORIOUS
+        """
         elif self.__game_type == GameType.CHESS:
             # TODO CHESS
             print("do stuff")
         else:
             # unknown game
             assert 0
+        """
         return
 
     def check_for_game_over(self):

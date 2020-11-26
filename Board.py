@@ -13,6 +13,7 @@ class Board:
      - gameBoard: 2D array of GameSquares.
      - boardTheme: color scheme of the board
     """
+
     def __init__(self, size):
         """
         This will initialize the gameBoard as a square 2D array of GameSquares.
@@ -50,9 +51,11 @@ class Board:
         if not isinstance(col, int):
             raise TypeError("Col must be an Integer")
         if row < 0 or row > self.__size:
-            raise IndexError("Row must be a within the bounds of 0 to " + str(self.__size))
+            raise IndexError(
+                "Row must be a within the bounds of 0 to " + str(self.__size))
         if col < 0 or col > self.__size:
-            raise IndexError("Col must be a within the bounds of 0 to " + str(self.__size))
+            raise IndexError(
+                "Col must be a within the bounds of 0 to " + str(self.__size))
 
         return self.__gameBoard[row][col]
 
@@ -148,9 +151,12 @@ class Board:
             # in specific row, col in board
             # 7, 5 are for the light player and 1 is for dark player these
             # these numbers are specific rows where player piece start from edge column
-            self.__gameBoard[7][col].put_piece_here(player1_pieces[checker_indexes[0][0]])
-            self.__gameBoard[5][col].put_piece_here(player1_pieces[checker_indexes[1][1]])
-            self.__gameBoard[1][col].put_piece_here(player2_pieces[checker_indexes[0][2]])
+            self.__gameBoard[7][col].put_piece_here(
+                player1_pieces[checker_indexes[0][0]])
+            self.__gameBoard[5][col].put_piece_here(
+                player1_pieces[checker_indexes[1][1]])
+            self.__gameBoard[1][col].put_piece_here(
+                player2_pieces[checker_indexes[0][2]])
             checker_indexes[0][0] += 1
             checker_indexes[1][1] += 1
             checker_indexes[0][2] += 1
@@ -162,9 +168,12 @@ class Board:
             # in specific row, col in board
             # 6 is for the light player and 2, 0 are for dark player
             # these numbers are specific rows where player piece start from edge column
-            self.__gameBoard[6][col].put_piece_here(player1_pieces[checker_indexes[0][1]])
-            self.__gameBoard[2][col].put_piece_here(player2_pieces[checker_indexes[1][2]])
-            self.__gameBoard[0][col].put_piece_here(player2_pieces[checker_indexes[1][0]])
+            self.__gameBoard[6][col].put_piece_here(
+                player1_pieces[checker_indexes[0][1]])
+            self.__gameBoard[2][col].put_piece_here(
+                player2_pieces[checker_indexes[1][2]])
+            self.__gameBoard[0][col].put_piece_here(
+                player2_pieces[checker_indexes[1][0]])
             checker_indexes[0][1] += 1
             checker_indexes[1][2] += 1
             checker_indexes[1][0] += 1
@@ -217,18 +226,23 @@ class Board:
                     column.append([empty_string])
                 else:
                     if type(c.get_occupying_piece()).__name__ is "CheckersCoin":
-                        column.append([type(c.get_occupying_piece()).__name__ + " "])
+                        column.append(
+                            [type(c.get_occupying_piece()).__name__ + " "])
                     elif type(c.get_occupying_piece()).__name__ is "Pawn":
-                        column.append([type(c.get_occupying_piece()).__name__+"  "])
+                        column.append(
+                            [type(c.get_occupying_piece()).__name__+"  "])
                         empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "Rook":
-                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                        column.append(
+                            [type(c.get_occupying_piece()).__name__ + "  "])
                         empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "King":
-                        column.append([type(c.get_occupying_piece()).__name__ + "  "])
+                        column.append(
+                            [type(c.get_occupying_piece()).__name__ + "  "])
                         empty_string = "E     "
                     elif type(c.get_occupying_piece()).__name__ is "Queen":
-                        column.append([type(c.get_occupying_piece()).__name__ + " "])
+                        column.append(
+                            [type(c.get_occupying_piece()).__name__ + " "])
                         empty_string = "E     "
                     else:
                         column.append([type(c.get_occupying_piece()).__name__])
@@ -245,7 +259,8 @@ class Board:
                     column.append([empty_string])
                 else:
                     if c.get_occupying_piece().get_colour() is "Red":
-                        column.append([c.get_occupying_piece().get_colour()+"  "])
+                        column.append(
+                            [c.get_occupying_piece().get_colour()+"  "])
                     else:
                         column.append([c.get_occupying_piece().get_colour()])
             board_pieces_colour.append(column)
@@ -256,7 +271,7 @@ class Board:
         [print(row) for row in board_pieces]
         print("\nBoard Pieces Colour")
         [print(row) for row in board_pieces_colour]
-        
+
         # board_row_col = [[(col.get_row(), col.get_col()) for col in row] for row in self.__gameBoard]
         # board_pieces = [[col.get_occupying_piece() for col in row] for row in self.__gameBoard]
         # print("\nBoard added mock piece")
