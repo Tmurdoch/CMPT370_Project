@@ -1,3 +1,7 @@
+# Board Game Simulator
+# CMPT 370 Group 4, Fall 2020
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
+
 import gi
 from Player import Player
 from PlayerType import PlayerType
@@ -7,6 +11,7 @@ from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
+gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
 from datetime import datetime
