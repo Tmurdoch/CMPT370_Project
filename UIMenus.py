@@ -355,7 +355,7 @@ class BoardWindow(Gtk.Window):
         svglc = 0
         while (svglc != 6):
                 # read binary to ensure no nonsense on windows
-                fp = open(light_chess_svg_targets[svglc], "rb")
+                fp = open(svg_targets[svglc], "rb")
                 fp.seek(0, SEEK_END)
                 fps = fp.tell()
                 fp.seek(0, SEEK_SET)
@@ -364,7 +364,7 @@ class BoardWindow(Gtk.Window):
                 svglc += 1
         while (svglc != len(svg_targets)):
                 # read binary to ensure no nonsense on windows
-                fp = open(light_chess_svg_targets[svglc], "rb")
+                fp = open(svg_targets[svglc], "rb")
                 fp.seek(0, SEEK_END)
                 fps = fp.tell()
                 fp.seek(0, SEEK_SET)
@@ -399,6 +399,34 @@ class BoardWindow(Gtk.Window):
         self.br = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[4])
         self.bp = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[5])
 
+        #checkers
+        checkers_svg_data_array = []
+        checkers_svg_dark_data_array = []
+        svg_targets = ["media/gfx/checkers/wc.svg",
+                       "media/gfx/checkers/wd.svg",
+                       "media/gfx/checkers/bc.svg",
+                       "media/gfx/checkers/bd.svg"]
+        svglc = 0
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                checkers_svg_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        # replace the colours
+        svglc = 0
+        while (svglc != len(checkers_svg_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_LIGHT_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        self.wc = Rsvg.Handle.new_from_data(checkers_svg_data_array[0])
+        self.wd = Rsvg.Handle.new_from_data(checkers_svg_data_array[1])
+        self.bc = Rsvg.Handle.new_from_data(checkers_svg_data_array[2])
+        self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
 
 
     def place_pieces(self):
