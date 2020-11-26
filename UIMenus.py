@@ -323,6 +323,7 @@ class CustomizationGrid(Gtk.Grid):
         x=0
         while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
                 self.attach(self.board_radio_buttons[x],4,2+x,1,1)
+                self.board_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
                 x+=1
 
         
