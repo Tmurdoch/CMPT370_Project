@@ -556,9 +556,9 @@ class BoardGrid(Gtk.Grid):
             
         cairo_ctx.restore()
         row = 0
-        while (row != height):
+        while (row != self.__game_obj.get_board().get_size()):
             col = 0
-            while (col != width):
+            while (col != self.__game_obj.get_board().get_size()):
                 cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
 
                 if (not (cur_piece is None)):
@@ -607,12 +607,12 @@ class BoardGrid(Gtk.Grid):
                                         
                         else:
                                 assert(0)
-                cairo_ctx.save()
-                #scale piece to size of square
-                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
-                cairo_ctx.translate(50 * col, 50 * row)
-                wk.render_cairo(cairo_ctx)
-                cairo_ctx.restore()
+                        cairo_ctx.save()
+                        #scale piece to size of square
+                        cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
+                        cairo_ctx.translate(piece_to_draw.get_dimensions().width* col, piece_to_draw.get_dimensions().height * row)
+                        piece_to_draw.render_cairo(cairo_ctx)
+                        cairo_ctx.restore()
                 col += 1
             row +=1
                                     
