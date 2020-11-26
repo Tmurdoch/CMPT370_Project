@@ -108,12 +108,15 @@ class TheWindow(Gtk.Window):
 
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
+                self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
                 temp_game = Game(self.game_type, 0)
+                #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
-                board = BoardWindow("Test", "multiplayer", temp_game)
-                board.show_all()
+                self.board = BoardGrid("Test", "multiplayer", temp_game)
+                self.grid.attach(self.board,0,0,1,1)
+                board.show()
 
 
 
@@ -272,30 +275,21 @@ class CustomizationGrid(Gtk.Grid):
 
 
 
-class BoardWindow(Gtk.Window):
+class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type, game_obj):
         """
         @param game_obj: actual game object, initialize by Game()
         """
-        Gtk.Window.__init__(self, title=game + " " + game_type)
+        Gtk.Grid.__init__(self)
         self.__game = game
         self.__game_obj = game_obj
         self.place_pieces()
         self.surface = None
 
-        self.set_resizable(False)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_border_width(80)
-        col = Gdk.Color(2000, 6000, 200)
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-
-        board_box = Gtk.Grid()
-        self.add(board_box)
-
         # create checkerboard area
         board_frame = Gtk.Frame()
         board_frame.set_shadow_type(Gtk.ShadowType.IN)
-        board_box.add(board_frame)
+        self.add(board_frame)
 
         checkerboard_area = Gtk.DrawingArea()
         checkerboard_area.set_size_request(400, 400)
@@ -309,14 +303,14 @@ class BoardWindow(Gtk.Window):
 
         timer_frame = Gtk.Frame()
         timer_frame.set_shadow_type(Gtk.ShadowType.IN)
-        board_box.add(timer_frame)
+        self.add(timer_frame)
 
         self.timer_area = Gtk.Label()
-        board_box.add(self.timer_area)
+        self.add(self.timer_area)
 
         help_button = Gtk.Button.new_with_label("help?")
         help_button.connect("clicked", self.help_clicked)
-        board_box.attach(help_button, 2, 4, 1, 1)
+        self.attach(help_button, 2, 4, 1, 1)
 
         # just to see if promotion works
         #promote_button = Gtk.Button.new_with_label("promote?")
@@ -325,7 +319,7 @@ class BoardWindow(Gtk.Window):
 
         save_quit_button = Gtk.Button.new_with_label("Save and Quit")
         save_quit_button.connect("clicked", self.save_quit_clicked)
-        board_box.attach_next_to(save_quit_button,help_button, Gtk.PositionType.RIGHT, 1, 1)
+        self.attach_next_to(save_quit_button,help_button, Gtk.PositionType.RIGHT, 1, 1)
         self.startclocktimer()
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
