@@ -158,12 +158,12 @@ def test_possible_moves():
     assert my_game.get_current_player() is None
 
     # create dark player
-    my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game.get_dark_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
 
     # create light player
-    my_game.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game.get_light_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
 
@@ -427,12 +427,12 @@ def test_possible_moves():
     assert my_game_2.get_current_player() is None
 
     # create dark player
-    my_game_2.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game_2.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_dark_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
 
     # create light player
-    my_game_2.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game_2.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_light_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
 
@@ -498,12 +498,12 @@ def test_possible_moves():
 
     my_game_2 = Game(1, ColourCodes.RED_BLACK)
     # create dark player
-    my_game_2.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game_2.build_dark_player("Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_dark_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
 
     # create light player
-    my_game_2.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True), False)
+    my_game_2.build_light_player("Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_light_player().get_piece_set().get_colour() == \
            COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
 
@@ -727,16 +727,16 @@ def test_game():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     # checkers player light ai 1st turn
-    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer)
 
     # checkers player dark human 2nd turn
-    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
 
     # Test chess after player initialization
     assert my_chess_game.get_dark_player().get_piece_set().get_colour() is "Black"
@@ -1158,21 +1158,21 @@ def test_integration_4():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
     pl_chess = my_chess_game.get_light_player()
     pc_chess = my_chess_game.get_current_player()
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
     pd_chess = my_chess_game.get_dark_player()
 
     # checkers player light ai 1st turn
-    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer)
     pl_checkers = my_checkers_game.get_light_player()
     pc_checkers = my_checkers_game.get_current_player()
 
     # checkers player dark human 2nd turn
-    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
     pd_checkers = my_checkers_game.get_dark_player()
 
     # TESTS
@@ -1320,16 +1320,16 @@ def test_integration_5():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     # checkers player light ai 1st turn
-    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer)
 
     # checkers player dark human 2nd turn
-    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
 
     # Build Chess Board on my_chess_game using the games light and dark player piece set
     my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
@@ -1504,28 +1504,6 @@ def test_integration_5():
                     if col != my_checkers_game.get_board().get_size() - 1:
                         x = 0
 
-    # - Testing Saving and Loading
-    """
-    my_chess_game.save_to_file()
-
-    load_chess_game = Game(0, ColourCodes.WHITE_BLACK)
-    load_chess_game.load_from_file()
-    
-    for row_gs in my_checkers_game.get_board().get_game_board():
-        col = 0
-        for col_gs in row_gs:
-            if col_gs.get_occupying_piece() is not None:
-                pieces_colour = ["White", "Black"]
-                assert type(col_gs.get_occupying_piece()).__name__ is "CheckersCoin"
-                assert col_gs.get_occupying_piece().get_colour() in pieces_colour
-            assert col_gs.get_row() is row
-            assert col_gs.get_col() is col
-            col += 1
-        row += 1
-    # SWITCHING SIDES
-    my_board.switch_sides()
-    """
-
 
 def test_integration_6():
     """
@@ -1553,16 +1531,16 @@ def test_integration_6():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     # checkers player light ai 1st turn
-    my_checkers_game.build_light_player("Light AI", pt_ai, timer, False)
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer)
 
     # checkers player dark human 2nd turn
-    my_checkers_game.build_dark_player("Dark HU", pt_human, timer, False)
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
 
     # Build Chess Board on my_chess_game using the games light and dark player piece set
     my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
@@ -1822,10 +1800,10 @@ def test_check():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     # Build Chess Board on my_chess_game using the games light and dark player piece set
     my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
@@ -1908,10 +1886,10 @@ def test_check():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     # Build Chess Board on my_chess_game using the games light and dark player piece set
     my_chess_game.get_board().build_chess_board(my_chess_game.get_light_player().get_piece_set().get_live_pieces(),
@@ -1953,6 +1931,10 @@ def test_check():
 
 
 def test_en_passant():
+    """
+    Testing the en passant chess move
+    Special capture move after a pawn double step
+    """
     gt_chess = 0
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
@@ -1970,10 +1952,10 @@ def test_en_passant():
     # build the players in game
 
     # chess player light human 1st turn
-    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+    my_chess_game.build_light_player("Light HU", pt_human, timer)
 
     # chess player dark ai 2nd turn
-    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer)
 
     dark_pawns = []
     light_pawns = []
@@ -2062,6 +2044,3 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_moves_s4 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 1), my_chess_game)
     assert sorted([x.get_row_and_column() for x in my_moves_s4]) == sorted([(2, 1), (1, 1), (2, 2)])
-
-
-
