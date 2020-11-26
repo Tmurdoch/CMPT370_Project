@@ -29,8 +29,6 @@ class TheWindow(Gtk.Window):
                 col = Gdk.Color(2000, 6000, 200)  # dark green
                 self.modify_bg(Gtk.StateType.NORMAL, col)
                 
-                self.game_type = "Checkers" # assume checkers first, change later when clicked
-
                 self.main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
                 self.main_box.play_button.connect("clicked", self.main_play_clicked)
                 if resume:
@@ -532,16 +530,26 @@ class BoardWindow(Gtk.Window):
                                                 piece_to_draw = self.wp
                                         else:
                                                 piece_to_draw = self.bp
-                                cairo_ctx.save()
-                                #scale piece to size of square
-                                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
-                                cairo_ctx.translate(50 * col, 50 * row)
-                                wk.render_cairo(cairo_ctx)
-                                cairo_ctx.restore()
                         elif (game_type == GameType.CHECKERS):
-                                print("checkers stuffffffffff")
+                                if (cur_piece.get_promotion_status()): # 1 is king
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wd
+                                        else:
+                                                piece_to_draw = self.bd
+                                else:
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wc
+                                        else:
+                                                piece_to_draw = self.bc
+                                        
                         else:
                                 assert(0)
+                cairo_ctx.save()
+                #scale piece to size of square
+                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
+                cairo_ctx.translate(50 * col, 50 * row)
+                wk.render_cairo(cairo_ctx)
+                cairo_ctx.restore()
                 col += 1
             row +=1
                                     
