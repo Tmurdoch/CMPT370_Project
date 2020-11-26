@@ -79,16 +79,16 @@ class Player(object):
                 # This move shouldn't have been generated
                 raise Exception("Illegal move, this move shouldn't have been generated")
             else:
-                if abs(origin_square.get_row() - dest_square().get_row()) == 1:
+                if abs(origin_square.get_row() - dest_square.get_row()) == 1:
                     # Squares are immediately adjacent, no jumping
                     dest_square.put_piece_here(origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
-                elif abs(origin_square.get_row() - dest_square().get_row()) == 2:
+                elif abs(origin_square.get_row() - dest_square.get_row()) == 2:
                     # Single jump
 
                     # Now, we also need to make the capture, need to find which of the four ways we moved
-                    if ((origin_square.get_row() - dest_square().get_row()) > 0 and
-                            (origin_square.get_col() - dest_square().get_col()) > 0):
+                    if ((origin_square.get_row() - dest_square.get_row()) > 0 and
+                            (origin_square.get_col() - dest_square.get_col()) > 0):
                         # Piece we are trying to jump is in the immediate top left hand corner of the origin square
                         square_of_capture = board.get_game_square(origin_square.get_row() - 1,
                                                                   origin_square.get_col() - 1)
@@ -104,8 +104,8 @@ class Player(object):
                             raise Exception("You are trying to jump your own piece, trying to jump top left hand "
                                             "corner piece")
 
-                    if ((origin_square.get_col() - dest_square().get_col())
-                            < 0 < (origin_square.get_row() - dest_square().get_row())):
+                    if ((origin_square.get_col() - dest_square.get_col())
+                            < 0 < (origin_square.get_row() - dest_square.get_row())):
                         # Piece we are trying to jump is in the immediate top right hand corner of the origin square
                         square_of_capture = board.get_game_square(origin_square.get_row() - 1,
                                                                   origin_square.get_col() + 1)
@@ -121,8 +121,8 @@ class Player(object):
                             raise Exception("You are trying to jump your own piece, tyring to jump top right hand "
                                             "corner piece")
 
-                    if ((origin_square.get_row() - dest_square().get_row())
-                            < 0 < (origin_square.get_col() - dest_square().get_col())):
+                    if ((origin_square.get_row() - dest_square.get_row())
+                            < 0 < (origin_square.get_col() - dest_square.get_col())):
                         # Piece we are trying to jump is in the immediate bottom left hand corner of the origin
                         # square
                         square_of_capture = board.get_game_square(origin_square.get_row() + 1,
@@ -139,8 +139,8 @@ class Player(object):
                             raise Exception("You are trying to jump your own piece, trying to jump bottom left "
                                             "hand corner piece")
 
-                    if ((origin_square.get_row() - dest_square().get_row()) < 0 and
-                            (origin_square.get_col() - dest_square().get_col()) < 0):
+                    if ((origin_square.get_row() - dest_square.get_row()) < 0 and
+                            (origin_square.get_col() - dest_square.get_col()) < 0):
                         # Piece we are trying to jump is in the immediate bottom right hand corner of the origin
                         # square
                         square_of_capture = board.get_game_square(origin_square.get_row() + 1,
