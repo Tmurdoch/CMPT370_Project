@@ -23,11 +23,7 @@ def build_list_of_moves(input_game_square, input_game):
     :return list_of_candidate_game_squares: GameSquare[]: List of destination squares you can legally move to
     """
     input_piece = input_game_square.get_occupying_piece()
-    input_row = input_game_square.get_row()
-    input_col = input_game_square.get_col()
     input_game_type = input_game.get_game_type()
-    input_board = input_game.get_board()
-    list_of_candidate_game_squares = []
 
     if input_game_type == GameType.CHECKERS:
         list_of_candidate_game_squares = build_coin_moves(input_game_square, input_game)
@@ -56,11 +52,10 @@ def build_list_of_moves(input_game_square, input_game):
             # Could not identify the type of piece
             raise Exception("Could not identify the type of piece")
 
-        return list_of_candidate_game_squares
-
     else:
-        # Game mode is neither "chess" nor "checkers"
-        return input_game_type.lower()
+        raise Exception("Game mode " + input_game_type.lower() + " is neither chess nor checkers")
+
+    return list_of_candidate_game_squares
 
 
 def temp_move(origin_square, destination_square):
