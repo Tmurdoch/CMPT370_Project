@@ -438,6 +438,9 @@ class BoardGrid(Gtk.Grid):
                 print(cur_location)
                 self.__game_obj.get_current_player().make_move(self.current_selected_location,cur_location, self.__game_obj)
                 print("Made Move")
+                #switch players, flip board
+                self.__game_obj.change_current_player()
+                self.__game_obj.get_board().switch_sides()
                 
                 #reset attributes                
                 self.current_selected_location = None
@@ -445,6 +448,8 @@ class BoardGrid(Gtk.Grid):
 
             #not making a move, so set attributes and build possible moves for next click
             else:
+                if cur_piece is None:
+                    return
                 self.current_selected_location = cur_location
                 self.possible_moves_for_cur_piece = PossibleMoves.build_list_of_moves(cur_location, self.__game_obj)
                 #TODO: check return value of above line, display somehow
