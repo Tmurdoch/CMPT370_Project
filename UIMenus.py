@@ -153,11 +153,12 @@ class TheWindow(Gtk.Window):
                 self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
                 game_type = 0
-                temp_game = Game(game_type, 0)
+                temp_game = Game(game_type, ColourCodes.RED_BLACK)
                 t1 = Timer(0, False)
                 t2 = Timer(0, False)
                 temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
                 temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
+                #temp_game.get_light_player().__piece_set.__colour = "White"
                 #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
@@ -504,14 +505,14 @@ class BoardGrid(Gtk.Grid):
         
         if self.__game_obj.get_game_type() == 0:
             print("is Chess")
-            pcs_player1 = PieceSet(0, 0) #TODO: implement different colours 
-            pcs_player2 = PieceSet(0, 0) #TODO: implement different colours 
+            pcs_player1 = self.__game_obj.get_light_player().get_piece_set() 
+            pcs_player2 = self.__game_obj.get_dark_player().get_piece_set() 
             self.__game_obj.get_board().build_chess_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
         if self.__game_obj.get_game_type() == 1:
             print("is Checkers")
-            pcs_player1 = PieceSet(1, 0) #TODO: implement different colours 
-            pcs_player2 = PieceSet(1, 0) #TODO: implement different colours 
+            pcs_player1 = self.__game_obj.get_light_player().get_piece_set() 
+            pcs_player2 = self.__game_obj.get_dark_player().get_piece_set() 
             self.__game_obj.get_board().build_checkers_board(pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
     def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
@@ -651,8 +652,11 @@ class BoardGrid(Gtk.Grid):
 
             cur_location = current_selected_piece = self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50))
 
-            print(cur_piece)
+            if cur_piece is not None:
+                print(cur_piece.get_colour())
+            print(self.__game_obj.get_light_player().get_piece_set().get_colour())
             
+            print(self.__game_obj.get_dark_player().get_piece_set().get_colour())
             #check if making a move
             if cur_location in self.possible_moves_for_cur_piece:
                 #move the piece
@@ -673,6 +677,7 @@ class BoardGrid(Gtk.Grid):
                 if cur_piece is None:
                     return
                 self.current_selected_location = cur_location
+                #build the possible pieces for a game square
                 self.possible_moves_for_cur_piece = PossibleMoves.build_list_of_moves(cur_location, self.__game_obj)
                 #TODO: check return value of above line, display somehow
 
