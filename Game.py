@@ -67,7 +67,7 @@ class Game:
         """:return: Player: The dark player object"""
         return self.__dark_player
 
-    def build_light_player(self, name, player_type, timer, castled):
+    def build_light_player(self, name, player_type, timer):
         """
         Build the light coloured object.
         :param name: string: Player name
@@ -79,7 +79,7 @@ class Game:
                                      self.__game_type, player_type, timer)
         self.__current_player = self.__light_player  # Light colour goes first
 
-    def build_dark_player(self, name, player_type, timer, castled):
+    def build_dark_player(self, name, player_type, timer):
         """
         Build the light coloured object.
         :param name: string: Player name
