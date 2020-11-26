@@ -11,6 +11,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg
 from GameType import GameType
 from datetime import datetime
 import cairo
+import os
 # make c-stdlib style definitions so
 # the code is readable and without
 # magic numbers
