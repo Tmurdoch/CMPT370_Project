@@ -323,18 +323,18 @@ class CustomizationGrid(Gtk.Grid):
 
         x = 0
         self.board_radio_buttons = []
-        self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(
-            None, COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-        x += 1
-        while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-            self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(
-                self.board_radio_buttons[0], COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
-            x += 1
-        x = 0
-        while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-            self.attach(self.board_radio_buttons[x], 4, 2+x, 1, 1)
-            x += 1
+        self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+        x+=1
+        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+                self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0], COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
+                x+=1
+        x=0
+        while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+                self.attach(self.board_radio_buttons[x],4,2+x,1,1)
+                self.board_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+                x+=1
 
+        
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
 
@@ -683,7 +683,8 @@ class BoardGrid(Gtk.Grid):
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
                 print("Made Move")
-                # switch players, flip board
+                checkerboard_area.queue_draw()
+                #switch players, flip board
                 self.__game_obj.change_current_player()
                 self.__game_obj.get_board().switch_sides()
 
