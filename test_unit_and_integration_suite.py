@@ -2,7 +2,6 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-import pytest
 import random
 from unittest import mock
 from PieceSet import PieceSet
@@ -11,8 +10,7 @@ import PossibleMoves
 from Timer import Timer
 import time  # For testing the timer
 from GameSquare import GameSquare
-from Board import Board
-from Board import BoardTheme
+from Board import Board, BoardTheme
 from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
 from Game import Game
 from PlayerType import PlayerType
@@ -659,10 +657,6 @@ def test_board():
         assert my_board.get_game_square(row, col).get_occupying_piece() is None
         # test theme is black white at default
         assert my_board.get_board_theme() is BoardTheme.BlackWhite
-        # test if changing theme of board works
-        new_board_theme = random.choice(list(BoardTheme))
-        my_board.set_board_theme(new_board_theme)
-        assert my_board.get_board_theme() is new_board_theme
 
 
 def test_game_square():
