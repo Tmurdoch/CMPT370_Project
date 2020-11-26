@@ -261,30 +261,6 @@ class CustomizationGrid(Gtk.Grid):
                 x+=1
 
         
-        chess_svg_light_data_array = []
-        light_chess_svg_targets = ["media/gfx/regular/wk.svg",
-                                   "media/gfx/regular/wq.svg",
-                                   "media/gfx/regular/wn.svg",
-                                   "media/gfx/regular/wb.svg",
-                                   "media/gfx/regular/wr.svg",
-                                   "media/gfx/regular/wp.svg"]
-        # load the data
-        svglc = 0
-        while (svglc != len light_chess_svg_targets):
-                # read binary to ensure no nonsense on windows
-                fp = open(light_chess_svg_targets[svglc], "rb")
-                fp.seek(0, SEEK_END)
-                fps = fp.tell()
-                fp.seek(0, SEEK_SET)
-                chess_svg_light_data_array.append(fp.read(fps))
-                svglc += 1
-        # replace the colours
-        svglc = 0
-        while (svglc != len(chess_svg_light_data_arraY)):
-                chess_svg_light_data_array[svglc].replace(b"f9f9f9",
-
-        
-
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
 
@@ -359,6 +335,71 @@ class BoardWindow(Gtk.Window):
         self.startclocktimer()
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
+
+                chess_svg_light_data_array = []
+        chess_svg_dark_data_array = []
+        svg_targets = ["media/gfx/regular/wk.svg",
+                       "media/gfx/regular/wq.svg",
+                       "media/gfx/regular/wn.svg",
+                       "media/gfx/regular/wb.svg",
+                       "media/gfx/regular/wr.svg",
+                       "media/gfx/regular/wp.svg",
+                       "media/gfx/regular/bk.svg",
+                       "media/gfx/regular/bq.svg",
+                       "media/gfx/regular/bn.svg",
+                       "media/gfx/regular/bb.svg",
+                       "media/gfx/regular/br.svg",
+                       "media/gfx/regular/bp.svg"]
+        
+        # load the data
+        svglc = 0
+        while (svglc != 6):
+                # read binary to ensure no nonsense on windows
+                fp = open(light_chess_svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_light_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(light_chess_svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_light_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        assert(len(chess_svg_light_data_array) == len(chess_svg_dark_data_array))
+        
+        # replace the colours
+        svglc = 0
+        while (svglc != len(chess_svg_light_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_LIGHT_HEX])
+                svglc += 1
+        svglc = 0
+        while (svglc != len(chess_svg_dark_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        # get light handles
+        self.wk = Rsvg.Handle.new_from_data(chess_svg_light_data_array[0])
+        self.wq = Rsvg.Handle.new_from_data(chess_svg_light_data_array[1])
+        self.wn = Rsvg.Handle.new_from_data(chess_svg_light_data_array[2])
+        self.wb = Rsvg.Handle.new_from_data(chess_svg_light_data_array[3])
+        self.wr = Rsvg.Handle.new_from_data(chess_svg_light_data_array[4])
+        self.wp = Rsvg.Handle.new_from_data(chess_svg_light_data_array[5])
+
+        # get dark handels
+        self.bk = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[0])
+        self.bq = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[1])
+        self.bn = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[2])
+        self.bb = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[3])
+        self.br = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[4])
+        self.bp = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[5])
+
+
 
     def place_pieces(self):
         """
