@@ -80,9 +80,9 @@ class Timer(object):
         """:returns: the time remaining for a Player in nanoseconds"""
         if self.__enabled:
             if self.__running:
-                return (self.__time_remaining_ns - (time.time_ns() - self.__timeOnStart)) / (10 ** 9)
+                return int((self.__time_remaining_ns - (time.time_ns() - self.__timeOnStart)) / (10 ** 9))
             else:
-                return self.__time_remaining_ns / (10 ** 9)
+                return int(self.__time_remaining_ns / (10 ** 9))
         else:
             return False
 
