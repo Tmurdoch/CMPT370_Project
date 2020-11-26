@@ -403,6 +403,7 @@ class Game:
         Get the colour mode enum for the current game
         :return: IntEnum of the current player colour
         """
+        return self.__colour_mode
 
 
 # if (__name__ == "__main__"):

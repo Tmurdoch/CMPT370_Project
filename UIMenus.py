@@ -425,11 +425,11 @@ class BoardGrid(Gtk.Grid):
         # replace the colours
         svglc = 0
         while (svglc != len(chess_svg_light_data_array)):
-                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_LIGHT_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
                 svglc += 1
         svglc = 0
         while (svglc != len(chess_svg_dark_data_array)):
-                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
+                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()[ColourOffset.OFFSET_DARK_HEX])
                 svglc += 1
 
         # get light handles
@@ -468,8 +468,8 @@ class BoardGrid(Gtk.Grid):
         # replace the colours
         svglc = 0
         while (svglc != len(checkers_svg_data_array)):
-                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_LIGHT_HEX])
-                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
                 svglc += 1
 
         self.wc = Rsvg.Handle.new_from_data(checkers_svg_data_array[0])
