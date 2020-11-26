@@ -39,7 +39,7 @@ class Game:
     def __init__(self, game_type, colour_mode):
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
-        self.__current_player = None
+        self.__current_player = self.__light_player
         if game_type>=2:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
@@ -65,7 +65,7 @@ class Game:
 
     def build_light_player(self, name, player_type, timer, castled):
         """
-        Build the light coloured object.
+        Build the light coloured player object.
         :param name: string: Player name
         :param player_type: int: The type of PlayerType enum of what type of player they ar
         :param timer: Timer: The player's timer object
@@ -77,7 +77,7 @@ class Game:
 
     def build_dark_player(self, name, player_type, timer, castled):
         """
-        Build the light coloured object.
+        Build the light coloured player object.
         :param name: string: Player name
         :param player_type: PlayerType: The type of Player the Player is, can be AI or Human
         :param timer: Timer: The player's timer object
