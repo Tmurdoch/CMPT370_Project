@@ -511,10 +511,10 @@ class BoardGrid(Gtk.Grid):
     def display_timer(self):
         # needs to have True or it only runs once
 
-        player1_time = player_1_timer.get_time_remaining_s() // 60  # get the minutes from Players' time remaining
-        player1_time_sec = player_1_timer.get_time_remaining_s() % 60  # get the seconds from Player's time remaining
-        player2_time = player_2_timer.get_time_remaining_s() // 60
-        player2_time_sec = player_2_timer.get_time_remaining_s() % 60
+        player1_time = int(player_1_timer.get_time_remaining_s() // 60)  # get the minutes from Players' time remaining
+        player1_time_sec = int(player_1_timer.get_time_remaining_s() % 60)  # get the seconds from Player's time remaining
+        player2_time = int(player_2_timer.get_time_remaining_s() // 60)
+        player2_time_sec = int(player_2_timer.get_time_remaining_s() % 60)
         p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)  # format the minutes and seconds to be
         p2_time = "{:2d}:{:02d}".format(player2_time, player2_time_sec)  # normal clock looking
 

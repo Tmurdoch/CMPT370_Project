@@ -3,9 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import Pieces
-
-GAME_TYPE_CHESS = 0
-GAME_TYPE_CHECKERS = 1
+from GameType import GameType
 
 
 class PieceSet:
@@ -28,16 +26,16 @@ class PieceSet:
     def __init__(self, piece_set_type, colour):
         """
         Purpose: Initialize a piece set normally at the start of a game
-        :param piece_set_type: string: either "Chess" or "Checkers"
+        :param piece_set_type: integer: either "1" for chess or "0" for Checkers
         :param colour: string: piece set __colour
         """
         # chess = 0, checkers = 1
         self.__capturedPieces = []
         if piece_set_type == 1:
-            self.__pieceSetType = GAME_TYPE_CHECKERS
+            self.__pieceSetType = GameType.CHECKERS
             self.__livePieces = [Pieces.CheckersCoin(colour)] * 12
         elif piece_set_type == 0:
-            self.__pieceSetType = GAME_TYPE_CHESS
+            self.__pieceSetType = GameType.CHESS
             self.__livePieces = [Pieces.King(colour),
                                  Pieces.Queen(colour),
                                  Pieces.Rook(colour), Pieces.Rook(colour),
