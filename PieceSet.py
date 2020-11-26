@@ -23,6 +23,7 @@ class PieceSet:
     Exceptions:
         Will throw an exception if the piece set type given is not "Chess" or "Checkers"
     """
+
     def __init__(self, piece_set_type, colour):
         """
         Purpose: Initialize a piece set normally at the start of a game
@@ -41,7 +42,8 @@ class PieceSet:
                                  Pieces.Rook(colour), Pieces.Rook(colour),
                                  Pieces.Bishop(colour), Pieces.Bishop(colour),
                                  Pieces.Knight(colour), Pieces.Knight(colour),
-                                 Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour),
+                                 Pieces.Pawn(colour), Pieces.Pawn(
+                                     colour), Pieces.Pawn(colour), Pieces.Pawn(colour),
                                  Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")

@@ -12,12 +12,14 @@ class ColourCodes(IntEnum):
     WHITE_BLACK = 0
     RED_BLACK = 1
 
+
 class ColourBoardCodes(IntEnum):
     """This enum contains constants that indicate
     what type of colours the board will have in
     the game in the formate LIGHT_DARK"""
     WHITE_BLACK = 0
     RED_BLACK = 1
+
 
 class ColourOffset(IntEnum):
     """This enum contains offset information for
