@@ -661,8 +661,6 @@ def test_board():
         assert my_board.get_board_theme() is BoardTheme.BlackWhite
         # test if changing theme of board works
         new_board_theme = random.choice(list(BoardTheme))
-        my_board.set_board_theme(new_board_theme)
-        assert my_board.get_board_theme() is new_board_theme
 
 
 def test_game_square():
