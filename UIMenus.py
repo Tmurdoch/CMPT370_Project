@@ -2,6 +2,7 @@ import gi
 from Player import Player
 from PlayerType import PlayerType
 from Game import Game
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
@@ -368,7 +369,7 @@ class BoardWindow(Gtk.Window):
                 fp.seek(0, SEEK_END)
                 fps = fp.tell()
                 fp.seek(0, SEEK_SET)
-                chess_svg_light_data_array.append(fp.read(fps))
+                chess_svg_dark_data_array.append(fp.read(fps))
                 fp.close()
                 svglc += 1
         assert(len(chess_svg_light_data_array) == len(chess_svg_dark_data_array))
@@ -380,7 +381,7 @@ class BoardWindow(Gtk.Window):
                 svglc += 1
         svglc = 0
         while (svglc != len(chess_svg_dark_data_array)):
-                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
+                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[ColourOffset.OFFSET_DARK_HEX])
                 svglc += 1
 
         # get light handles
@@ -467,8 +468,9 @@ class BoardWindow(Gtk.Window):
         width = checkerboard_area.get_allocated_width()
         height = checkerboard_area.get_allocated_height()
 
-        cairo_ctx.identity_matrix()
 
+        cairo_ctx.save()
+        
         while i < width:
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
@@ -490,55 +492,58 @@ class BoardWindow(Gtk.Window):
             xcount += 1
 
             game_type = self.__game_obj.get_game_type()
-            row = 0
-            while (row != size):
-                    col = 0
-                    while (col != size):
-                        cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
-                        
-                        if (not (cur_piece is None)):
-                                if (game_type == GameType.CHESS):
-                                        if (isinstance(cur_piece, King)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wk
-                                                else:
-                                                        piece_to_draw = self.bk
-                                        elif (isinstance(cur_piece, Queen)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wq
-                                                else:
-                                                        piece_to_draw = self.bq
-                                        elif (isinstance(cur_piece, Knight)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wn
-                                                else:
-                                                        piece_to_draw = self.bn
-                                        elif (isinstance(cur_piece, Bishop)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wb
-                                                else:
-                                                        piece_to_draw = self.bb
-                                        elif (isinstance(cur_piece, Rook)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wr
-                                                else:
-                                                        piece_to_draw = self.br
-                                        elif (isinstance(cur_piece, Pawn)):
-                                                if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
-                                                        piece_to_draw = self.wp
-                                                else:
-                                                        piece_to_draw = self.bp
-                                        cairo_ctx.identity_matrix()
-                                        #scale piece to size of square
-                                        cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
-                                        cairo_ctx.translate(50 * col, 50 * row)
-                                        wk.render_cairo(cairo_ctx)
-                                elif (game_type == GameType.CHECKERS):
-                                        print("checkers stuffffffffff")
-                                else:
-                                        assert(0)
-                        col += 1
-                row +=1
+            
+        cairo_ctx.restore()
+        row = 0
+        while (row != height):
+            col = 0
+            while (col != width):
+                cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
+
+                if (not (cur_piece is None)):
+                        if (game_type == GameType.CHESS):
+                                if (isinstance(cur_piece, King)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wk
+                                        else:
+                                                piece_to_draw = self.bk
+                                elif (isinstance(cur_piece, Queen)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wq
+                                        else:
+                                                piece_to_draw = self.bq
+                                elif (isinstance(cur_piece, Knight)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wn
+                                        else:
+                                                piece_to_draw = self.bn
+                                elif (isinstance(cur_piece, Bishop)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wb
+                                        else:
+                                                piece_to_draw = self.bb
+                                elif (isinstance(cur_piece, Rook)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wr
+                                        else:
+                                                piece_to_draw = self.br
+                                elif (isinstance(cur_piece, Pawn)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wp
+                                        else:
+                                                piece_to_draw = self.bp
+                                cairo_ctx.save()
+                                #scale piece to size of square
+                                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
+                                cairo_ctx.translate(50 * col, 50 * row)
+                                wk.render_cairo(cairo_ctx)
+                                cairo_ctx.restore()
+                        elif (game_type == GameType.CHECKERS):
+                                print("checkers stuffffffffff")
+                        else:
+                                assert(0)
+                col += 1
+            row +=1
                                     
         return True
 
