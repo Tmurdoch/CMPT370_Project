@@ -27,7 +27,7 @@ class Player(object):
         """
         Initializes a Player object.
         :param name: string: The name of a Player.
-        :param colour:
+        :param colour: string: Player colour as a string.
         :param game_type: GameType:
         :param: player_type: PlayerType: The type of Player the Player is PlayerType.AI or PlayerType.HUMAN
         :param timer: Timer: The Timer object for a Player
@@ -43,17 +43,19 @@ class Player(object):
     def build_possible_moves_for_single_square(game_square, game):
         """
         Generates and returns a list of possible moves for a single game square.
-        :param: GameSquare object, for getting game square to build list of moves for
-        :param: Game object, for getting player and board
-        :return: List of GameSquares for a single square
+        :param: GameSquare: For getting game square to build list of moves for
+        :param: Game: For getting player and board.
+        :return: List of GameSquares for a single square.
         """
         return build_list_of_moves(game_square, game)
 
     @staticmethod
     def build_possible_moves_for_all_pieces(game):
-        """Generates and returns all possible moves for all current player's pieces on the board.
-            :param: Game object, for getting player and board
-            :return: List of GameSquares for all the current player's pieces"""
+        """
+        Generates and returns all possible moves for all current player's pieces on the board.
+        :param: Game: The current game, need to get the player and board.
+        :return: List of GameSquares for all the current player's pieces.
+        """
         game_squares_movable_to = []
         for row in range(game.get_board().get_size()):
             for col in range(game.get_board().get_size()):
@@ -264,34 +266,36 @@ class Player(object):
                 "The players piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
-        """:return: The players PieceSet"""
+        """ :return: PieceSet: The player's piece set """
         return self.__piece_set
 
     def get_colour(self):
-        """:return: the colour of the player"""
+        """ :return: the colour of the player """
         return self.__piece_set.get_colour()
 
     def get_name(self):
-        """:return: The player's name"""
+        """ :return: string: The player's name """
         return self.__name
 
     def get_player_type(self):
-        """":return: type of PlayerType object for a Player, AI(0) or Human(1)"""
+        """" :return: type of PlayerType object for a Player, AI(0) or Human(1) """
         return self.__player_type.value
 
     def get_timer(self):
-        """:return: Timer object of a Player"""
+        """ :return: Timer object of a Player """
         return self.__timer
 
     def get_castled(self):
-        """:return: Bool, True if the player has already castled, False otherwise"""
+        """ :return: Bool: True if the player has already castled, False otherwise """
         return self.__castled
 
     def castle(self):
-        """Marks that the player has castled so we can make sure they don't castle again
-        Can only be called in make_move() when executing the castle"""
+        """
+        Marks that the player has castled so we can make sure they don't castle again
+        Can only be called in make_move() when executing the castle
+        """
         self.__castled = True
 
     def get_last_move(self):
-        """:return: a Tuple of 2 Tuples of 2 Integer, ((origin row, origin col), (dest row, dest col))"""
+        """ :return: Tuple of 2 Tuples of 2 Integer, ((origin row, origin col), (dest row, dest col)) """
         return self.__last_move
