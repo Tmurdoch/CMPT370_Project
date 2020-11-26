@@ -59,7 +59,8 @@ class Player(object):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
                 if (square_here.get_occupying_piece() is not None) and (square_here.get_occupying_piece().get_colour()):
-                    game_squares_movable_to.append(build_list_of_moves(square_here, game))
+                    game_squares_movable_to.append(
+                        build_list_of_moves(square_here, game))
         return game_squares_movable_to
 
     def make_move(self, origin_square, dest_square, board):
@@ -77,11 +78,13 @@ class Player(object):
         if self.__piece_set.get_piece_set_type() == GameType.CHECKERS:
             if dest_square.get_occupying_piece() is not None:
                 # This move shouldn't have been generated
-                raise Exception("Illegal move, this move shouldn't have been generated")
+                raise Exception(
+                    "Illegal move, this move shouldn't have been generated")
             else:
                 if abs(origin_square.get_row() - dest_square.get_row()) == 1:
                     # Squares are immediately adjacent, no jumping
-                    dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    dest_square.put_piece_here(
+                        origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                 elif abs(origin_square.get_row() - dest_square.get_row()) == 2:
                     # Single jump
@@ -95,7 +98,8 @@ class Player(object):
                         if (square_of_capture.get_occupying_piece().get_colour()
                                 != origin_square.get_occupying_piece().get_colour()):
                             # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             square_of_capture.get_occupying_piece().capture()
                             square_of_capture.remove_occupying_piece()
@@ -112,7 +116,8 @@ class Player(object):
                         if (square_of_capture.get_occupying_piece().get_colour()
                                 != origin_square.get_occupying_piece().get_colour()):
                             # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             square_of_capture.get_occupying_piece().capture()
                             square_of_capture.remove_occupying_piece()
@@ -130,7 +135,8 @@ class Player(object):
                         if (square_of_capture.get_occupying_piece().get_colour()
                                 != origin_square.get_occupying_piece().get_colour()):
                             # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             square_of_capture.get_occupying_piece().capture()
                             square_of_capture.remove_occupying_piece()
@@ -148,7 +154,8 @@ class Player(object):
                         if (square_of_capture.get_occupying_piece().get_colour()
                                 != origin_square.get_occupying_piece().get_colour()):
                             # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(origin_square.get_occupying_piece())
+                            dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             square_of_capture.get_occupying_piece().capture()
                             square_of_capture.remove_occupying_piece()
@@ -158,7 +165,8 @@ class Player(object):
                                             "right hand corner piece")
                 else:
                     # There are more than one jumps needing to take place
-                    raise Exception("Cannot handle more than one jump right now")
+                    raise Exception(
+                        "Cannot handle more than one jump right now")
 
             # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
             if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
@@ -185,8 +193,10 @@ class Player(object):
                         if king_dest_square.get_occupying_piece() is None \
                                 and rook_dest_square.get_occupying_piece() is None:
                             # We are good to go, execute the castle
-                            king_dest_square.put_piece_here(origin_square.get_occupying_piece())
-                            rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
+                            king_dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(
+                                dest_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             dest_square.remove_occupying_piece()
                             self.castle()
@@ -208,8 +218,10 @@ class Player(object):
                         if king_dest_square.get_occupying_piece() is None \
                                 and rook_dest_square.get_occupying_piece() is None:
                             # We are good to go, execute the castle
-                            king_dest_square.put_piece_here(origin_square.get_occupying_piece())
-                            rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
+                            king_dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(
+                                dest_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             dest_square.remove_occupying_piece()
                             self.castle()
@@ -224,24 +236,29 @@ class Player(object):
             else:
                 if dest_square.get_occupying_piece() is None:
                     # We can go ahead and make the move
-                    dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    dest_square.put_piece_here(
+                        origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                 elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
                     # Enemy piece there, make the capture move
-                    #dest_square.get_occupying_piece().capture_piece()
-                    self.__piece_set.capture_piece(dest_square.get_occupying_piece())
-                    dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    # dest_square.get_occupying_piece().capture_piece()
+                    self.__piece_set.capture_piece(
+                        dest_square.get_occupying_piece())
+                    dest_square.put_piece_here(
+                        origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                 else:
                     # Illegal move, trying to move a square that has a friendly piece
-                    raise Exception("Illegal move, trying to move a square that has a friendly piece")
+                    raise Exception(
+                        "Illegal move, trying to move a square that has a friendly piece")
                 # Register this to be that last move
                 self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
                                     (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
         else:
             # Couldn't identify the type of game
-            raise Exception("The players piece set is neither of type checkers or type chess")
+            raise Exception(
+                "The players piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
         """:return: The players PieceSet"""

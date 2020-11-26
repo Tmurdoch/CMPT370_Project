@@ -16,6 +16,7 @@ class Timer(object):
         __running: Bool: Whether or not timer is running
         __timeOnStart: Int: The time as of when the timer was last started
     """
+
     def __init__(self, allotted_time, enabled):
         """
         Initializes a Timer object.
@@ -23,7 +24,8 @@ class Timer(object):
             Remaining time if loading from a file.  Takes in time in seconds.
         :param: enabled: Bool that determines if the timer is enabled or not (True for enabled, False otherwise)
         """
-        self.__time_remaining_ns = allotted_time * (10 ** 9)  # Can't be manually changed, no setter
+        self.__time_remaining_ns = allotted_time * \
+            (10 ** 9)  # Can't be manually changed, no setter
         self.__enabled = enabled  # is this for starting the timer?
         self.__running = False
         self.__timeOnStart = None
