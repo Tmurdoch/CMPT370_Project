@@ -5,6 +5,7 @@
 from PieceSet import PieceSet
 from Pieces import King, Rook
 from PossibleMoves import build_list_of_moves
+from GameType import GameType
 
 
 class Player(object):
@@ -18,6 +19,8 @@ class Player(object):
         __player_type: PlayerType.AI or PlayerType.HUMAN, whether the player is a human or computer engine
         __timer: Timer: The players timer object
         __castled: Bool: Whether or not the player has castled
+        __last_move: Tuple of Tuples of Integer: ((origin row, origin col), (dest row, dest col)). This is only 
+                    used for the en passant move in chess. This is not used in checkers
     """
 
     def __init__(self, name, colour, game_type, player_type, timer):
@@ -34,6 +37,7 @@ class Player(object):
         self.__player_type = player_type
         self.__timer = timer
         self.__castled = False
+        self.__last_move = None
 
     @staticmethod
     def build_possible_moves_for_single_square(game_square, game):
@@ -60,7 +64,7 @@ class Player(object):
 
     def make_move(self, origin_square, dest_square, board):
         """
-        Actually executes a move (and capture)
+        Actually executes a move (and capture) also registers what the player last move was
         Precondition: Assuming that dest_square is a legal move for the origin_square
         :param origin_square: GameSquare: Where we are moving from
         :param dest_square: GameSquare: Where we are moving to
@@ -70,7 +74,7 @@ class Player(object):
             # There is no piece here, raise an exception
             raise Exception("There is not piece on this square")
 
-        if self.__piece_set.get_piece_set_type().lower() == "checkers":
+        if self.__piece_set.get_piece_set_type() == GameType.CHECKERS:
             if dest_square.get_occupying_piece() is not None:
                 # This move shouldn't have been generated
                 raise Exception("Illegal move, this move shouldn't have been generated")
@@ -160,7 +164,7 @@ class Player(object):
             if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
                 origin_square.get_occupying_piece().promote()
 
-        elif self.__piece_set.get_piece_set_type().lower() == "chess":
+        elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
 
             # First check if the move is a castle
             if origin_square.get_row() == 7 and origin_square.get_col() == 4 \
@@ -212,6 +216,9 @@ class Player(object):
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, Queen-side error")
+                # register the castle move
+                self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
+                                    (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
             # Else it is just a normal move
             else:
@@ -227,6 +234,9 @@ class Player(object):
                 else:
                     # Illegal move, trying to move a square that has a friendly piece
                     raise Exception("Illegal move, trying to move a square that has a friendly piece")
+                # Register this to be that last move
+                self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
+                                    (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
         else:
             # Couldn't identify the type of game
@@ -260,3 +270,7 @@ class Player(object):
         """Marks that the player has castled so we can make sure they don't castle again
         Can only be called in make_move() when executing the castle"""
         self.__castled = True
+
+    def get_last_move(self):
+        """:return: a Tuple of 2 Tuples of 2 Integer, ((origin row, origin col), (dest row, dest col))"""
+        return self.__last_move

@@ -1952,3 +1952,116 @@ def test_check():
     assert sorted([x.get_row_and_column() for x in filtered_moves]) == sorted([(5, 4), (4, 4)])
 
 
+def test_en_passant():
+    gt_chess = 0
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+
+    # create a chess and checkers game
+    my_chess_game = Game(gt_chess, gc_wb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    # build the players in game
+
+    # chess player light human 1st turn
+    my_chess_game.build_light_player("Light HU", pt_human, timer, False)
+
+    # chess player dark ai 2nd turn
+    my_chess_game.build_dark_player("Dark AI", pt_ai, timer, False)
+
+    dark_pawns = []
+    light_pawns = []
+
+    for piece in my_chess_game.get_dark_player().get_piece_set().get_live_pieces():
+        if type(piece).__name__ is "Pawn":
+            dark_pawns.append(piece)
+
+    for piece in my_chess_game.get_light_player().get_piece_set().get_live_pieces():
+        if type(piece).__name__ is "Pawn":
+            light_pawns.append(piece)
+
+    # build board as en passant scenario
+
+    # scenario 1 for en passant
+    my_chess_game.get_board().get_game_square(1, 3).put_piece_here(dark_pawns[0])
+    my_chess_game.get_board().get_game_square(3, 2).put_piece_here(light_pawns[0])
+
+    # scenario 2 for en passant
+    my_chess_game.get_board().get_game_square(7, 1).put_piece_here(dark_pawns[1])
+    my_chess_game.get_board().get_game_square(7, 0).put_piece_here(light_pawns[1])
+
+    # scenario 3 for en passant
+    my_chess_game.get_board().get_game_square(1, 7).put_piece_here(dark_pawns[2])
+    my_chess_game.get_board().get_game_square(1, 5).put_piece_here(dark_pawns[3])
+    my_chess_game.get_board().get_game_square(3, 6).put_piece_here(light_pawns[2])
+
+    # scenario 4 for en passant
+    my_chess_game.get_board().get_game_square(4, 6).put_piece_here(dark_pawns[4])
+    my_chess_game.get_board().get_game_square(6, 5).put_piece_here(light_pawns[3])
+    my_chess_game.get_board().get_game_square(6, 7).put_piece_here(light_pawns[4])
+
+    # switch sides for dark player to move
+    my_chess_game.get_board().switch_sides()
+    # use 2 step for the dark pawn move
+    my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 4),
+                                              my_chess_game.get_board().get_game_square(4, 4),
+                                              my_chess_game.get_board())
+    # sc 1
+    # switch sides for light player to check if the en passant move registers
+    my_chess_game.get_board().switch_sides()
+    my_moves_s1 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 2), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s1]) == sorted([(1, 2), (2, 2), (2, 3)])
+    # sc 2
+    my_moves_s2 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(7, 0), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s2]) == sorted([(6, 0), (5, 0)])
+    # sc 3
+    # do two one step move
+    my_chess_game.get_board().switch_sides()
+    my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 0),
+                                              my_chess_game.get_board().get_game_square(5, 0),
+                                              my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    my_moves_s3 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s3]) == sorted([(1, 6), (2, 6), (2, 7)])
+    # 2nd one step
+    my_chess_game.get_board().switch_sides()
+    my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(5, 0),
+                                              my_chess_game.get_board().get_game_square(4, 0),
+                                              my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    my_moves_s3 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s3]) == sorted([(1, 6), (2, 6)])
+    # 1 two step from left pawn
+    my_chess_game.get_board().switch_sides()
+    my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 2),
+                                              my_chess_game.get_board().get_game_square(4, 2),
+                                              my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    my_moves_s3 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s3]) == sorted([(1, 6), (2, 6), (2, 5)])
+    # sc 4
+    # move right pawn 2 step
+    my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 7),
+                                               my_chess_game.get_board().get_game_square(4, 7),
+                                               my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    # check possible move for an en passant
+    my_moves_s4 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 1), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s4]) == sorted([(2, 1), (1, 1), (2, 0)])
+    my_chess_game.get_board().switch_sides()
+    # do the other pawn to 2 step and cause en passant; should only register one
+    my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 5),
+                                               my_chess_game.get_board().get_game_square(4, 5),
+                                               my_chess_game.get_board())
+    my_chess_game.get_board().switch_sides()
+    my_moves_s4 = PossibleMoves.build_list_of_moves(my_chess_game.get_board().get_game_square(3, 1), my_chess_game)
+    assert sorted([x.get_row_and_column() for x in my_moves_s4]) == sorted([(2, 1), (1, 1), (2, 2)])
+
+
+
