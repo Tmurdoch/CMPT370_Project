@@ -665,6 +665,7 @@ class BoardGrid(Gtk.Grid):
                 print(cur_location)
                 self.__game_obj.get_current_player().make_move(self.current_selected_location,cur_location, self.__game_obj)
                 print("Made Move")
+                checkerboard_area.queue_draw()
                 #switch players, flip board
                 self.__game_obj.change_current_player()
                 self.__game_obj.get_board().switch_sides()
