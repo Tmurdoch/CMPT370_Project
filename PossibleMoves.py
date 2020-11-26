@@ -5,6 +5,7 @@
 
 import copy
 from GameType import GameType
+from build_bishop_moves import build_bishop_moves
 
 
 def build_list_of_moves(input_game_square, input_game):
@@ -410,130 +411,7 @@ def build_list_of_moves(input_game_square, input_game):
                             break
 
         elif type(input_piece).__name__ == "Bishop":
-            # The bishop can be moved any number of unoccupied squares in a straight line diagonally.
-            # Stop if we see a piece. If piece is unfriendly add the capture move to the list. Here are the step taken:
-            #   1. check if the row or column are out of bounds
-            #   2. check specific corner from piece
-            #   3. will stop until sees a peace
-            #   4. if piece friendly stop
-            #   5. if non friendly add add (row, col) to possible moves but also stops
-            #   6. if empty then add it to list and keep going
-
-            # Top Right
-            row_pos = input_row
-            col_pos = input_col
-
-            stopper = False
-            if row_pos != 0:
-                for row in range(row_pos - 1, -1, -1):
-                    if col_pos != input_board.get_size() - 1:
-                        if not stopper:
-                            for col in range(col_pos + 1, input_board.get_size()):
-                                if abs(row_pos - row) == abs(col_pos - col):
-                                    if input_board.get_game_board()[row][col].get_occupying_piece() is not None:
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() == input_piece.get_colour():
-                                            stopper = True
-                                            break
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() != input_piece.get_colour():
-                                            list_of_candidate_game_squares.append(
-                                                input_board.get_game_board()[row][col])
-                                            stopper = True
-                                            break
-                                    else:
-                                        # Square was empty, add it to the list
-                                        list_of_candidate_game_squares.append(
-                                            input_board.get_game_board()[row][col])
-                        else:
-                            break
-
-            # Top Left
-            row_pos = input_row
-            col_neg = input_col
-
-            stopper = False
-            if row_pos != 0:
-                for row in range(row_pos - 1, -1, -1):
-                    if col_neg != 0:
-                        if not stopper:
-                            for col in range(col_neg - 1, -1, -1):
-                                if abs(row_pos - row) == abs(col_neg - col):
-                                    if input_board.get_game_board()[row][col].get_occupying_piece() is not None:
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() == input_piece.get_colour():
-                                            stopper = True
-                                            break
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() != input_piece.get_colour():
-                                            list_of_candidate_game_squares.append(
-                                                input_board.get_game_board()[row][col])
-                                            stopper = True
-                                            break
-                                    else:
-                                        # Square was empty, add it to the list
-                                        list_of_candidate_game_squares.append(
-                                            input_board.get_game_board()[row][col])
-                        else:
-                            break
-
-            # Bottom Right
-            row_neg = input_row
-            col_pos = input_col
-
-            stopper = False
-            if row_neg != input_board.get_size() - 1:
-                for row in range(row_neg + 1, input_board.get_size()):
-                    if col_pos != input_board.get_size() - 1:
-                        if not stopper:
-                            for col in range(col_pos + 1, input_board.get_size()):
-                                if abs(row_neg - row) == abs(col_pos - col):
-                                    if input_board.get_game_board()[row][col].get_occupying_piece() is not None:
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() == input_piece.get_colour():
-                                            stopper = True
-                                            break
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() != input_piece.get_colour():
-                                            list_of_candidate_game_squares.append(
-                                                input_board.get_game_board()[row][col])
-                                            stopper = True
-                                            break
-                                    else:
-                                        # Square was empty, add it to the list
-                                        list_of_candidate_game_squares.append(
-                                            input_board.get_game_board()[row][col])
-                        else:
-                            break
-
-            # Bottom Left
-            row_neg = input_row
-            col_neg = input_col
-
-            stopper = False
-            if row_neg != input_board.get_size():
-                for row in range(row_neg + 1, input_board.get_size()):
-                    if col_neg != 0:
-                        if not stopper:
-                            for col in range(col_neg - 1, -1, -1):
-                                if abs(row_neg - row) == abs(col_neg - col):
-                                    if input_board.get_game_board()[row][col].get_occupying_piece() is not None:
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() == input_piece.get_colour():
-                                            stopper = True
-                                            break
-                                        if input_board.get_game_board()[row][col].get_occupying_piece() \
-                                                .get_colour() != input_piece.get_colour():
-                                            list_of_candidate_game_squares.append(
-                                                input_board.get_game_board()[row][col])
-                                            stopper = True
-                                            break
-                                    else:
-                                        # Square was empty, add it to the list
-                                        list_of_candidate_game_squares.append(
-                                            input_board.get_game_board()[row][col])
-                        else:
-                            break
+            list_of_candidate_game_squares = build_bishop_moves(input_game_square, input_game)
 
         elif type(input_piece).__name__ == "Knight":
             # Compared to other chess pieces, the knight's movement is unique: it may move two squares vertically and
