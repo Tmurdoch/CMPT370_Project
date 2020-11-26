@@ -30,12 +30,11 @@ class PieceSet:
         :param piece_set_type: integer: either "1" for chess or "0" for Checkers
         :param colour: string: piece set __colour
         """
-        # chess = 0, checkers = 1
         self.__capturedPieces = []
-        if piece_set_type == 1:
+        if piece_set_type == GameType.CHECKERS:
             self.__pieceSetType = GameType.CHECKERS
             self.__livePieces = [Pieces.CheckersCoin(colour)] * 12
-        elif piece_set_type == 0:
+        elif piece_set_type == GameType.CHESS:
             self.__pieceSetType = GameType.CHESS
             self.__livePieces = [Pieces.King(colour),
                                  Pieces.Queen(colour),
