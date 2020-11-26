@@ -10,6 +10,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 from GameType import GameType
 from datetime import datetime
 import cairo
+import PossibleMoves
 
 resume = True
 
@@ -21,7 +22,6 @@ class TheWindow(Gtk.Window):
                 col = Gdk.Color(2000, 6000, 200)  # dark green
                 self.modify_bg(Gtk.StateType.NORMAL, col)
                 
-                self.game_type = "Checkers" # assume checkers first, change later when clicked
 
                 self.main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
                 self.main_box.play_button.connect("clicked", self.main_play_clicked)
@@ -108,15 +108,21 @@ class TheWindow(Gtk.Window):
 
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
+                #TODO: allow for users to set game type, right now hard coded as checkers
                 self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
-                temp_game = Game(self.game_type, 0)
+                game_type = 1
+                temp_game = Game(game_type, 0)
+                t1 = Timer(0, False)
+                t2 = Timer(0, False)
+                temp_game.build_light_player("light_player", PlayerType.HUMAN, t1, 0)
+                temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2, 0)
                 #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
                 self.board = BoardGrid("Test", "multiplayer", temp_game)
                 self.grid.attach(self.board,0,0,1,1)
-                board.show()
+                self.board.show()
 
 
 
@@ -279,12 +285,18 @@ class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type, game_obj):
         """
         @param game_obj: actual game object, initialize by Game()
+        @attribute current_selected_piece: Piece obejct, last clicked on piece
+        @attribute possible_moves_for_cur_piece: list
         """
         Gtk.Grid.__init__(self)
         self.__game = game
         self.__game_obj = game_obj
         self.place_pieces()
         self.surface = None
+        #save the selected piece so we can check if they click on a possible
+        #moves for that piece
+        self.current_selected_location = None
+        self.possible_moves_for_cur_piece = []
 
         # create checkerboard area
         board_frame = Gtk.Frame()
@@ -403,15 +415,40 @@ class BoardGrid(Gtk.Grid):
 
     def mouse_press_event(self, checkerboard_area, event):
         """
-        prints game piece at clicked location
+        handles mouse press events on the board grid
         returns False on Failure
         """
+         
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
         if event.button == 1:
+            #click registered
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            print(self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece())
+            cur_piece = current_selected_piece = self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece()
+
+            cur_location = current_selected_piece = self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50))
+
+            print(cur_piece)
+            
+            #check if making a move
+            if cur_location in self.possible_moves_for_cur_piece:
+                #move the piece
+                print(self.current_selected_location)
+                print(cur_location)
+                self.__game_obj.get_current_player().make_move(self.current_selected_location,cur_location, self.__game_obj)
+                print("Made Move")
+                
+                #reset attributes                
+                self.current_selected_location = None
+                self.possible_moves_for_cur_piece = []
+
+            #not making a move, so set attributes and build possible moves for next click
+            else:
+                self.current_selected_location = cur_location
+                self.possible_moves_for_cur_piece = PossibleMoves.build_list_of_moves(cur_location, self.__game_obj)
+                #TODO: check return value of above line, display somehow
+
 
 
     def create_location_list(self, size):
