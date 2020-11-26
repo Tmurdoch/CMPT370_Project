@@ -3,7 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import GameSquare as Gs
-import enum
+from enum import IntEnum
 
 # TODO: Get rid of the internal board theme enum.  Board theme should be passed into board init.
 
@@ -29,13 +29,13 @@ class Board:
             raise TypeError("Size must be a Positive Integer")
 
         self.__size = size
+        self.__boardTheme = BoardTheme.BlackWhite
         self.__gameBoard = []
         for r in range(size):
             row = []
             for c in range(size):
                 row.append(Gs.GameSquare(r, c))
             self.__gameBoard.append(row)
-        self.__boardTheme = BoardTheme.BlackWhite
 
     def get_game_square(self, row, col):
         """
@@ -228,7 +228,7 @@ class Board:
         [print(row) for row in board_pieces_colour]
 
 
-class BoardTheme(enum):
+class BoardTheme(IntEnum):
     """
     Enum for a list of color that the board can change into.
     """
