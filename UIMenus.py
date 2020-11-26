@@ -2,48 +2,61 @@ import gi
 from Player import Player
 from PlayerType import PlayerType
 from Game import Game
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, GLib
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg
 from GameType import GameType
 from datetime import datetime
 import cairo
+import PossibleMoves
+import os
+# make c-stdlib style definitions so
+# the code is readable and without
+# magic numbers
+SEEK_SET = 0
+SEEK_CUR = 1
+SEEK_END = 2
 
 
-# Temporary Globals for initializing objects
 resume = True
-current = "Player 1"
-player_1_timer = Timer(900, True)
-player_2_timer = Timer(900, True)
-player_2_type = None
-game_type = None
-player_1 = None
-p1_piece_set = PieceSet(1,None)
-board_colour = "board2"
-
 
 class TheWindow(Gtk.Window):
-        def __init__(self):
+        def __init__(self, directory):
                 Gtk.Window.__init__(self, title="Main Menu")
                 self.set_border_width(70)
                 self.set_position(Gtk.WindowPosition.CENTER)
                 col = Gdk.Color(2000, 6000, 200)  # dark green
                 self.modify_bg(Gtk.StateType.NORMAL, col)
-                
-                self.game_type = "Checkers" # assume checkers first, change later when clicked
 
-                self.main_box = MainMenuBox()#Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-                self.main_box.play_button.connect("clicked", self.main_play_clicked)
-                if resume:
+                self.has_chess_save = 0
+                self.has_checkers_save = 0
+                
+
+                if (os.path.exists(directory+"/savedGame.cmpt370chess")):
+                        self.has_chess_save = 1
+                if (os.path.exists(directory+"/savedGame.cmpt370checkrs")):
+                        self.has_checkers_save = 1
+                self.main_box = MainMenuBox(self.has_chess_save, self.has_checkers_save)
+                if (self.has_chess_save or self.has_checkers_save):
                         self.main_box.resume_button.connect("clicked", self.main_resume_clicked)
+                
+                self.main_box.play_button.connect("clicked", self.main_play_clicked)
 
 
                 self.game_choice_box = GameChoiceBox()
                 self.game_choice_box.chess_button.connect("clicked", self.game_choice_chess_clicked)
                 self.game_choice_box.checkers_button.connect("clicked", self.game_choice_checkers_clicked)
                 self.game_choice_box.back_button.connect("clicked", self.game_choice_back_clicked)
+
+                self.resume_choice_box = ResumeChoiceBox(self.has_chess_save, self.has_checkers_save)
+                if (self.has_chess_save):
+                        self.resume_choice_box.chess_button.connect("clicked", self.resume_choice_chess_clicked)
+                if (self.has_checkers_save):
+                        self.resume_choice_box.checkers_button.connect("clicked", self.esume_choice_checkers_clicked)
+                self.resume_choice_box.back_button.connect("clicked", self.resume_choice_back_clicked)
 
 
                 self.player_type = PlayerTypeBox()
@@ -95,6 +108,23 @@ class TheWindow(Gtk.Window):
                 self.game_choice_box.hide()
                 self.main_box.show()
 
+        def resume_choice_chess_clicked(self, button):
+                print('Chess was chosen')  # put next window here
+                self.game_type = GameType.CHESS
+                self.game_choice_box.hide()
+                self.player_type.show()
+
+        def resume_choice_checkers_clicked(self, button):
+                print('Checkers was chosen')  # put next window here
+                self.game_type = GameType.CHECKERS
+                self.game_choice_box.hide()
+                self.player_type.show()
+
+        def resume_choice_back_clicked(self, button):
+                print("This should go back to Main Menu Window")
+                self.game_choice_box.hide()
+                self.main_box.show()
+
         def player_type_single_clicked(self, button):
                 print('Single Player was chosen')  # put next window here
                 self.player_type.hide()
@@ -110,7 +140,7 @@ class TheWindow(Gtk.Window):
         def player_type_back_clicked(self, button):
                 print("This should go back to Game Choice Window")
                 self.player_type.hide()
-                self.game_choice_box.show_all()
+                self.game_type.show()
 
         def customization_back_clicked(self, button):
                 print("This should go back to Game Choice Window")
@@ -119,40 +149,30 @@ class TheWindow(Gtk.Window):
 
         def customization_start_clicked(self, button):
                 print("This should go to Board Window")
+                #TODO: allow for users to set game type, right now hard coded as checkers
                 self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
-                temp_game = Game(self.game_type, 0)
+                game_type = 1
+                temp_game = Game(game_type, 0)
+                t1 = Timer(0, False)
+                t2 = Timer(0, False)
+                temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
+                temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
                 #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
                 self.board = BoardGrid("Test", "multiplayer", temp_game)
                 self.grid.attach(self.board,0,0,1,1)
-                self.board.help_button.connect("clicked", self.board_help_clicked)
-                self.board.save_quit_button.connect("clicked", self.board_save_clicked)
-                self.board.pause_button.connect("clicked", self.board_pause_clicked)
                 self.board.show()
 
-        def board_save_clicked(self, button):
-                print("This should exit and save")
-                Gtk.main_quit()
 
-        def board_pause_clicked(self, button):
-                player_1_timer.stop()
-                player_2_timer.stop()
-
-        def board_help_clicked(self, button):
-                print("This should go to Help Window")
-                board = HowToPlayWindow("Checkers")
-                player_1_timer.stop()
-                player_2_timer.stop()
-                board.show_all()
 
 
 
 
 
 class MainMenuBox(Gtk.Box):
-        def __init__(self):
+        def __init__(self,has_chess_save,has_checkers_save):
                 Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
                 # self.add(b)
                 self.play_button = Gtk.Button.new_with_label("Play")
@@ -160,8 +180,8 @@ class MainMenuBox(Gtk.Box):
                 self.play_button.set_property("width-request", 300)
                 self.play_button.set_property("height-request", 100)
                 self.pack_start(self.play_button, True, True, 0)
-                
-                if resume:
+
+                if (has_chess_save or has_checkers_save):
                         self.resume_button = Gtk.Button.new_with_label("Resume")
                         #checkers_button.connect("clicked", self.resume_clicked)
                         self.resume_button.set_property("width-request", 300)
@@ -178,6 +198,27 @@ class MainMenuBox(Gtk.Box):
                 print("This should exit")
                 Gtk.main_quit()
 
+
+class ResumeChoiceBox(Gtk.Box):
+        def __init__(self, has_chess_save, has_checkers_save):
+                Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
+
+                if (has_chess_save):
+                        self.chess_button = Gtk.Button.new_with_label("Chess")
+                        self.chess_button.set_property("width-request", 300)
+                        self.chess_button.set_property("height-request", 100)
+                        self.pack_start(self.chess_button, True, True, 0)
+
+                if (has_checkers_save):
+                        self.checkers_button = Gtk.Button.new_with_label("Checkers")
+                        self.checkers_button.set_property("width-request", 300)
+                        self.checkers_button.set_property("height-request", 100)
+                        self.pack_start(self.checkers_button, True, True, 0)
+
+                self.back_button = Gtk.Button.new_with_label("Back")
+                self.pack_start(self.back_button, True, True, 0)
+
+                self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
 class GameChoiceBox(Gtk.Box):
         def __init__(self):
@@ -284,7 +325,6 @@ class CustomizationGrid(Gtk.Grid):
                 x+=1
 
         
-
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
 
@@ -306,13 +346,19 @@ class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type, game_obj):
         """
         @param game_obj: actual game object, initialize by Game()
+        @attribute current_selected_piece: Piece obejct, last clicked on piece
+        @attribute possible_moves_for_cur_piece: list
         """
         Gtk.Grid.__init__(self)
         self.__game = game
         self.__game_obj = game_obj
         self.place_pieces()
         self.surface = None
-        self.start_clock_timer()
+        #save the selected piece so we can check if they click on a possible
+        #moves for that piece
+        self.current_selected_location = None
+        self.possible_moves_for_cur_piece = []
+
         # create checkerboard area
         board_frame = Gtk.Frame()
         board_frame.set_shadow_type(Gtk.ShadowType.IN)
@@ -328,46 +374,121 @@ class BoardGrid(Gtk.Grid):
                                      | Gdk.EventMask.LEAVE_NOTIFY_MASK
                                      | Gdk.EventMask.BUTTON_PRESS_MASK)
 
-        self.timer_area = Gtk.Label()  # Player 1 time
+        timer_frame = Gtk.Frame()
+        timer_frame.set_shadow_type(Gtk.ShadowType.IN)
+        self.add(timer_frame)
+
+        self.timer_area = Gtk.Label()
         self.add(self.timer_area)
 
-        self.timer_area_2 = Gtk.Label()  # Player 2 time
-        self.attach_next_to(self.timer_area_2, self.timer_area, Gtk.PositionType.RIGHT, 3, 1)
-
-        player1_label = Gtk.Label()
-        player1_label.set_markup("<b>Player 1 Time Remaining</b>")
-        player1_label.set_justify(Gtk.Justification.CENTER)
-        player1_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(player1_label, self.timer_area, Gtk.PositionType.TOP, 1, 1)
-
-        player2_label = Gtk.Label()
-        player2_label.set_markup("<b>Player 2 Time Remaining</b>")
-        player2_label.set_justify(Gtk.Justification.CENTER)
-        player2_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(player2_label, player1_label, Gtk.PositionType.RIGHT, 1, 1)
+        help_button = Gtk.Button.new_with_label("help?")
+        help_button.connect("clicked", self.help_clicked)
+        self.attach(help_button, 2, 4, 1, 1)
 
         # just to see if promotion works
-        # promote_button = Gtk.Button.new_with_label("promote?")
-        # promote_button.connect("clicked", self.promote_clicked)
-        # board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
+        #promote_button = Gtk.Button.new_with_label("promote?")
+        #promote_button.connect("clicked", self.promote_clicked)
+        #board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
 
-        self.pause_button = Gtk.Button.new_with_label("Pause Timer")
-        self.pause_button.connect("clicked", self.pause_clicked)
-        self.attach(self.pause_button, 1, 4, 1, 1)
-
-        self.resume_button = Gtk.Button.new_with_label("Resume Timer")
-        self.resume_button.connect("clicked", self.resume_clicked)
-        self.attach_next_to(self.resume_button, self.pause_button, Gtk.PositionType.BOTTOM, 1, 1)
-
-        self.help_button = Gtk.Button.new_with_label("Help?")
-        self.attach_next_to(self.help_button, self.pause_button, Gtk.PositionType.RIGHT, 1, 1)
-
-        self.save_quit_button = Gtk.Button.new_with_label("Save and Quit")
-        self.attach_next_to(self.save_quit_button, self.help_button, Gtk.PositionType.BOTTOM, 1, 1)
-
-        self.start_clock_timer()
+        save_quit_button = Gtk.Button.new_with_label("Save and Quit")
+        save_quit_button.connect("clicked", self.save_quit_clicked)
+        self.attach_next_to(save_quit_button,help_button, Gtk.PositionType.RIGHT, 1, 1)
+        self.startclocktimer()
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
+
+        chess_svg_light_data_array = []
+        chess_svg_dark_data_array = []
+        svg_targets = ["media/gfx/regular/wk.svg",
+                       "media/gfx/regular/wq.svg",
+                       "media/gfx/regular/wn.svg",
+                       "media/gfx/regular/wb.svg",
+                       "media/gfx/regular/wr.svg",
+                       "media/gfx/regular/wp.svg",
+                       "media/gfx/regular/bk.svg",
+                       "media/gfx/regular/bq.svg",
+                       "media/gfx/regular/bn.svg",
+                       "media/gfx/regular/bb.svg",
+                       "media/gfx/regular/br.svg",
+                       "media/gfx/regular/bp.svg"]
+        
+        # load the data
+        svglc = 0
+        while (svglc != 6):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_light_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_dark_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        assert(len(chess_svg_light_data_array) == len(chess_svg_dark_data_array))
+        
+        # replace the colours
+        svglc = 0
+        while (svglc != len(chess_svg_light_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
+                svglc += 1
+        svglc = 0
+        while (svglc != len(chess_svg_dark_data_array)):
+                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        # get light handles
+        self.wk = Rsvg.Handle.new_from_data(chess_svg_light_data_array[0])
+        self.wq = Rsvg.Handle.new_from_data(chess_svg_light_data_array[1])
+        self.wn = Rsvg.Handle.new_from_data(chess_svg_light_data_array[2])
+        self.wb = Rsvg.Handle.new_from_data(chess_svg_light_data_array[3])
+        self.wr = Rsvg.Handle.new_from_data(chess_svg_light_data_array[4])
+        self.wp = Rsvg.Handle.new_from_data(chess_svg_light_data_array[5])
+
+        # get dark handels
+        self.bk = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[0])
+        self.bq = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[1])
+        self.bn = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[2])
+        self.bb = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[3])
+        self.br = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[4])
+        self.bp = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[5])
+
+        #checkers
+        checkers_svg_data_array = []
+        checkers_svg_dark_data_array = []
+        svg_targets = ["media/gfx/checkers/wc.svg",
+                       "media/gfx/checkers/wd.svg",
+                       "media/gfx/checkers/bc.svg",
+                       "media/gfx/checkers/bd.svg"]
+        svglc = 0
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                checkers_svg_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        # replace the colours
+        svglc = 0
+        while (svglc != len(checkers_svg_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        self.wc = Rsvg.Handle.new_from_data(checkers_svg_data_array[0])
+        self.wd = Rsvg.Handle.new_from_data(checkers_svg_data_array[1])
+        self.bc = Rsvg.Handle.new_from_data(checkers_svg_data_array[2])
+        self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
+
 
     def place_pieces(self):
         """
@@ -407,53 +528,93 @@ class BoardGrid(Gtk.Grid):
         width = checkerboard_area.get_allocated_width()
         height = checkerboard_area.get_allocated_height()
 
+
+        cairo_ctx.save()
+        
         while i < width:
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if board_colour == "board0":
-                    if ycount % 2:
-                        cairo_ctx.set_source_rgb(1.000, 1.000, 1.000)
-                    else:
-                        cairo_ctx.set_source_rgb(0, 0, 0)
-                    # If we're outside the clip this will do nothing.
-                    cairo_ctx.rectangle(i, j,
-                                        check_size,
-                                        check_size)
-                    cairo_ctx.fill()
+                if ycount % 2:
+                    cairo_ctx.set_source_rgb(0.300, .155, 0.119)
+                else:
+                    cairo_ctx.set_source_rgb(0, 1, 1)
+                # If we're outside the clip this will do nothing.
+                cairo_ctx.rectangle(i, j,
+                                    check_size,
+                                    check_size)
+                cairo_ctx.fill()
 
-                    j += check_size + spacing
-                    ycount += 1
-                if board_colour == "board1":
-                    if ycount % 2:
-                        cairo_ctx.set_source_rgb(1, 0, 0)
-                    else:
-                        cairo_ctx.set_source_rgb(0, 0, 0)
-                    # If we're outside the clip this will do nothing.
-                    cairo_ctx.rectangle(i, j,
-                                        check_size,
-                                        check_size)
-                    cairo_ctx.fill()
-
-                    j += check_size + spacing
-                    ycount += 1
-                if board_colour == "board2":
-                    if ycount % 2:
-                        cairo_ctx.set_source_rgb(0.300, .155, 0.119)
-                    else:
-                        cairo_ctx.set_source_rgb(0, 1, 1)
-                    # If we're outside the clip this will do nothing.
-                    cairo_ctx.rectangle(i, j,
-                                        check_size,
-                                        check_size)
-                    cairo_ctx.fill()
-
-                    j += check_size + spacing
-                    ycount += 1
+                j += check_size + spacing
+                ycount += 1
 
             i += check_size + spacing
             xcount += 1
 
+            game_type = self.__game_obj.get_game_type()
+            
+        cairo_ctx.restore()
+        row = 0
+        while (row != height):
+            col = 0
+            while (col != width):
+                cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
+
+                if (not (cur_piece is None)):
+                        if (game_type == GameType.CHESS):
+                                if (isinstance(cur_piece, King)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wk
+                                        else:
+                                                piece_to_draw = self.bk
+                                elif (isinstance(cur_piece, Queen)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wq
+                                        else:
+                                                piece_to_draw = self.bq
+                                elif (isinstance(cur_piece, Knight)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wn
+                                        else:
+                                                piece_to_draw = self.bn
+                                elif (isinstance(cur_piece, Bishop)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wb
+                                        else:
+                                                piece_to_draw = self.bb
+                                elif (isinstance(cur_piece, Rook)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wr
+                                        else:
+                                                piece_to_draw = self.br
+                                elif (isinstance(cur_piece, Pawn)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wp
+                                        else:
+                                                piece_to_draw = self.bp
+                        elif (game_type == GameType.CHECKERS):
+                                if (cur_piece.get_promotion_status()): # 1 is king
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wd
+                                        else:
+                                                piece_to_draw = self.bd
+                                else:
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wc
+                                        else:
+                                                piece_to_draw = self.bc
+                                        
+                        else:
+                                assert(0)
+                cairo_ctx.save()
+                #scale piece to size of square
+                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
+                cairo_ctx.translate(50 * col, 50 * row)
+                wk.render_cairo(cairo_ctx)
+                cairo_ctx.restore()
+                col += 1
+            row +=1
+                                    
         return True
 
     def mouse_pointer(self, widget, x, y):
@@ -475,15 +636,45 @@ class BoardGrid(Gtk.Grid):
 
     def mouse_press_event(self, checkerboard_area, event):
         """
-        prints game piece at clicked location
+        handles mouse press events on the board grid
         returns False on Failure
         """
+         
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
 
         if event.button == 1:
+            #click registered
             self.mouse_pointer(checkerboard_area, event.x, event.y)
-            print(self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece())
+            cur_piece = current_selected_piece = self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50)).get_occupying_piece()
+
+            cur_location = current_selected_piece = self.__game_obj.get_board().get_game_square(int(event.y//50), int(event.x//50))
+
+            print(cur_piece)
+            
+            #check if making a move
+            if cur_location in self.possible_moves_for_cur_piece:
+                #move the piece
+                print(self.current_selected_location)
+                print(cur_location)
+                self.__game_obj.get_current_player().make_move(self.current_selected_location,cur_location, self.__game_obj)
+                print("Made Move")
+                #switch players, flip board
+                self.__game_obj.change_current_player()
+                self.__game_obj.get_board().switch_sides()
+                
+                #reset attributes                
+                self.current_selected_location = None
+                self.possible_moves_for_cur_piece = []
+
+            #not making a move, so set attributes and build possible moves for next click
+            else:
+                if cur_piece is None:
+                    return
+                self.current_selected_location = cur_location
+                self.possible_moves_for_cur_piece = PossibleMoves.build_list_of_moves(cur_location, self.__game_obj)
+                #TODO: check return value of above line, display somehow
+
 
 
     def create_location_list(self, size):
@@ -508,44 +699,19 @@ class BoardGrid(Gtk.Grid):
     
         return rv_list
 
-    def display_timer(self):
-        # needs to have True or it only runs once
-
-        player1_time = int(player_1_timer.get_time_remaining_s() // 60)  # get the minutes from Players' time remaining
-        player1_time_sec = int(player_1_timer.get_time_remaining_s() % 60)  # get the seconds from Player's time remaining
-        player2_time = int(player_2_timer.get_time_remaining_s() // 60)
-        player2_time_sec = int(player_2_timer.get_time_remaining_s() % 60)
-        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)  # format the minutes and seconds to be
-        p2_time = "{:2d}:{:02d}".format(player2_time, player2_time_sec)  # normal clock looking
-
-        # bold the times and set the to be white
-        self.timer_area.set_markup("<b>" + p1_time + "</b>")
+    def displayclock(self):
+        #  putting our datetime into a var and setting our label to the result.
+        #  we need to return "True" to ensure the timer continues to run, otherwise it will only run once.
+        datetimenow = str(datetime.now().second)
+        self.timer_area.set_label(datetimenow)
         self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
-        self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         return True
 
         # Initialize Timer
 
-    def start_clock_timer(self):
-        if current == "Player 1":
-            player_1_timer.start()
-            GLib.timeout_add(1000, self.display_timer)
-        else:
-            player_2_timer.start()
-            GLib.timeout_add(1000, self.display_timer)
-
-    def pause_clicked(self, button):
-        player_1_timer.stop()
-        player_2_timer.stop()
-        return True
-
-    def resume_clicked(self, button):
-        if current == "Player 1":
-            player_1_timer.start()
-        else:
-            player_2_timer.start()
-        return True
+    def startclocktimer(self):
+        #  this takes 2 args: (how often to update in millisec, the method to run)
+        GObject.timeout_add(1000, self.displayclock)
 
     def help_clicked(self, button):
         print("This should go to HowToPlay Window")
@@ -596,7 +762,7 @@ class HowToPlayWindow(Gtk.Window):
         self.connect("destroy", self.hide)  # this gives error message but still does it??
 
 
-
+""" will we want to pause timer while this is happening? """
 class PromotePawnWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Choose Promotion ")
@@ -627,34 +793,18 @@ class PromotePawnWindow(Gtk.Window):
 
     def queen_clicked(self, button):
         print('Queen was chosen')
-        if current == "Player 1":
-            player_1_timer.start()
-        else:
-            player_2_timer.start()
         self.hide()
 
     def knight_clicked(self, button):
         print('Knight was chosen')
-        if current == "Player 1":
-            player_1_timer.start()
-        else:
-            player_2_timer.start()
         self.hide()
 
     def bishop_clicked(self, button):
         print('Bishop was chosen')
-        if current == "Player 1":
-            player_1_timer.start()
-        else:
-            player_2_timer.start()
         self.hide()
 
     def rook_clicked(self, button):
         print('Rook was chosen')
-        if current == "Player 1":
-            player_1_timer.start()
-        else:
-            player_2_timer.start()
         self.hide()
 
 
@@ -689,13 +839,13 @@ class PlayAgainWindow(Gtk.Window):
 
     def play_clicked(self, button):
         print('Play was chosen')
-        game_type = GameChoiceBox()
+        game_type = GameChoiceWindow()  # do we want it to go back to the board or back through menus?
         game_type.show_all()
         self.hide()
 
     def main_menu_clicked(self, button):
         print('This should go to resumed game')
-        main_menu = MainMenuBox()
+        main_menu = MainMenuWindow()
         main_menu.show_all()
         self.hide()
 
@@ -709,11 +859,30 @@ class PlayAgainWindow(Gtk.Window):
         super().Gtk.Button.new_with_label("Play")
         print("b")"""
 
+def initializeFS():
+        """initialize filesystem for storing stuff
+        :returns: directory string"""
+        if (os.name == "posix"):
+                home = os.path.expanduser("~")
+                if (not (os.path.exists(home+"/.cmpt370checkerschess"))):
+                        os.mkdir(home+"/.cmpt370checkerschess")
+                return (home+"/.cmpt370checkerschess")
+        elif (os.name == "nt"):
+                app_data = os.getenv("LOCALAPPDATA")
+                if (not (os.path.exists(app_data+"/.cmpt370checkerschess"))):
+                        os.mkdir(app_data+"/.cmpt370checkerschess")
+                return (app_data+"/.cmpt370checkerschess")
+        else:
+             print("uknown os")
+             return
+
+
 if __name__ == "__main__":
-    win = TheWindow()
+    win = TheWindow(initializeFS())
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     win.game_choice_box.hide()
+    win.resume_choice_box.hide()
     win.player_type.hide()
     win.customization.hide()
     Gtk.main()
