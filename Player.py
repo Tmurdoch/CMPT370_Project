@@ -70,7 +70,7 @@ class Player(object):
             # There is no piece here, raise an exception
             raise Exception("There is not piece on this square")
 
-        if str(self.__piece_set.get_piece_set_type()).lower() == "checkers":
+        if self.__piece_set.get_piece_set_type() == 0:
             if dest_square.get_occupying_piece() is not None:
                 # This move shouldn't have been generated
                 raise Exception("Illegal move, this move shouldn't have been generated")
@@ -160,7 +160,7 @@ class Player(object):
             if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
                 origin_square.get_occupying_piece().promote()
 
-        elif str(self.__piece_set.get_piece_set_type()).lower() == "chess":
+        elif self.__piece_set.get_piece_set_type() == 1:
 
             # First check if the move is a castle
             if origin_square.get_row() == 7 and origin_square.get_col() == 4 \
