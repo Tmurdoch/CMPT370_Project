@@ -228,7 +228,8 @@ class Player(object):
                     origin_square.remove_occupying_piece()
                 elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
                     # Enemy piece there, make the capture move
-                    dest_square.get_occupying_piece().capture_piece()
+                    #dest_square.get_occupying_piece().capture_piece()
+                    self.__piece_set.capture_piece(dest_square.get_occupying_piece())
                     dest_square.put_piece_here(origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                 else:
