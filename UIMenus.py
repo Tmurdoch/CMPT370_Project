@@ -429,7 +429,7 @@ class BoardGrid(Gtk.Grid):
                 svglc += 1
         svglc = 0
         while (svglc != len(chess_svg_dark_data_array)):
-                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()[ColourOffset.OFFSET_DARK_HEX])
+                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
                 svglc += 1
 
         # get light handles
