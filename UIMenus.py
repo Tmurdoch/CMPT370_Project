@@ -152,7 +152,7 @@ class TheWindow(Gtk.Window):
                 #TODO: allow for users to set game type, right now hard coded as checkers
                 self.customization.hide()
                 #board = BoardWindow(self.__game, self.__game_type)
-                game_type = 1
+                game_type = 0
                 temp_game = Game(game_type, 0)
                 t1 = Timer(0, False)
                 t2 = Timer(0, False)
