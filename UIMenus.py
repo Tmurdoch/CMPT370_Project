@@ -148,8 +148,8 @@ class TheWindow(Gtk.Window):
                 temp_game = Game(game_type, 0)
                 t1 = Timer(0, False)
                 t2 = Timer(0, False)
-                temp_game.build_light_player("light_player", PlayerType.HUMAN, t1, 0)
-                temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2, 0)
+                temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
+                temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
                 #                                                   \/ should it?
                 #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
                 #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
