@@ -475,7 +475,6 @@ class BoardGrid(Gtk.Grid):
 
         # checkers
         checkers_svg_data_array = []
-        checkers_svg_dark_data_array = []
         svg_targets = ["media/gfx/checkers/wc.svg",
                        "media/gfx/checkers/wd.svg",
                        "media/gfx/checkers/bc.svg",
@@ -493,9 +492,9 @@ class BoardGrid(Gtk.Grid):
         # replace the colours
         svglc = 0
         while (svglc != len(checkers_svg_data_array)):
-            chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(
+            checkers_svg_data_array[svglc] = checkers_svg_data_array[svglc].replace(
                 b"f9f9f9", COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
-            chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(
+            checkers_svg_data_array[svglc] = checkers_svg_data_array[svglc].replace(
                 b"000000", COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
             svglc += 1
 
