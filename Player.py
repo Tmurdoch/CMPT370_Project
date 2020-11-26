@@ -5,6 +5,7 @@
 from PieceSet import PieceSet
 from Pieces import King, Rook
 from PossibleMoves import build_list_of_moves
+from GameType import GameType
 
 
 class Player(object):
