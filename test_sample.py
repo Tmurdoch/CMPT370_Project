@@ -2,7 +2,6 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-import pytest
 import random
 from unittest import mock
 from PieceSet import PieceSet
