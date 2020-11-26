@@ -14,6 +14,16 @@ import cairo
 resume = True
 
 class TheWindow(Gtk.Window):
+    """
+        The TheWindow initializes a Gtk Window that holds the UI menus that are included in the program and attaches
+        the buttons used by each menu to the window that button is used on. Has methods to handle most of the button presses
+        for non-pop-up menus.
+        Attributes:
+           main_box: Initializes the MainMenuBox menu
+           game_choice_box: Initializes the GameChoiceBox menu
+           player_type:  Initializes the PlayerTypeBox menu
+           customization:  Initializes the CustomizationGrid menu
+       """
         def __init__(self):
                 Gtk.Window.__init__(self, title="Main Menu")
                 self.set_border_width(70)
@@ -59,64 +69,106 @@ class TheWindow(Gtk.Window):
                 self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
         def main_play_clicked(self, button):
-                print('Play was chosen')
-                self.main_box.hide()
-                self.game_choice_box.show()
+            """
+            Handles the MainMenuBox play button, shows the GameChoiceBox if clicked and hides the MainMenuBox menu.
+            :param button: A Gtk Button with the label 'Play'
+            """
+            print('Play was chosen')
+            self.main_box.hide()
+            self.game_choice_box.show()
 
         def main_resume_clicked(self, button):
-                print('This should go to resumed game') 
-                return
+            """
+            Handles the MainMenuBox resume button, shows the saved game on the BoardBox menu and hides the MainMenuBox
+            menu.
+            :param button: A Gtk Button with the label 'Resume'
+            """
+            print('This should go to resumed game')
+            return
 
         def game_choice_chess_clicked(self, button):
-                print('Chess was chosen')  # put next window here
-                self.game_type = GameType.CHESS
-                self.game_choice_box.hide()
-                self.player_type.show()
+            """
+            Handles the GameChoiceBox chess button, sets the game_type to chess, shows the PlayerTypeBox menu and
+            hides the GameChoiceBox menu.
+            :param button: A Gtk Button with the label 'Chess'
+            """
+            print('Chess was chosen')  # put next window here
+            self.game_type = GameType.CHESS
+            self.game_choice_box.hide()
+            self.player_type.show()
 
         def game_choice_checkers_clicked(self, button):
-                print('Checkers was chosen')  # put next window here
-                self.game_type = GameType.CHECKERS
-                self.game_choice_box.hide()
-                self.player_type.show()
+            """
+            Handles the GameChoiceBox checkers button, sets the game_type to checkers, shows the PlayerTypeBox menu and
+            hides the GameChoiceBox menu.
+            :param button: A Gtk Button with the label 'Checkers'
+            """
+            print('Checkers was chosen')  # put next window here
+            self.game_type = GameType.CHECKERS
+            self.game_choice_box.hide()
+            self.player_type.show()
 
         def game_choice_back_clicked(self, button):
-                print("This should go back to Main Menu Window")
-                self.game_choice_box.hide()
-                self.main_box.show()
+            """
+            Handles the GameChoiceBox back button, shows the MainMenuBox menu and hides the GameChoiceBox menu.
+            :param button: A Gtk Button with the label 'Back'
+            """
+            print("This should go back to Main Menu Window")
+            self.game_choice_box.hide()
+            self.main_box.show()
 
         def player_type_single_clicked(self, button):
-                print('Single Player was chosen')  # put next window here
-                self.player_type.hide()
-                self.customization.show()
+            """
+            Handles the PlayerTypeBox single-player button, sets the player_type to single-player, shows the
+            CustomizationBox menu and hides the PlayerTypeBox menu.
+            :param button: A Gtk Button with the label 'Single-Player'
+            """
+            print('Single Player was chosen')  # put next window here
+            self.player_type.hide()
+            self.customization.show()
 
 
         def player_type_multi_clicked(self, button):
-                print('Multi Player was chosen')  # put next window here
-                self.player_type.hide()
-                self.customization.show()
+            """
+            Handles the PlayerTypeBox multi-player button, sets the player_type to multi-player, shows the
+            CustomizationBox menu and hides the PlayerTypeBox menu.
+            :param button: A Gtk Button with the label 'Multi-Player'
+            """
+            print('Multi Player was chosen')  # put next window here
+            self.player_type.hide()
+            self.customization.show()
 
 
         def player_type_back_clicked(self, button):
-                print("This should go back to Game Choice Window")
-                self.player_type.hide()
-                self.game_type.show()
+            """
+            Handles the PlayerTypeBox back button, shows the GameChoiceBox menu and hides the PlayerTypeBox menu.
+            :param button: A Gtk Button with the label 'Back'
+            """
+            print("This should go back to Game Choice Window")
+            self.player_type.hide()
+            self.game_type.show()
 
         def customization_back_clicked(self, button):
-                print("This should go back to Game Choice Window")
-                self.customization.hide()
-                self.player_type.show()
+            """
+            Handles the CustomizationGrid back button, shows the PlayerTypeBox menu and hides the CustomizationGrid
+            menu.
+            :param button: A Gtk Button with the label 'Back'
+            """
+            print("This should go back to Game Choice Window")
+            self.customization.hide()
+            self.player_type.show()
 
         def customization_start_clicked(self, button):
-                print("This should go to Board Window")
-                self.customization.hide()
-                #board = BoardWindow(self.__game, self.__game_type)
-                temp_game = Game(self.game_type, 0)
-                #                                                   \/ should it?
-                #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
-                #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
-                self.board = BoardGrid("Test", "multiplayer", temp_game)
-                self.grid.attach(self.board,0,0,1,1)
-                board.show()
+            print("This should go to Board Window")
+            self.customization.hide()
+            #board = BoardWindow(self.__game, self.__game_type)
+            temp_game = Game(self.game_type, 0)
+            #                                                   \/ should it?
+            #TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
+            #TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
+            self.board = BoardGrid("Test", "multiplayer", temp_game)
+            self.grid.attach(self.board,0,0,1,1)
+            self.board.show()
 
 
 
@@ -125,51 +177,69 @@ class TheWindow(Gtk.Window):
 
 
 class MainMenuBox(Gtk.Box):
-        def __init__(self):
-                Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
-                # self.add(b)
-                self.play_button = Gtk.Button.new_with_label("Play")
-                #chess_button.connect("clicked", self.play_clicked)
-                self.play_button.set_property("width-request", 300)
-                self.play_button.set_property("height-request", 100)
-                self.pack_start(self.play_button, True, True, 0)
-                
-                if resume:
-                        self.resume_button = Gtk.Button.new_with_label("Resume")
-                        #checkers_button.connect("clicked", self.resume_clicked)
-                        self.resume_button.set_property("width-request", 300)
-                        self.resume_button.set_property("height-request", 100)
-                        self.pack_start(self.resume_button, True, True, 0)
-                
-                back_button = Gtk.Button.new_with_mnemonic("_Exit")
-                back_button.connect("clicked", self.exit_clicked)
-                self.pack_start(back_button, True, True, 0)
+    """
+    The MainMenuBox initializes a Gtk Box that holds the play, resume and exit buttons. Has a method to handle the Exit
+    button event.
+    Attributes:
+       play_button: A Gtk Button that allows a player to start menu sequence to play a game
+       resume_button: A Gtk Button that resumes a game if their is a saved file
+   """
+    def __init__(self):
+            Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
+            # self.add(b)
+            self.play_button = Gtk.Button.new_with_label("Play")
+            #chess_button.connect("clicked", self.play_clicked)
+            self.play_button.set_property("width-request", 300)
+            self.play_button.set_property("height-request", 100)
+            self.pack_start(self.play_button, True, True, 0)
+
+            if resume:
+                    self.resume_button = Gtk.Button.new_with_label("Resume")
+                    #checkers_button.connect("clicked", self.resume_clicked)
+                    self.resume_button.set_property("width-request", 300)
+                    self.resume_button.set_property("height-request", 100)
+                    self.pack_start(self.resume_button, True, True, 0)
+
+            back_button = Gtk.Button.new_with_mnemonic("_Exit")
+            back_button.connect("clicked", self.exit_clicked)
+            self.pack_start(back_button, True, True, 0)
 
 
-                
-        def exit_clicked(self, button):
-                print("This should exit")
-                Gtk.main_quit()
+
+    def exit_clicked(self, button):
+        """
+        Handles the MainMenuBox exit button and exits the program when pressed.
+        :param button: A Gtk Button with the label 'Exit'
+        """
+        print("This should exit")
+        Gtk.main_quit()
 
 
 class GameChoiceBox(Gtk.Box):
-        def __init__(self):
-                Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    """
+    The GameChoiceBox initializes a Gtk Box that holds the Chess, Checkers and Back buttons.
+    Attributes:
+       chess_button: A Gtk Button that sets the game type to be chess
+       checkers_button: A Gtk Button that sets the game type to be checkers
+       back_button: A Gtk Button that changes the display to be the previous menu
+   """
+    def __init__(self):
+        Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
-                self.chess_button = Gtk.Button.new_with_label("Chess")
-                self.chess_button.set_property("width-request", 300)
-                self.chess_button.set_property("height-request", 100)
-                self.pack_start(self.chess_button, True, True, 0)
+        self.chess_button = Gtk.Button.new_with_label("Chess")
+        self.chess_button.set_property("width-request", 300)
+        self.chess_button.set_property("height-request", 100)
+        self.pack_start(self.chess_button, True, True, 0)
 
-                self.checkers_button = Gtk.Button.new_with_label("Checkers")
-                self.checkers_button.set_property("width-request", 300)
-                self.checkers_button.set_property("height-request", 100)
-                self.pack_start(self.checkers_button, True, True, 0)
+        self.checkers_button = Gtk.Button.new_with_label("Checkers")
+        self.checkers_button.set_property("width-request", 300)
+        self.checkers_button.set_property("height-request", 100)
+        self.pack_start(self.checkers_button, True, True, 0)
 
-                self.back_button = Gtk.Button.new_with_label("Back")
-                self.pack_start(self.back_button, True, True, 0)
+        self.back_button = Gtk.Button.new_with_label("Back")
+        self.pack_start(self.back_button, True, True, 0)
 
-                self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
+        self.connect("destroy", Gtk.main_quit)  # fixed the exit stalling problem
 
 
 
@@ -178,6 +248,13 @@ class GameChoiceBox(Gtk.Box):
 
 
 class PlayerTypeBox(Gtk.Box):
+    """
+    The PlayerTypeBox initializes a Gtk Box that holds the Single-Player, Multi-Player and Back buttons.
+    Attributes:
+       single_button: A Gtk Button that sets the player type to AI
+       multiplayer_button: A Gtk Button that sets the player type to Human
+       back_button: A Gtk Button that changes the display to be the previous menu
+   """
     def __init__(self):
         Gtk.Box.__init__(self,orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
@@ -205,6 +282,16 @@ class PlayerTypeBox(Gtk.Box):
 
 
 class CustomizationGrid(Gtk.Grid):
+    """
+    The CustomizationGrid initializes a Gtk Grid that holds the radio buttons for choosing the piece and board colour
+    and the Back and Start buttons.
+    Attributes:
+       piece_radio_buttons: A list of Gtk Radio Buttons that correspond to a piece colour in Colours.py
+       board_radio_buttons: A list of Gtk Radio Buttons that correspond to a board colour in Colours.py
+       back_button: A Gtk Button that changes the display to be the previous menu
+       start_button: A Gtk Button that initializes a Game object, shows the BoardGrid menu and hides the
+       CustomizationGrid menu.
+   """
     def __init__(self):#, game, game_type):
         #self.__game = game
         #self.__game_type = game_type
@@ -276,6 +363,7 @@ class CustomizationGrid(Gtk.Grid):
 
 
 class BoardGrid(Gtk.Grid):
+
     def __init__(self, game, game_type, game_obj):
         """
         @param game_obj: actual game object, initialize by Game()
