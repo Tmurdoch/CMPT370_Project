@@ -8,6 +8,7 @@ from GameType import GameType
 from build_bishop_moves import build_bishop_moves
 from build_knight_moves import build_knight_moves
 from build_queen_moves import build_queen_moves
+from build_rook_moves import build_rook_moves
 
 
 def build_list_of_moves(input_game_square, input_game):
@@ -210,93 +211,7 @@ def build_list_of_moves(input_game_square, input_game):
             list_of_candidate_game_squares = build_knight_moves(input_game_square, input_game)
 
         elif type(input_piece).__name__ == "Rook":
-            # The rook can be moved any number of unoccupied squares in a straight line vertically or horizontally
-
-            # First check fow check for horizontal movements, again stop if we see a piece.  If piece is unfriendly
-            # add the capture move to the list.
-
-            # Vertical UP
-            # check from piece to top row -- (row, col) -> (0, col)
-            row_pos = input_row
-            while row_pos != 0:
-                row_pos -= 1
-                if input_board.get_game_board()[row_pos][input_col].get_occupying_piece() is not None:
-                    if input_board.get_game_board()[row_pos][input_col].get_occupying_piece().get_colour() == \
-                            input_piece.get_colour():
-                        break
-                    if input_board.get_game_board()[row_pos][input_col].get_occupying_piece().get_colour() != \
-                            input_piece.get_colour():
-                        # Capture move, add it to the list
-                        list_of_candidate_game_squares.append(
-                            input_board.get_game_board()[row_pos][input_col])
-                        break
-                else:
-                    # Square was empty, add it to the list
-                    list_of_candidate_game_squares.append(
-                        input_board.get_game_board()[row_pos][input_col])
-
-            # Vertical DOWN
-            # check from piece to bot row -- (row, col) -> (7, col)
-            row_neg = input_row
-            while row_neg != input_board.get_size() - 1:
-                row_neg += 1
-                if input_board.get_game_board()[row_neg][input_col].get_occupying_piece() is not None:
-                    if input_board.get_game_board()[row_neg][input_col].get_occupying_piece().get_colour() == \
-                            input_piece.get_colour():
-                        break
-                    if input_board.get_game_board()[row_neg][input_col].get_occupying_piece().get_colour() != \
-                            input_piece.get_colour():
-                        # Capture move, add it to the list
-                        list_of_candidate_game_squares.append(
-                            input_board.get_game_board()[row_neg][input_col])
-                        break
-                else:
-                    # Square was empty, add it to the list
-                    list_of_candidate_game_squares.append(
-                        input_board.get_game_board()[row_neg][input_col])
-
-            # Now check for horizontal movements, again stop if we see a piece.  If piece is unfriendly add the capture
-            # move to the list.
-
-            # Horizontal RIGHT
-            # check from piece to right col -- (row, col) -> (row, 7)
-            col_pos = input_col
-            while col_pos != input_board.get_size() - 1:
-                col_pos += 1
-                if input_board.get_game_board()[input_row][col_pos].get_occupying_piece() is not None:
-                    if input_board.get_game_board()[input_row][col_pos].get_occupying_piece().get_colour() == \
-                            input_piece.get_colour():
-                        break
-                    if input_board.get_game_board()[input_row][col_pos].get_occupying_piece().get_colour() != \
-                            input_piece.get_colour():
-                        # Capture move, add it to the list
-                        list_of_candidate_game_squares.append(
-                            input_board.get_game_board()[input_row][col_pos])
-                        break
-                else:
-                    # Square was empty, add it to the list
-                    list_of_candidate_game_squares.append(
-                        input_board.get_game_board()[input_row][col_pos])
-
-            # Horizontal LEFT
-            # check from piece to left col -- (row, col) -> (row, 0)
-            col_neg = input_col
-            while col_neg != 0:
-                col_neg -= 1
-                if input_board.get_game_board()[input_row][col_neg].get_occupying_piece() is not None:
-                    if input_board.get_game_board()[input_row][col_neg].get_occupying_piece().get_colour() == \
-                            input_piece.get_colour():
-                        break
-                    if input_board.get_game_board()[input_row][col_neg].get_occupying_piece().get_colour() != \
-                            input_piece.get_colour():
-                        # Capture move, add it to the list
-                        list_of_candidate_game_squares.append(
-                            input_board.get_game_board()[input_row][col_neg])
-                        break
-                else:
-                    # Square was empty, add it to the list
-                    list_of_candidate_game_squares.append(
-                        input_board.get_game_board()[input_row][col_neg])
+            list_of_candidate_game_squares = build_rook_moves(input_game_square, input_game)
 
         elif type(input_piece).__name__ == "Pawn":
             # Normally a pawn moves by advancing a single square,
