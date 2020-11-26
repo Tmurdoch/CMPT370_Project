@@ -90,14 +90,6 @@ class Game:
         self.__dark_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK],
                                     self.__game_type, player_type, timer)
 
-    def start(self):
-        # TODO: Not sure what this is?
-        pass
-
-    def abort(self):
-        # TODO: Not sure what this is?
-        pass
-
     def get_board(self):
         """:return: the board object"""
         return self.__board
