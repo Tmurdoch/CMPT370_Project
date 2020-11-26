@@ -83,7 +83,7 @@ class Game:
 
     def build_dark_player(self, name, player_type, timer):
         """
-        Build the light coloured player object.
+        Build the dark coloured player object.
         :param name: string: Player name
         :param player_type: PlayerType: The type of Player the Player is, can be AI or Human
         :param timer: Timer: The player's timer object
