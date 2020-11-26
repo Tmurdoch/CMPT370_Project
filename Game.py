@@ -2,14 +2,14 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
-from GameType import GameType
+from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
 from Player import Player
 from Board import Board
-from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
 from Timer import Timer
 from GameStatus import GameStatus
 import struct
+import os
 
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
@@ -28,7 +28,7 @@ SEEK_END = 2
 
 class Game:
     """
-    The game object is ...
+    The game object is relates the players and the board together
 
     Attributes:
         __game_type: int: GameType enum
@@ -36,13 +36,15 @@ class Game:
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
         __board: Board: The game board
+        __game_status: GameStatus: The current status of the game
     """
 
     def __init__(self, game_type, colour_mode):
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
-        if game_type>=2:
+        self.__game_status = GameStatus.IN_PROGRESS
+        if game_type >= 2:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
@@ -104,7 +106,7 @@ class Game:
         """:return: The current player """
         return self.__current_player
 
-    def save_to_file(self,path):
+    def save_to_file(self, path):
         """
         Save the current game state to a file
         path: string describing file path to save too
@@ -185,7 +187,7 @@ class Game:
             row += 1
         fp.close()
 
-    def load_from_file(self,path):
+    def load_from_file(self, path):
         """
         Load game state from file
         This is expected to be called from the ui object
@@ -349,7 +351,7 @@ class Game:
                     )
             elif self.__game_type == GAME_TYPE_CHESS:
                 pass
-            # delete the file after loading as discussed at some point
+            # delete the file after loading
             os.remove(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
             return
 
@@ -394,27 +396,9 @@ class Game:
             # unknown game
             assert 0
         return
-                    
 
     def check_for_game_over(self):
         """
         Checks to see if the game is over
-        :param name: string: Player name
-        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
-        :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         :return: Bool: if the game is over"""
         return bool(self.__game_status)
-
-
-# if (__name__ == "__main__"):
-#    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
-#
-#    piece_obj = King("Red")
-#
-#    game_obj.get_board().get_game_square(0, 0).put_piece_here(self.__dark_player.get_piece_set().)
-#    game_obj.get_board().print_game_board()
-#    timer_obj = Timer(10, 20, 0)
-#    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.save_to_file()
