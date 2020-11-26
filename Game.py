@@ -28,7 +28,8 @@ SEEK_END = 2
 
 class Game:
     """
-    The game object is relates the players and the board together
+    The game object is relates the players and the board together.
+    The game has two players and one board.  The game can save itself to or load itself in from file.
 
     Attributes:
         __game_type: int: GameType enum
@@ -362,17 +363,8 @@ class Game:
                 "ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
+        # TODO: Not sure if this makes sense
         return self.__current_player
-
-    def declare_result(self):
-        return
-
-    def build_result(self):
-        return
-
-    def show_instructions(self):
-        """This might be part of UI?"""
-        return
 
     def get_game_type(self):
         return self.__game_type
