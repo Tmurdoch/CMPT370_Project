@@ -101,7 +101,8 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            square_of_capture.get_occupying_piece().capture()
+                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                                raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
                             # You are trying to jump your own piece
@@ -119,7 +120,8 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            square_of_capture.get_occupying_piece().capture()
+                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                                raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
                             # You are trying to jump your own piece
@@ -138,7 +140,8 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            square_of_capture.get_occupying_piece().capture()
+                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                                raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
                             # You are trying to jump your own piece
@@ -157,7 +160,8 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            square_of_capture.get_occupying_piece().capture()
+                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                                raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
                             # You are trying to jump your own piece
@@ -241,11 +245,10 @@ class Player(object):
                     origin_square.remove_occupying_piece()
                 elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
                     # Enemy piece there, make the capture move
-                    # dest_square.get_occupying_piece().capture_piece()
-                    self.__piece_set.capture_piece(
-                        dest_square.get_occupying_piece())
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
+                    if not self.__piece_set.capture_piece(dest_square.get_occupying_piece()):
+                        raise Exception("Unable to capture piece.")
+                    dest_square.remove_occupying_piece()
+                    dest_square.put_piece_here(origin_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                 else:
                     # Illegal move, trying to move a square that has a friendly piece
