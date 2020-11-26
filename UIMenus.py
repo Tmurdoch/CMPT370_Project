@@ -291,7 +291,7 @@ class CustomizationGrid(Gtk.Grid):
         label_piece.set_markup("<b>Pieces</b>")
         # label_piece.set_justify(Gtk.Justification.CENTER)
         label_piece.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach(label_piece, 1, 1, 1, 1)
+        self.attach(label_piece, 0, 1, 1, 1)
 
         # Board choices label
         label_board = Gtk.Label()
@@ -310,6 +310,7 @@ class CustomizationGrid(Gtk.Grid):
         x=0
         while (x!=len(COLOUR_STRING_LOOK_UP_TABLE)):
                 self.attach(self.piece_radio_buttons[x],0,2+x,1,1)
+                self.piece_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
                 x+=1
 
         x=0
@@ -321,7 +322,7 @@ class CustomizationGrid(Gtk.Grid):
                 x+=1
         x=0
         while (x!=len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-                self.attach(self.board_radio_buttons[x],3,2+x,1,1)
+                self.attach(self.board_radio_buttons[x],4,2+x,1,1)
                 x+=1
 
         
