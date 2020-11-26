@@ -398,6 +398,12 @@ class Game:
         :return: Bool: if the game is over"""
         return bool(self.__game_status)
 
+    def get_colour_mode(self):
+        """
+        Get the colour mode enum for the current game
+        :return: IntEnum of the current player colour
+        """
+
 
 # if (__name__ == "__main__"):
 #    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
