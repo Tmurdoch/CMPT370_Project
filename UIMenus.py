@@ -7,7 +7,7 @@ from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
 from datetime import datetime
 import cairo
