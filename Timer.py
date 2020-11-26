@@ -50,7 +50,7 @@ class Timer(object):
             return False
 
     def start(self):
-        """ Starts the timer """
+        """ Starts the timer. """
         if self.__enabled and not self.__running:
             self.__running = True
             self.__timeOnStart = time.time_ns()
@@ -59,7 +59,7 @@ class Timer(object):
             return False
 
     def stop(self):
-        """ Stops the timer and updates the time remaining """
+        """ Stops the timer and updates the time remaining. """
         if self.__enabled and self.__running:
             self.__time_remaining_ns = self.get_time_remaining_ns()
             self.__running = False
@@ -68,7 +68,7 @@ class Timer(object):
             return False
 
     def get_time_remaining_ns(self):
-        """ :return: float: the time remaining for a Player in nanoseconds """
+        """ :return: float: the time remaining for a Player in nanoseconds. """
         if self.__enabled:
             if self.__running:
                 return self.__time_remaining_ns - (time.time_ns() - self.__timeOnStart)
@@ -78,7 +78,7 @@ class Timer(object):
             return False
 
     def get_time_remaining_s(self):
-        """ :return: float: the time remaining for a Player in seconds """
+        """ :return: float: the time remaining for a Player in seconds. """
         if self.__enabled:
             if self.__running:
                 return (self.__time_remaining_ns - (time.time_ns() - self.__timeOnStart)) / (10 ** 9)
@@ -88,5 +88,5 @@ class Timer(object):
             return False
 
     def get_enabled(self):
-        """ :return: bool: True if the timer is enabled, False otherwise """
+        """ :return: bool: True if the timer is enabled, False otherwise. """
         return self.__enabled
