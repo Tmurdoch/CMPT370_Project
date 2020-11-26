@@ -57,6 +57,8 @@ def build_list_of_moves(input_game_square, input_game):
 
     return list_of_candidate_game_squares
 
+# TODO: Not sure what the below functions do or where they should go...
+
 
 def temp_move(origin_square, destination_square):
     """
