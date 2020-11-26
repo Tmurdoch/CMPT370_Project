@@ -15,8 +15,6 @@ MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
 FILENAME = "test_save.bin"
 FILE_VER_ZERO_HEADER_SIZE = 39
-GAME_TYPE_CHESS = 0
-GAME_TYPE_CHECKERS = 1
 GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess", "Checkers"]
 # make the c-stdlib style definitions so
 # the code is readable and not full
@@ -152,7 +150,7 @@ class Game:
                 else:
                     output_piece = 0
                 # decode object to char
-                if self.__game_type == GAME_TYPE_CHESS:
+                if self.__game_type == GameType.CHESS:
                     if isinstance(cur_piece, King):
                         output_piece += ord("K")
                     elif isinstance(cur_piece, Queen):
@@ -174,7 +172,7 @@ class Game:
                         # unidentified piece, shouldn't be possible
                         fp.close()
                         assert 0
-                elif self.__game_type == GAME_TYPE_CHECKERS:
+                elif self.__game_type == GameType.CHECKERS:
                     output_piece += (1 + cur_piece.get_promotion_status())
                 else:
                     # unidentified game, shouldn't be possible
@@ -284,7 +282,7 @@ class Game:
                         is_dark = 0
 
                     # decode object to char
-                    if self.__game_type == GAME_TYPE_CHESS:
+                    if self.__game_type == GameType.CHESS:
                         if chr(board_data[board_data_index]).lower() == "k":
                             cur_square.put_piece_here(
                                 King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
@@ -313,7 +311,7 @@ class Game:
                             # unidentified piece, shouldn't be possible
                             assert 0
 
-                    elif self.__game_type == GAME_TYPE_CHECKERS:
+                    elif self.__game_type == GameType.CHECKERS:
                         if is_dark:
                             cur_square.put_piece_here(
                                 self.__dark_player.get_piece_set().get_live_pieces()[
@@ -337,14 +335,14 @@ class Game:
                 row += 1
 
             # put all the pieces that were not placed on the board into the captured lists
-            if self.__game_type == GAME_TYPE_CHECKERS:
+            if self.__game_type == GameType.CHECKERS:
                 # Start at the back of the list of live pieces not placed on the board and capture them
                 for i in range(16-found_dark_checkers_pieces):
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_live_pieces()[
                             15-i]
                     )
-            elif self.__game_type == GAME_TYPE_CHESS:
+            elif self.__game_type == GameType.CHESS:
                 pass
 
         else:
@@ -375,13 +373,13 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
-        if self.__game_type == GAME_TYPE_CHECKERS:
+        if self.__game_type == GameType.CHECKERS:
             if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
                 if self.__current_player is self.__light_player:
                     self.__game_status = GameStatus.DARK_VICTORIOUS
                 else:
                     self.__game_status = GameStatus.LIGHT_VICTORIOUS
-        elif self.__game_type == GAME_TYPE_CHESS:
+        elif self.__game_type == GameType.CHESS:
             # TODO CHESS
             print("do stuff")
         else:
