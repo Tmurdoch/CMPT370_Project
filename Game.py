@@ -2,14 +2,14 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
-from GameType import GameType
+from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
 from Player import Player
 from Board import Board
-from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
 from Timer import Timer
 from GameStatus import GameStatus
 import struct
+import os
 
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
@@ -26,7 +26,8 @@ SEEK_END = 2
 
 class Game:
     """
-    The game object is ...
+    The game object is relates the players and the board together.
+    The game has two players and one board.  The game can save itself to or load itself in from file.
 
     Attributes:
         __game_type: int: GameType enum
@@ -34,13 +35,20 @@ class Game:
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
         __board: Board: The game board
+        __game_status: GameStatus: The current status of the game
     """
 
     def __init__(self, game_type, colour_mode):
+        """
+        Initialize the game object, players are built later
+        :param game_type: GameType: The type of game (chess or checkes)
+        :param colour_mode: Colour: The game colour mode
+        """
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
-        self.__current_player = self.__light_player
-        if game_type>=2:
+        self.__current_player = None
+        self.__game_status = GameStatus.IN_PROGRESS
+        if game_type >= 2:
             # something went wrong here and it wasn't the users fault
             # so don't show an error, whatever tried to create a game
             # object will probably crash now
@@ -51,8 +59,7 @@ class Game:
         if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
-        self.__board = Board(8)
-
+        self.__board = Board(8)  # TODO: Should this board size be hard coded?
         return
 
     def get_light_player(self):
@@ -63,36 +70,26 @@ class Game:
         """:return: Player: The dark player object"""
         return self.__dark_player
 
-    def build_light_player(self, name, player_type, timer, castled):
+    def build_light_player(self, name, player_type, timer):
         """
         Build the light coloured player object.
         :param name: string: Player name
         :param player_type: int: The type of PlayerType enum of what type of player they ar
         :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__light_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_LIGHT],
                                      self.__game_type, player_type, timer)
         self.__current_player = self.__light_player  # Light colour goes first
 
-    def build_dark_player(self, name, player_type, timer, castled):
+    def build_dark_player(self, name, player_type, timer):
         """
         Build the light coloured player object.
         :param name: string: Player name
         :param player_type: PlayerType: The type of Player the Player is, can be AI or Human
         :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__dark_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK],
                                     self.__game_type, player_type, timer)
-
-    def start(self):
-        # TODO: Not sure what this is?
-        pass
-
-    def abort(self):
-        # TODO: Not sure what this is?
-        pass
 
     def get_board(self):
         """:return: the board object"""
@@ -102,17 +99,16 @@ class Game:
         """:return: The current player """
         return self.__current_player
 
-    def save_to_file(self):
+    def save_to_file(self, path):
         """
         Save the current game state to a file
-        TODO: The file location is unknown at this time
-        expected *nix = ~/.cmpt370checkerschess/savegame.370checkerschess
-        expected windows = ????
+        path: string describing file path to save too
+        :return: None
         """
         # caller of save_to_file()
         # is responsible for the try except
         # error handling
-        fp = open(FILENAME, "wb")
+        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
         # write magic
         fp.write(MAGIC)
         game_mode = self.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
@@ -184,17 +180,21 @@ class Game:
             row += 1
         fp.close()
 
-    def load_from_file(self):
+    def load_from_file(self, path):
         """
         Load game state from file
-        This is expected to be called from the ui object?
+        This is expected to be called from the ui object
         Which has already checked for the existence of the save game
+        DELETES THE FILE IF IT IS SUCCESSFULLY LOADED AS DISCUSSED
+        AT SOME POINT IN OUR MEETINGS
+        path: string describing file path to save too
+        :return: None
         # TODO: Reconstruct piece set from the file
         """
         # caller of load_from_file()
         # is responsible for the try except
         # error handling
-        fp = open(FILENAME, "rb")
+        fp = open(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "rb")
         read_magic = fp.read(20)
         if read_magic != MAGIC:
             raise Exception(
@@ -246,10 +246,16 @@ class Game:
 
             self.build_light_player("NotUsedInThisVersionOfSaves",
                                     (not (ai_in_game and (not dark_player_is_ai))),
-                                    Timer(light_player_time, timer_enabled), light_player_castled)
+                                    Timer(light_player_time, timer_enabled))
+
+            if light_player_castled:
+                self.__light_player.castle()
+
             self.build_dark_player("NotUsedInThisVersionOfSaves",
                                    (not (ai_in_game and dark_player_is_ai)),
-                                   Timer(dark_player_time, timer_enabled), dark_player_castled)
+                                   Timer(dark_player_time, timer_enabled))
+            if dark_player_castled:
+                self.__dark_player.castle()
 
             # For now assume they are ideal piece sets
             self.__light_player.build_piece_set(
@@ -344,6 +350,9 @@ class Game:
                     )
             elif self.__game_type == GameType.CHESS:
                 pass
+            # delete the file after loading
+            os.remove(path+"/save-game.370"+GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
+            return
 
         else:
             fp.close()
@@ -352,17 +361,8 @@ class Game:
                 "ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     def get_result(self):
+        # TODO: Not sure if this makes sense
         return self.__current_player
-
-    def declare_result(self):
-        return
-
-    def build_result(self):
-        return
-
-    def show_instructions(self):
-        """This might be part of UI?"""
-        return
 
     def get_game_type(self):
         return self.__game_type
@@ -386,27 +386,9 @@ class Game:
             # unknown game
             assert 0
         return
-                    
 
     def check_for_game_over(self):
         """
         Checks to see if the game is over
-        :param name: string: Player name
-        :param player_type: The type of Player the Player is, can be AI or Human TODO: What type is this?
-        :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         :return: Bool: if the game is over"""
         return bool(self.__game_status)
-
-
-# if (__name__ == "__main__"):
-#    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
-#
-#    piece_obj = King("Red")
-#
-#    game_obj.get_board().get_game_square(0, 0).put_piece_here(self.__dark_player.get_piece_set().)
-#    game_obj.get_board().print_game_board()
-#    timer_obj = Timer(10, 20, 0)
-#    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.save_to_file()
