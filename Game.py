@@ -40,6 +40,11 @@ class Game:
     """
 
     def __init__(self, game_type, colour_mode):
+        """
+        Initialize the game object, players are built later
+        :param game_type: GameType: The type of game (chess or checkes)
+        :param colour_mode: Colour: The game colour mode
+        """
         self.__light_player = None  # Will be build later
         self.__dark_player = None  # Will be build later
         self.__current_player = None
@@ -55,8 +60,7 @@ class Game:
         if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
-        self.__board = Board(8)
-
+        self.__board = Board(8)  # TODO: Should this board size be hard coded?
         return
 
     def get_light_player(self):
@@ -73,7 +77,6 @@ class Game:
         :param name: string: Player name
         :param player_type: int: The type of PlayerType enum of what type of player they ar
         :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__light_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_LIGHT],
                                      self.__game_type, player_type, timer)
@@ -85,7 +88,6 @@ class Game:
         :param name: string: Player name
         :param player_type: PlayerType: The type of Player the Player is, can be AI or Human
         :param timer: Timer: The player's timer object
-        :param castled: Bool: True is the player has castled, False otherwise
         """
         self.__dark_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK],
                                     self.__game_type, player_type, timer)
@@ -245,10 +247,16 @@ class Game:
 
             self.build_light_player("NotUsedInThisVersionOfSaves",
                                     (not (ai_in_game and (not dark_player_is_ai))),
-                                    Timer(light_player_time, timer_enabled), light_player_castled)
+                                    Timer(light_player_time, timer_enabled))
+
+            if light_player_castled:
+                self.__light_player.castle()
+
             self.build_dark_player("NotUsedInThisVersionOfSaves",
                                    (not (ai_in_game and dark_player_is_ai)),
-                                   Timer(dark_player_time, timer_enabled), dark_player_castled)
+                                   Timer(dark_player_time, timer_enabled))
+            if dark_player_castled:
+                self.__dark_player.castle()
 
             # For now assume they are ideal piece sets
             self.__light_player.build_piece_set(

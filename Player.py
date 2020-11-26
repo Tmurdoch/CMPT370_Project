@@ -185,7 +185,7 @@ class Player(object):
                             rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             dest_square.remove_occupying_piece()
-                            self.__castle()
+                            self.castle()
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, King-side error")
@@ -208,7 +208,7 @@ class Player(object):
                             rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
                             dest_square.remove_occupying_piece()
-                            self.__castle()
+                            self.castle()
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, Queen-side error")
@@ -256,7 +256,7 @@ class Player(object):
         """:return: Bool, True if the player has already castled, False otherwise"""
         return self.__castled
 
-    def __castle(self):
+    def castle(self):
         """Marks that the player has castled so we can make sure they don't castle again
         Can only be called in make_move() when executing the castle"""
         self.__castled = True
