@@ -29,11 +29,13 @@ class ColourOffset(IntEnum):
     the adition of OFFSET_LIGHT_HEX etc..."""
     OFFSET_LIGHT = 0
     OFFSET_DARK = 1
+    OFFSET_LIGHT_HEX = 2
+    OFFSET_DARK_HEX = 3
 
 
-COLOUR_STRING_LOOK_UP_TABLE = [("White", "Black"),
-                               ("Red", "Black")]
+COLOUR_STRING_LOOK_UP_TABLE = [("White", "Black", b"FFFFFF", b"000000"),
+                               ("Red", "Black", b"FF0000", b"000000")]
 
-COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black"),
-                                     ("Red", "Black"),
-                                     ("Yellow", "Blue")]
+COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black", b"FFFFFF", b"000000"),
+                                     ("Red", "Black",  b"FF0000", b"000000"),
+                                     ("Yellow", "Blue", b"FFFF00", b"0000FF")]

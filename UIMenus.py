@@ -2,16 +2,24 @@ import gi
 from Player import Player
 from PlayerType import PlayerType
 from Game import Game
+from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 from PieceSet import PieceSet
 from Timer import Timer
 from Colours import ColourCodes, ColourBoardCodes, ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg
 from GameType import GameType
 from datetime import datetime
 import cairo
 import PossibleMoves
 import os
+# make c-stdlib style definitions so
+# the code is readable and without
+# magic numbers
+SEEK_SET = 0
+SEEK_CUR = 1
+SEEK_END = 2
+
 
 resume = True
 
@@ -317,7 +325,6 @@ class CustomizationGrid(Gtk.Grid):
                 x+=1
 
         
-
         self.back_button = Gtk.Button.new_with_label("Back")
         self.attach(self.back_button, 0, 8, 1, 1)
 
@@ -390,6 +397,99 @@ class BoardGrid(Gtk.Grid):
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
 
+        chess_svg_light_data_array = []
+        chess_svg_dark_data_array = []
+        svg_targets = ["media/gfx/regular/wk.svg",
+                       "media/gfx/regular/wq.svg",
+                       "media/gfx/regular/wn.svg",
+                       "media/gfx/regular/wb.svg",
+                       "media/gfx/regular/wr.svg",
+                       "media/gfx/regular/wp.svg",
+                       "media/gfx/regular/bk.svg",
+                       "media/gfx/regular/bq.svg",
+                       "media/gfx/regular/bn.svg",
+                       "media/gfx/regular/bb.svg",
+                       "media/gfx/regular/br.svg",
+                       "media/gfx/regular/bp.svg"]
+        
+        # load the data
+        svglc = 0
+        while (svglc != 6):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_light_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                chess_svg_dark_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        assert(len(chess_svg_light_data_array) == len(chess_svg_dark_data_array))
+        
+        # replace the colours
+        svglc = 0
+        while (svglc != len(chess_svg_light_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
+                svglc += 1
+        svglc = 0
+        while (svglc != len(chess_svg_dark_data_array)):
+                chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        # get light handles
+        self.wk = Rsvg.Handle.new_from_data(chess_svg_light_data_array[0])
+        self.wq = Rsvg.Handle.new_from_data(chess_svg_light_data_array[1])
+        self.wn = Rsvg.Handle.new_from_data(chess_svg_light_data_array[2])
+        self.wb = Rsvg.Handle.new_from_data(chess_svg_light_data_array[3])
+        self.wr = Rsvg.Handle.new_from_data(chess_svg_light_data_array[4])
+        self.wp = Rsvg.Handle.new_from_data(chess_svg_light_data_array[5])
+
+        # get dark handels
+        self.bk = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[0])
+        self.bq = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[1])
+        self.bn = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[2])
+        self.bb = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[3])
+        self.br = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[4])
+        self.bp = Rsvg.Handle.new_from_data(chess_svg_dark_data_array[5])
+
+        #checkers
+        checkers_svg_data_array = []
+        checkers_svg_dark_data_array = []
+        svg_targets = ["media/gfx/checkers/wc.svg",
+                       "media/gfx/checkers/wd.svg",
+                       "media/gfx/checkers/bc.svg",
+                       "media/gfx/checkers/bd.svg"]
+        svglc = 0
+        while (svglc != len(svg_targets)):
+                # read binary to ensure no nonsense on windows
+                fp = open(svg_targets[svglc], "rb")
+                fp.seek(0, SEEK_END)
+                fps = fp.tell()
+                fp.seek(0, SEEK_SET)
+                checkers_svg_data_array.append(fp.read(fps))
+                fp.close()
+                svglc += 1
+        # replace the colours
+        svglc = 0
+        while (svglc != len(checkers_svg_data_array)):
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"f9f9f9",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
+                chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(b"000000",COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
+                svglc += 1
+
+        self.wc = Rsvg.Handle.new_from_data(checkers_svg_data_array[0])
+        self.wd = Rsvg.Handle.new_from_data(checkers_svg_data_array[1])
+        self.bc = Rsvg.Handle.new_from_data(checkers_svg_data_array[2])
+        self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
+
+
     def place_pieces(self):
         """
         place the pieces on the board, stored in game->board
@@ -428,6 +528,9 @@ class BoardGrid(Gtk.Grid):
         width = checkerboard_area.get_allocated_width()
         height = checkerboard_area.get_allocated_height()
 
+
+        cairo_ctx.save()
+        
         while i < width:
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
@@ -448,6 +551,70 @@ class BoardGrid(Gtk.Grid):
             i += check_size + spacing
             xcount += 1
 
+            game_type = self.__game_obj.get_game_type()
+            
+        cairo_ctx.restore()
+        row = 0
+        while (row != height):
+            col = 0
+            while (col != width):
+                cur_piece = self.__game_obj.get_board().get_game_square(row,col).get_occupying_piece()
+
+                if (not (cur_piece is None)):
+                        if (game_type == GameType.CHESS):
+                                if (isinstance(cur_piece, King)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wk
+                                        else:
+                                                piece_to_draw = self.bk
+                                elif (isinstance(cur_piece, Queen)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wq
+                                        else:
+                                                piece_to_draw = self.bq
+                                elif (isinstance(cur_piece, Knight)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wn
+                                        else:
+                                                piece_to_draw = self.bn
+                                elif (isinstance(cur_piece, Bishop)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wb
+                                        else:
+                                                piece_to_draw = self.bb
+                                elif (isinstance(cur_piece, Rook)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wr
+                                        else:
+                                                piece_to_draw = self.br
+                                elif (isinstance(cur_piece, Pawn)):
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wp
+                                        else:
+                                                piece_to_draw = self.bp
+                        elif (game_type == GameType.CHECKERS):
+                                if (cur_piece.get_promotion_status()): # 1 is king
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wd
+                                        else:
+                                                piece_to_draw = self.bd
+                                else:
+                                        if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                                                piece_to_draw = self.wc
+                                        else:
+                                                piece_to_draw = self.bc
+                                        
+                        else:
+                                assert(0)
+                cairo_ctx.save()
+                #scale piece to size of square
+                cairo_ctx.scale(50/piece_to_draw.get_dimensions().width, 50/piece_to_draw.get_dimensions().height)
+                cairo_ctx.translate(50 * col, 50 * row)
+                wk.render_cairo(cairo_ctx)
+                cairo_ctx.restore()
+                col += 1
+            row +=1
+                                    
         return True
 
     def mouse_pointer(self, widget, x, y):

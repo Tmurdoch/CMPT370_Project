@@ -392,3 +392,23 @@ class Game:
         Checks to see if the game is over
         :return: Bool: if the game is over"""
         return bool(self.__game_status)
+
+    def get_colour_mode(self):
+        """
+        Get the colour mode enum for the current game
+        :return: IntEnum of the current player colour
+        """
+        return self.__colour_mode
+
+
+# if (__name__ == "__main__"):
+#    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
+#
+#    piece_obj = King("Red")
+#
+#    game_obj.get_board().get_game_square(0, 0).put_piece_here(self.__dark_player.get_piece_set().)
+#    game_obj.get_board().print_game_board()
+#    timer_obj = Timer(10, 20, 0)
+#    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
+#    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
+#    game_obj.save_to_file()
