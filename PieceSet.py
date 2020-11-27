@@ -33,16 +33,22 @@ class PieceSet:
         self.__capturedPieces = []
         self.__pieceSetType = piece_set_type
         if piece_set_type == GameType.CHECKERS:
-            self.__livePieces = [Pieces.CheckersCoin(colour)] * 12
+            self.__livePieces = [Pieces.CheckersCoin(colour, 1), Pieces.CheckersCoin(colour, 2),
+                                 Pieces.CheckersCoin(colour, 3), Pieces.CheckersCoin(colour, 4),
+                                 Pieces.CheckersCoin(colour, 5), Pieces.CheckersCoin(colour, 6),
+                                 Pieces.CheckersCoin(colour, 7), Pieces.CheckersCoin(colour, 8),
+                                 Pieces.CheckersCoin(colour, 9), Pieces.CheckersCoin(colour, 10),
+                                 Pieces.CheckersCoin(colour, 11), Pieces.CheckersCoin(colour, 12)]
         elif piece_set_type == GameType.CHESS:
-            self.__livePieces = [Pieces.King(colour),
-                                 Pieces.Queen(colour),
-                                 Pieces.Rook(colour), Pieces.Rook(colour),
-                                 Pieces.Bishop(colour), Pieces.Bishop(colour),
-                                 Pieces.Knight(colour), Pieces.Knight(colour),
-                                 Pieces.Pawn(colour), Pieces.Pawn(
-                                     colour), Pieces.Pawn(colour), Pieces.Pawn(colour),
-                                 Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
+            self.__livePieces = [Pieces.King(colour, 1),
+                                 Pieces.Queen(colour, 2),
+                                 Pieces.Rook(colour, 3), Pieces.Rook(colour, 4),
+                                 Pieces.Bishop(colour, 5), Pieces.Bishop(colour, 6),
+                                 Pieces.Knight(colour, 7), Pieces.Knight(colour, 8),
+                                 Pieces.Pawn(colour, 9), Pieces.Pawn(colour, 10),
+                                 Pieces.Pawn(colour, 11), Pieces.Pawn(colour, 12),
+                                 Pieces.Pawn(colour, 13), Pieces.Pawn(colour, 14),
+                                 Pieces.Pawn(colour, 15), Pieces.Pawn(colour, 16)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
 
@@ -52,12 +58,13 @@ class PieceSet:
         :param captured_piece: a piece to capture
         :return: bool: If the piece was successfully captured, return True, False otherwise
         """
-        if captured_piece in self.__livePieces:
-            self.__livePieces.remove(captured_piece)
-            self.__capturedPieces.append(captured_piece)
-            return True
-        else:
-            return False
+        live_ids = self.get_live_piece_ids()
+        for piece_id_index, piece_id in enumerate(live_ids):
+            if captured_piece.get_piece_id() == piece_id:
+                self.__livePieces.pop(piece_id_index)
+                self.__capturedPieces.append(captured_piece)
+                return True
+        return False
 
     def get_captured_pieces(self):
         """ :return: Piece[]: The list of captured pieces """
@@ -71,6 +78,16 @@ class PieceSet:
     def get_live_pieces(self):
         """ :return: Piece[]: The list of live (non-captured) pieces """
         return self.__livePieces
+
+    def get_live_piece_ids(self):
+        """
+        :return: int[]: A list containing all the list piece ids
+        Note: Live piece ids will be in the same order as the corresponding pieces are in __live_pieces
+        """
+        live_ids = []
+        for piece in self.__livePieces:
+            live_ids.append(piece.get_piece_id())
+        return live_ids
 
     def get_number_of_live_pieces(self):
         """ :return: The number of live (non-captured) pieces """

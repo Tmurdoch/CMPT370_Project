@@ -26,37 +26,37 @@ def test_pieces():
     piece_set_colour3 = "Black"
 
     # Test the king
-    king1 = King(piece_set_colour1)
+    king1 = King(piece_set_colour1, 1)
     assert king1.get_colour() == piece_set_colour1
     king1.set_colour(piece_set_colour2)
     assert king1.get_colour() == piece_set_colour2
 
     # Test the queen
-    queen1 = Queen(piece_set_colour3)
+    queen1 = Queen(piece_set_colour3, 1)
     assert queen1.get_colour() == piece_set_colour3
     queen1.set_colour(piece_set_colour2)
     assert queen1.get_colour() == piece_set_colour2
 
     # Test the knight
-    knight1 = Knight(piece_set_colour1)
+    knight1 = Knight(piece_set_colour1, 1)
     assert knight1.get_colour() == piece_set_colour1
     knight1.set_colour(piece_set_colour3)
     assert knight1.get_colour() == piece_set_colour3
 
     # Test the bishop
-    bishop1 = Bishop(piece_set_colour1)
+    bishop1 = Bishop(piece_set_colour1, 1)
     assert bishop1.get_colour() == piece_set_colour1
     bishop1.set_colour(piece_set_colour2)
     assert bishop1.get_colour() == piece_set_colour2
 
     # Test the rook
-    rook1 = Rook(piece_set_colour3)
+    rook1 = Rook(piece_set_colour3, 1)
     assert rook1.get_colour() == piece_set_colour3
     rook1.set_colour(piece_set_colour2)
     assert rook1.get_colour() == piece_set_colour2
 
     # Test the pawn
-    pawn1 = Pawn(piece_set_colour3)
+    pawn1 = Pawn(piece_set_colour3, 1)
     assert pawn1.get_colour() == piece_set_colour3
     assert not pawn1.get_moved_yet_status()
     pawn1.set_colour(piece_set_colour2)
@@ -67,17 +67,17 @@ def test_pieces():
     new_piece = pawn1.promote("Knight")
     assert isinstance(new_piece, Knight)
 
-    pawn2 = Pawn(piece_set_colour1)
+    pawn2 = Pawn(piece_set_colour1, 1)
     assert pawn2.get_colour() == piece_set_colour1
     new_piece2 = pawn2.promote("Queen")
     assert isinstance(new_piece2, Queen)
 
-    pawn3 = Pawn(piece_set_colour2)
+    pawn3 = Pawn(piece_set_colour2, 1)
     assert pawn3.get_colour() == piece_set_colour2
     new_piece3 = pawn3.promote("Bishop")
     assert isinstance(new_piece3, Bishop)
 
-    pawn4 = Pawn(piece_set_colour2)
+    pawn4 = Pawn(piece_set_colour2, 1)
     new_piece4 = pawn4.promote("King")
     assert new_piece4 is None
     assert pawn4.get_colour() == piece_set_colour2
@@ -85,7 +85,7 @@ def test_pieces():
     assert isinstance(new_piece4, Bishop)
 
     # Test the checkers coin
-    checkers_coin1 = CheckersCoin(piece_set_colour3)
+    checkers_coin1 = CheckersCoin(piece_set_colour3, 1)
     assert checkers_coin1.get_colour() == piece_set_colour3
     assert not checkers_coin1.is_promoted()
     checkers_coin1.promote()
@@ -118,8 +118,7 @@ def test_piece_set():
     assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Fail to capture pieces, nothing should change
-    assert not piece_set1.capture_piece(Rook(piece_set_colour))
-    assert not piece_set1.capture_piece("Apple")
+    assert not piece_set1.capture_piece(Rook(piece_set_colour, 1))
     assert piece_set1.get_number_of_live_pieces() == 11
     assert piece_set1.get_number_of_captured_pieces() == 1
 
@@ -597,11 +596,13 @@ def test_possible_moves():
     my_game_2.get_board().get_game_square(1, 4).remove_occupying_piece()
 
     # double jumps + more
+    my_game_2.get_board().get_game_square(5, 0).get_occupying_piece().promote()
     lomcoinb = build_list_of_moves.build_list_of_moves(
         my_game_2.get_board().get_game_square(5, 0), my_game_2)
     assert sorted([x.get_row_and_column() for x in lomcoinb]
                   ) == sorted([(3, 2), (1, 0), (1, 4), (3, 6)])
 
+    my_game_2.get_board().get_game_square(5, 4).get_occupying_piece().promote()
     lomcoinb2 = build_list_of_moves.build_list_of_moves(
         my_game_2.get_board().get_game_square(5, 4), my_game_2)
     assert sorted([x.get_row_and_column() for x in lomcoinb2]) == sorted(
@@ -2139,7 +2140,7 @@ def test_en_passant():
     # use 2 step for the dark pawn move
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 4),
                                               my_chess_game.get_board().get_game_square(4, 4),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     # sc 1
     # switch sides for light player to check if the en passant move registers
     my_chess_game.get_board().switch_sides()
@@ -2157,7 +2158,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 0),
                                               my_chess_game.get_board().get_game_square(5, 0),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2167,7 +2168,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(5, 0),
                                               my_chess_game.get_board().get_game_square(4, 0),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2177,7 +2178,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 2),
                                               my_chess_game.get_board().get_game_square(4, 2),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2187,7 +2188,7 @@ def test_en_passant():
     # move right pawn 2 step
     my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 7),
                                                my_chess_game.get_board().get_game_square(4, 7),
-                                               my_chess_game.get_board())
+                                               my_chess_game)
     my_chess_game.get_board().switch_sides()
     # check possible move for an en passant
     my_moves_s4 = build_list_of_moves.build_list_of_moves(
@@ -2198,7 +2199,7 @@ def test_en_passant():
     # do the other pawn to 2 step and cause en passant; should only register one
     my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 5),
                                                my_chess_game.get_board().get_game_square(4, 5),
-                                               my_chess_game.get_board())
+                                               my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s4 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 1), my_chess_game)

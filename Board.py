@@ -71,8 +71,8 @@ class Board:
     def build_chess_board(self, player1_pieces, player2_pieces):
         """
         Set up chess pieces in their staring positions on the board
-        :param player1_pieces: PieceSet: Player 1's piece set
-        :param player2_pieces: PieceSet: Player 2's piece set
+        :param player1_pieces: Piece[]: A list of player 1's live pieces
+        :param player2_pieces: Piece[]: A list of player 2's live pieces
         """
         # indexes of pieces based on where they are on the board
         spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]
@@ -98,8 +98,8 @@ class Board:
     def build_checkers_board(self, player1_pieces, player2_pieces):
         """
         Set up checkers pieces in their staring positions on the board
-        :param player1_pieces: PieceSet: Player 1's piece set
-        :param player2_pieces: PieceSet: Player 2's piece set
+        :param player1_pieces: Piece[]: A list of player 1's live pieces
+        :param player2_pieces: Piece[]: A list of player 2's live pieces
         """
         # list of index inside piece set for light player and dark player
         # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player

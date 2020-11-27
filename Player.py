@@ -3,7 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from PieceSet import PieceSet
-from Pieces import King, Rook
+from Pieces import King, Rook, Pawn
 from build_list_of_moves import build_list_of_moves
 from GameType import GameType
 
@@ -65,14 +65,20 @@ class Player(object):
                         build_list_of_moves(square_here, game))
         return game_squares_movable_to
 
-    def make_move(self, origin_square, dest_square, board):
+    def make_move(self, origin_square, dest_square, game):
         """
         Actually executes a move (and capture) also registers what the player last move was
         Precondition: Assuming that dest_square is a legal move for the origin_square
         :param origin_square: GameSquare: Where we are moving from
         :param dest_square: GameSquare: Where we are moving to
-        :param board: Board: Needed to look at the squares we are jumping to for checkers and for castling in chess
+        :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
+        board = game.get_board()
+        if self is game.get_light_player():
+            other_player = game.get_dark_player()
+        else:
+            other_player = game.get_light_player()
+
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
             raise Exception("There is not piece on this square")
@@ -103,7 +109,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -122,7 +128,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -142,7 +148,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -162,7 +168,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -247,7 +253,7 @@ class Player(object):
                     origin_square.remove_occupying_piece()
                 elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
                     # Enemy piece there, make the capture move
-                    if not self.__piece_set.capture_piece(dest_square.get_occupying_piece()):
+                    if not other_player.__piece_set.capture_piece(dest_square.get_occupying_piece()):
                         raise Exception("Unable to capture piece.")
                     dest_square.remove_occupying_piece()
                     dest_square.put_piece_here(origin_square.get_occupying_piece())
@@ -259,6 +265,11 @@ class Player(object):
                 # Register this to be that last move
                 self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
                                     (7 - dest_square.get_row(), 7 - dest_square.get_col()))
+
+            # Update that the piece has moved, this will prevent special moves from being generated in the future.
+            piece_moved = dest_square.get_occupying_piece()
+            if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
+                piece_moved.move()
 
         else:
             # Couldn't identify the type of game
