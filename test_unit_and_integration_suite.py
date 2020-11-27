@@ -4,6 +4,8 @@
 
 import random
 from unittest import mock
+
+from GameType import GameType
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 import build_list_of_moves
@@ -28,36 +30,42 @@ def test_pieces():
     # Test the king
     king1 = King(piece_set_colour1, 1)
     assert king1.get_colour() == piece_set_colour1
+    assert king1.get_piece_id() == 1
     king1.set_colour(piece_set_colour2)
     assert king1.get_colour() == piece_set_colour2
 
     # Test the queen
-    queen1 = Queen(piece_set_colour3, 1)
+    queen1 = Queen(piece_set_colour3, 2)
     assert queen1.get_colour() == piece_set_colour3
+    assert queen1.get_piece_id() == 2
     queen1.set_colour(piece_set_colour2)
     assert queen1.get_colour() == piece_set_colour2
 
     # Test the knight
-    knight1 = Knight(piece_set_colour1, 1)
+    knight1 = Knight(piece_set_colour1, 16)
     assert knight1.get_colour() == piece_set_colour1
+    assert knight1.get_piece_id() == 16
     knight1.set_colour(piece_set_colour3)
     assert knight1.get_colour() == piece_set_colour3
 
     # Test the bishop
-    bishop1 = Bishop(piece_set_colour1, 1)
+    bishop1 = Bishop(piece_set_colour1, 4)
     assert bishop1.get_colour() == piece_set_colour1
+    assert bishop1.get_piece_id() == 4
     bishop1.set_colour(piece_set_colour2)
     assert bishop1.get_colour() == piece_set_colour2
 
     # Test the rook
-    rook1 = Rook(piece_set_colour3, 1)
+    rook1 = Rook(piece_set_colour3, 6)
     assert rook1.get_colour() == piece_set_colour3
+    assert rook1.get_piece_id() == 6
     rook1.set_colour(piece_set_colour2)
     assert rook1.get_colour() == piece_set_colour2
 
     # Test the pawn
     pawn1 = Pawn(piece_set_colour3, 1)
     assert pawn1.get_colour() == piece_set_colour3
+    assert pawn1.get_piece_id() == 1
     assert not pawn1.get_moved_yet_status()
     pawn1.set_colour(piece_set_colour2)
     assert pawn1.get_colour() == piece_set_colour2
@@ -88,37 +96,44 @@ def test_pieces():
     checkers_coin1 = CheckersCoin(piece_set_colour3, 1)
     assert checkers_coin1.get_colour() == piece_set_colour3
     assert not checkers_coin1.is_promoted()
+    assert checkers_coin1.get_piece_id() == 1
     checkers_coin1.promote()
     assert checkers_coin1.is_promoted()
     checkers_coin1.set_colour(piece_set_colour1)
     assert checkers_coin1.get_colour() == piece_set_colour1
+
+    checkers_coin2 = CheckersCoin(piece_set_colour2, 12)
+    assert checkers_coin2.get_colour() == piece_set_colour2
+    assert checkers_coin2.get_piece_id() == 12
 
 
 def test_piece_set():
     """
     Unit testing the piece set
     """
-    # checkers = 1, chess = 0
     piece_set_colour = "White"
-    piece_set1 = PieceSet(1, piece_set_colour)
+    piece_set1 = PieceSet(GameType.CHECKERS, piece_set_colour)
 
     # Test initial conditions for Checkers
     assert piece_set1.get_number_of_captured_pieces() == 0
-    # Chess = 0, Checkers = 1
-    assert piece_set1.get_piece_set_type() == 1
+    assert piece_set1.get_piece_set_type() == GameType.CHECKERS
     assert piece_set1.get_colour() == piece_set_colour
     assert piece_set1.get_number_of_live_pieces() == 12
     assert (piece_set1.get_live_pieces()[0]).get_colour() == piece_set_colour
+    assert (piece_set1.get_live_pieces()[0]).get_piece_id() == 1
     assert piece_set1.get_live_pieces()[5].get_colour() == piece_set_colour
     assert piece_set1.get_live_pieces()[11].get_colour() == piece_set_colour
+    assert (piece_set1.get_live_pieces()[11]).get_piece_id() == 12
+    assert piece_set1.get_live_piece_ids() == list(range(1, 13))
 
-    # Captured a piece
+    # Captured a piece with id 1
     assert piece_set1.capture_piece(piece_set1.get_live_pieces()[0])
+    assert piece_set1.get_live_piece_ids() == list(range(2, 13))
     assert piece_set1.get_number_of_live_pieces() == 11
     assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Fail to capture pieces, nothing should change
-    assert not piece_set1.capture_piece(Rook(piece_set_colour, 1))
+    assert not piece_set1.capture_piece(Rook(piece_set_colour, 64))
     assert piece_set1.get_number_of_live_pieces() == 11
     assert piece_set1.get_number_of_captured_pieces() == 1
 
@@ -127,20 +142,20 @@ def test_piece_set():
         len(piece_set1.get_live_pieces()) - 1])
     assert piece_set1.get_number_of_live_pieces() == 10
     assert piece_set1.get_number_of_captured_pieces() == 2
+    assert piece_set1.get_live_piece_ids() == list(range(2, 12))
 
     # Make sure colour is preserved
     assert piece_set1.get_colour() == piece_set_colour
 
-    # chess = 0, checkers = 1
     piece_set_colour = "Black"
-    piece_set2 = PieceSet(0, piece_set_colour)
+    piece_set2 = PieceSet(GameType.CHESS, piece_set_colour)
 
     # Test initial conditions for Chess
-    assert piece_set2.get_number_of_captured_pieces() == 0
-    # Chess = 0, Checkers = 1
+    assert piece_set2.get_number_of_captured_pieces() == GameType.CHESS
     assert piece_set2.get_piece_set_type() == 0
     assert piece_set2.get_colour() == piece_set_colour
     assert piece_set2.get_number_of_live_pieces() == 16
+    assert piece_set2.get_live_piece_ids() == list(range(1, 17))
 
 
 def test_possible_moves():
