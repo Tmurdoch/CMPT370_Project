@@ -6,6 +6,14 @@ from Pieces import King, Rook, Pawn
 
 
 def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, player):
+    """
+    A helper function to actually execute a chess move.
+    :param origin_square: GameSquare: Where we are moving from
+    :param dest_square: GameSquare: Where we are moving to
+    :param board: Board: Our game board, needed in case of a castle
+    :param other_player_piece_set: The other player's piece set, we need it to capture their pieces
+    :param player: The player who is actually making the move
+    """
 
     castle_move = False
 
@@ -63,9 +71,6 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
                                     "in the way, Queen-side error")
-        # register the castle move
-        player.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
-                              (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
     if not castle_move:
         if dest_square.get_occupying_piece() is None:
@@ -82,11 +87,11 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
         else:
             # Illegal move, trying to move a square that has a friendly piece
             raise Exception("Illegal move, trying to move a square that has a friendly piece")
-        # Register this to be that last move
-        player.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
-                              (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
-    # Update that the piece has moved, this will prevent special moves from being generated in the future.
+    player.set_last_move(((7 - origin_square.get_row(), 7 - origin_square.get_col()),
+                          (7 - dest_square.get_row(), 7 - dest_square.get_col())))
+
+    # Update that the piece has moved, this will prevent special moves from being generated when not appropriate.
     piece_moved = dest_square.get_occupying_piece()
     if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
         piece_moved.move()

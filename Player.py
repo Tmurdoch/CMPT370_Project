@@ -129,3 +129,7 @@ class Player(object):
     def get_last_move(self):
         """ :return: Tuple of 2 Tuples of 2 Integer, ((origin row, origin col), (dest row, dest col)) """
         return self.__last_move
+
+    def set_last_move(self, last_move):
+        """ :param last_move: The player's last move, ((origin row, origin col), (dest row, dest col)) """
+        self.__last_move = last_move
