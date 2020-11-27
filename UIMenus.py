@@ -169,8 +169,8 @@ class TheWindow(Gtk.Window):
         # board = BoardWindow(self.__game, self.__game_type)
         game_type = 1
         temp_game = Game(game_type, ColourCodes.RED_BLACK)
-        t1 = Timer(0, False)
-        t2 = Timer(0, False)
+        t1 = Timer(70, True)
+        t2 = Timer(70, True)
         temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
         temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
         # temp_game.get_light_player().__piece_set.__colour = "White"
