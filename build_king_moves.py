@@ -3,6 +3,8 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
+from chess_move_adder import chess_move_adder
+
 
 def build_king_moves(input_game_square, input_game):
     """
@@ -22,28 +24,28 @@ def build_king_moves(input_game_square, input_game):
     # unless the square is already occupied by a friendly piece, or the move would place the king in check
 
     # Check the square immediately below the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col)
 
     # Check the square immediately above the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col)
 
     # Check the square immediately left of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col - 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col - 1)
 
     # Check the square immediately right of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col + 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col + 1)
 
     # Check the square immediately down and to the left of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col - 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col - 1)
 
     # Check the square immediately down and to the right of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col + 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col + 1)
 
     # Check the square immediately up and to the left of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col - 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col - 1)
 
     # Check the square immediately up and to the right of the kings current position
-    king_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col + 1)
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col + 1)
 
     # Check for Castle opportunity
     #   Requirements for Castling:
@@ -82,28 +84,3 @@ def build_king_moves(input_game_square, input_game):
     # TODO: Review the list of candidate squares, and filter out any that would place the king in check
 
     return candidate_game_squares
-
-
-def king_move_adder(input_board, candidate_game_squares, input_piece_colour, candidate_row, candidate_col):
-    """
-    Evaluates possible game squares to see if they are possible moves for the king.
-    :param input_piece_colour: string: The colour of the input piece, used to check if other pieces are friendly
-    :param candidate_game_squares:  GameSquare[]: The running list of candidate game squares
-    :param input_board: Board: The game board we are working with
-    :param candidate_row: int: The row of the square we are considering moving to
-    :param candidate_col: int: The col of the square we are considering moving to
-    Does not return anything, just appends new moves to the list
-    """
-    if 0 <= candidate_row < input_board.get_size() and 0 <= candidate_col < input_board.get_size():
-        # The candidate square is on the board
-        if input_board.get_game_square(candidate_row, candidate_col).get_occupying_piece() is not None:
-            # There is a piece at the candidate square, check the for enemy piece
-            if input_board.get_game_square(candidate_row, candidate_col).get_occupying_piece() \
-                    .get_colour() is not input_piece_colour:
-                # Enemy piece, add the capture move
-                candidate_game_squares.append(input_board.get_game_square(candidate_row, candidate_col))
-            else:
-                pass  # Piece is friendly, no moves to add
-        else:
-            # Square was empty, add it to the list
-            candidate_game_squares.append(input_board.get_game_square(candidate_row, candidate_col))
