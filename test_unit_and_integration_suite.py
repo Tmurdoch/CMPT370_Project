@@ -597,11 +597,13 @@ def test_possible_moves():
     my_game_2.get_board().get_game_square(1, 4).remove_occupying_piece()
 
     # double jumps + more
+    my_game_2.get_board().get_game_square(5, 0).get_occupying_piece().promote()
     lomcoinb = build_list_of_moves.build_list_of_moves(
         my_game_2.get_board().get_game_square(5, 0), my_game_2)
     assert sorted([x.get_row_and_column() for x in lomcoinb]
                   ) == sorted([(3, 2), (1, 0), (1, 4), (3, 6)])
 
+    my_game_2.get_board().get_game_square(5, 4).get_occupying_piece().promote()
     lomcoinb2 = build_list_of_moves.build_list_of_moves(
         my_game_2.get_board().get_game_square(5, 4), my_game_2)
     assert sorted([x.get_row_and_column() for x in lomcoinb2]) == sorted(
