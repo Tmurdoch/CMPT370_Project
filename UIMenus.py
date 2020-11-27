@@ -169,8 +169,8 @@ class TheWindow(Gtk.Window):
         # board = BoardWindow(self.__game, self.__game_type)
         game_type = 1
         temp_game = Game(game_type, ColourCodes.RED_BLACK)
-        t1 = Timer(0, False)
-        t2 = Timer(0, False)
+        t1 = Timer(900, True)
+        t2 = Timer(900, True)
         temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
         temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
         # temp_game.get_light_player().__piece_set.__colour = "White"
@@ -415,17 +415,13 @@ class BoardGrid(Gtk.Grid):
         # promote_button.connect("clicked", self.promote_clicked)
         # board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
 
-        self.pause_button = Gtk.Button.new_with_label("Pause Timer")
-        self.pause_button.connect("clicked", self.pause_clicked)
-        self.attach(self.pause_button, 1, 4, 1, 1)
-
         self.help_button = Gtk.Button.new_with_label("Help?")
         self.help_button.connect("clicked", self.help_clicked)
-        self.attach_next_to(self.help_button, self.pause_button, Gtk.PositionType.RIGHT, 1, 1)
+        self.attach(self.help_button,1 ,4, 1, 1)
 
         self.save_quit_button = Gtk.Button.new_with_label("Save and Quit")
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
-        self.attach_next_to(self.save_quit_button, self.help_button, Gtk.PositionType.BOTTOM, 1, 1)
+        self.attach(self.save_quit_button, 2, 5, 1, 1)
 
         self.start_clock_timer()  # start the Timer
         self.show_all()
@@ -711,6 +707,13 @@ class BoardGrid(Gtk.Grid):
                 checkerboard_area.queue_draw()
                 # switch players, flip board
                 self.__game_obj.change_current_player()
+                # change the timer to other player
+                if self.__game_obj.get_current_player() is self.__game_obj.get_dark_player():
+                    self.__game_obj.get_light_player().get_timer().stop()
+                    self.__game_obj.get_dark_player().get_timer().start()
+                else:
+                    self.__game_obj.get_light_player().get_timer().start()
+                    self.__game_obj.get_dark_player().get_timer().stop()
                 self.__game_obj.get_board().switch_sides()
 
                 # reset attributes
@@ -771,23 +774,17 @@ class BoardGrid(Gtk.Grid):
 
         # Initialize Timer
     def start_clock_timer(self):
-        if self.__game_obj.get_current_player is self.__game_obj.get_light_player:
+        if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
             GLib.timeout_add(1000, self.display_timer)
         else:
             self.__game_obj.get_dark_player().get_timer().start()
             GLib.timeout_add(1000, self.display_timer)
 
-    def pause_clicked(self, button):
-        self.__game_obj.get_light_player().get_timer().stop()
-        self.__game_obj.get_dark_player().get_timer().stop()
-        pause = PausedWindow()
-        pause.show_all()
-
     def help_clicked(self, button):
         print("This should go to HowToPlay Window")
-        self.__game_obj.get_light_player().get_timer().stop()
-        self.__game_obj.get_dark_player().get_timer().stop()
+        # self.__game_obj.get_light_player().get_timer().stop()
+        # self.__game_obj.get_dark_player().get_timer().stop()
         board = HowToPlayWindow(self.__game)
         board.show_all()
         # self.hide()
@@ -804,27 +801,6 @@ class BoardGrid(Gtk.Grid):
         print("This should exit")
         Gtk.main_quit()
 
-
-class PausedWindow(Gtk.Window):
-    def __init__(self):
-        Gtk.Window.__init__(self, title ="Resume")
-        self.set_border_width(80)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-        promote_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.add(promote_box)
-
-        resume_button = Gtk.Button.new_with_label("Resume")
-        resume_button.connect("clicked", self.resume_clicked)
-
-        promote_box.add(resume_button)
-        self.connect("destroy", self.hide)
-
-    def resume_clicked(self, button):
-        BoardGrid.__game_obj.get_light_player.get_timer().start()
-        BoardGrid.__game_obj.get_dark_player.get_timer().start()
-        self.hide()
 
 
 class HowToPlayWindow(Gtk.Window):
@@ -858,12 +834,12 @@ class HowToPlayWindow(Gtk.Window):
         help_box.add(scrolled)
 
         # this gives error message but still does it??
-        self.connect("destroy", self.closed)
-
-    def closed(self):
+        self.connect("destroy", self.hide)
+    # implement this when fixed the parent problem
+    """def closed(self):
         BoardGrid.__game_obj.get_light_player().get_timer().start()
         BoardGrid.__game_obj.get_dark_player().get_timer().start()
-        self.hide()
+        self.hide()"""
 
 
 class PromotePawnWindow(Gtk.Window):
@@ -898,7 +874,7 @@ class PromotePawnWindow(Gtk.Window):
     # CHANGE THIS WHEN GAME OBJECT IS FIGURED OUT
     def queen_clicked(self, button):
         print('Queen was chosen')
-        if self.__game_obj.get_current_player is self.__light_player:
+        if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
         else:
             self.__game_obj.get_dark_player().get_timer().start()
@@ -906,7 +882,7 @@ class PromotePawnWindow(Gtk.Window):
 
     def knight_clicked(self, button):
         print('Knight was chosen')
-        if self.__game_obj.get_current_player is self.__light_player:
+        if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
         else:
             self.__game_obj.get_dark_player().get_timer().start()
@@ -914,7 +890,7 @@ class PromotePawnWindow(Gtk.Window):
 
     def bishop_clicked(self, button):
         print('Bishop was chosen')
-        if self.__game_obj.get_current_player is self.__light_player:
+        if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
         else:
             self.__game_obj.get_dark_player().get_timer().start()
@@ -922,7 +898,7 @@ class PromotePawnWindow(Gtk.Window):
 
     def rook_clicked(self, button):
         print('Rook was chosen')
-        if self.__game_obj.get_current_player is self.__light_player:
+        if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
         else:
             self.__game_obj.get_dark_player().get_timer().start()
@@ -962,25 +938,19 @@ class PlayAgainWindow(Gtk.Window):
     def play_clicked(self, button):
         print('Play was chosen')
         # do we want it to go back to the board or back through menus?
-        game_type = GameChoiceWindow()
+        game_type = GameChoiceBox()
         game_type.show_all()
         self.hide()
 
     def main_menu_clicked(self, button):
         print('This should go to resumed game')
-        main_menu = MainMenuWindow()
+        main_menu = MainMenuBox()
         main_menu.show_all()
         self.hide()
 
     def exit_clicked(self, button):
         print("This should exit")
         Gtk.main_quit()
-
-
-"""class Button(Gtk.Button):
-    def __init__(self):
-        super().Gtk.Button.new_with_label("Play")
-        print("b")"""
 
 
 def initializeFS():
