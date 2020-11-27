@@ -171,7 +171,7 @@ class Game:
                         fp.close()
                         assert 0
                 elif self.__game_type == GameType.CHECKERS:
-                    output_piece += (1 + cur_piece.get_promotion_status())
+                    output_piece += (1 + cur_piece.is_promoted())
                 else:
                     # unidentified game, shouldn't be possible
                     fp.close()

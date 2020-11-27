@@ -175,7 +175,7 @@ class Player(object):
                         "Cannot handle more than one jump right now")
 
             # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
-            if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().get_promotion_status():
+            if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().is_promoted():
                 origin_square.get_occupying_piece().promote()
 
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:

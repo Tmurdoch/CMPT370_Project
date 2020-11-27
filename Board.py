@@ -180,22 +180,22 @@ class Board:
                 if c.get_occupying_piece() is None:
                     column.append([empty_string])
                 else:
-                    if type(c.get_occupying_piece()).__name__ is "CheckersCoin":
+                    if type(c.get_occupying_piece()).__name__ == "CheckersCoin":
                         column.append(
                             [type(c.get_occupying_piece()).__name__ + " "])
-                    elif type(c.get_occupying_piece()).__name__ is "Pawn":
+                    elif type(c.get_occupying_piece()).__name__ == "Pawn":
                         column.append(
                             [type(c.get_occupying_piece()).__name__+"  "])
                         empty_string = "E     "
-                    elif type(c.get_occupying_piece()).__name__ is "Rook":
+                    elif type(c.get_occupying_piece()).__name__ == "Rook":
                         column.append(
                             [type(c.get_occupying_piece()).__name__ + "  "])
                         empty_string = "E     "
-                    elif type(c.get_occupying_piece()).__name__ is "King":
+                    elif type(c.get_occupying_piece()).__name__ == "King":
                         column.append(
                             [type(c.get_occupying_piece()).__name__ + "  "])
                         empty_string = "E     "
-                    elif type(c.get_occupying_piece()).__name__ is "Queen":
+                    elif type(c.get_occupying_piece()).__name__ == "Queen":
                         column.append(
                             [type(c.get_occupying_piece()).__name__ + " "])
                         empty_string = "E     "

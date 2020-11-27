@@ -34,7 +34,7 @@ def build_coin_moves(input_game_square, input_game):
                                                                               input_col + 1))
 
     # In the case that the coin is promoted can move backwards as well
-    if input_piece.get_promotion_status():
+    if input_piece.is_promoted():
         # Check the square immediately backward and to the left
         if input_row < input_board.get_size() - 1 and input_col > 0:
             if input_board.get_game_square(input_row + 1, input_col - 1).get_occupying_piece() is None:
@@ -126,7 +126,7 @@ def checkers_jump_helper(input_board, input_piece, input_game_square, list_moves
                     input_board.get_game_square(input_game_square.get_row() - 1,
                                                 input_game_square.get_col() + 1).put_piece_here(coin_removed)
 
-    if input_piece.get_promotion_status():
+    if input_piece.is_promoted():
         # The coin is promoted and can also jump backwards.
 
         # Check for the jump and down and to the left
