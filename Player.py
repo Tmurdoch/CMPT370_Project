@@ -109,11 +109,6 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-
-                            print(square_of_capture.get_occupying_piece())
-                            print("")
-                            print(other_player.get_piece_set().get_live_pieces())
-
                             if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()

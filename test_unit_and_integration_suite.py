@@ -26,37 +26,37 @@ def test_pieces():
     piece_set_colour3 = "Black"
 
     # Test the king
-    king1 = King(piece_set_colour1)
+    king1 = King(piece_set_colour1, 1)
     assert king1.get_colour() == piece_set_colour1
     king1.set_colour(piece_set_colour2)
     assert king1.get_colour() == piece_set_colour2
 
     # Test the queen
-    queen1 = Queen(piece_set_colour3)
+    queen1 = Queen(piece_set_colour3, 1)
     assert queen1.get_colour() == piece_set_colour3
     queen1.set_colour(piece_set_colour2)
     assert queen1.get_colour() == piece_set_colour2
 
     # Test the knight
-    knight1 = Knight(piece_set_colour1)
+    knight1 = Knight(piece_set_colour1, 1)
     assert knight1.get_colour() == piece_set_colour1
     knight1.set_colour(piece_set_colour3)
     assert knight1.get_colour() == piece_set_colour3
 
     # Test the bishop
-    bishop1 = Bishop(piece_set_colour1)
+    bishop1 = Bishop(piece_set_colour1, 1)
     assert bishop1.get_colour() == piece_set_colour1
     bishop1.set_colour(piece_set_colour2)
     assert bishop1.get_colour() == piece_set_colour2
 
     # Test the rook
-    rook1 = Rook(piece_set_colour3)
+    rook1 = Rook(piece_set_colour3, 1)
     assert rook1.get_colour() == piece_set_colour3
     rook1.set_colour(piece_set_colour2)
     assert rook1.get_colour() == piece_set_colour2
 
     # Test the pawn
-    pawn1 = Pawn(piece_set_colour3)
+    pawn1 = Pawn(piece_set_colour3, 1)
     assert pawn1.get_colour() == piece_set_colour3
     assert not pawn1.get_moved_yet_status()
     pawn1.set_colour(piece_set_colour2)
@@ -67,17 +67,17 @@ def test_pieces():
     new_piece = pawn1.promote("Knight")
     assert isinstance(new_piece, Knight)
 
-    pawn2 = Pawn(piece_set_colour1)
+    pawn2 = Pawn(piece_set_colour1, 1)
     assert pawn2.get_colour() == piece_set_colour1
     new_piece2 = pawn2.promote("Queen")
     assert isinstance(new_piece2, Queen)
 
-    pawn3 = Pawn(piece_set_colour2)
+    pawn3 = Pawn(piece_set_colour2, 1)
     assert pawn3.get_colour() == piece_set_colour2
     new_piece3 = pawn3.promote("Bishop")
     assert isinstance(new_piece3, Bishop)
 
-    pawn4 = Pawn(piece_set_colour2)
+    pawn4 = Pawn(piece_set_colour2, 1)
     new_piece4 = pawn4.promote("King")
     assert new_piece4 is None
     assert pawn4.get_colour() == piece_set_colour2
@@ -85,7 +85,7 @@ def test_pieces():
     assert isinstance(new_piece4, Bishop)
 
     # Test the checkers coin
-    checkers_coin1 = CheckersCoin(piece_set_colour3)
+    checkers_coin1 = CheckersCoin(piece_set_colour3, 1)
     assert checkers_coin1.get_colour() == piece_set_colour3
     assert not checkers_coin1.is_promoted()
     checkers_coin1.promote()
@@ -118,7 +118,7 @@ def test_piece_set():
     assert piece_set1.get_number_of_captured_pieces() == 1
 
     # Fail to capture pieces, nothing should change
-    assert not piece_set1.capture_piece(Rook(piece_set_colour))
+    assert not piece_set1.capture_piece(Rook(piece_set_colour, 1))
     assert not piece_set1.capture_piece("Apple")
     assert piece_set1.get_number_of_live_pieces() == 11
     assert piece_set1.get_number_of_captured_pieces() == 1

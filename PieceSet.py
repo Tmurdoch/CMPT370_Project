@@ -58,12 +58,13 @@ class PieceSet:
         :param captured_piece: a piece to capture
         :return: bool: If the piece was successfully captured, return True, False otherwise
         """
-        if captured_piece in self.__livePieces:
-            self.__livePieces.remove(captured_piece)
-            self.__capturedPieces.append(captured_piece)
-            return True
-        else:
-            return False
+        live_ids = self.get_live_piece_ids()
+        for id_index, id in enumerate(live_ids):
+            if captured_piece.get_piece_id() == id:
+                self.__livePieces.pop(id_index)
+                self.__capturedPieces.append(captured_piece)
+                return True
+        return False
 
     def get_captured_pieces(self):
         """ :return: Piece[]: The list of captured pieces """
@@ -77,6 +78,13 @@ class PieceSet:
     def get_live_pieces(self):
         """ :return: Piece[]: The list of live (non-captured) pieces """
         return self.__livePieces
+
+    def get_live_piece_ids(self):
+        """ :return: int[]: A list containing all the list piece ids """
+        live_ids = []
+        for piece in self.__livePieces:
+            live_ids.append(piece.get_piece_id())
+        return live_ids
 
     def get_number_of_live_pieces(self):
         """ :return: The number of live (non-captured) pieces """
