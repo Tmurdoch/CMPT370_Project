@@ -17,4 +17,4 @@ def build_queen_moves(input_game_square, input_game):
     # The queen can be moved any number of unoccupied squares in a straight line vertically, horizontally,
     # or diagonally. This a combination of the way a rook moves and the way bishop moves.
 
-    return [build_rook_moves(input_game_square, input_game), build_bishop_moves(input_game_square, input_game)]
+    return build_rook_moves(input_game_square, input_game) + build_bishop_moves(input_game_square, input_game)
