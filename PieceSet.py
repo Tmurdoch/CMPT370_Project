@@ -59,9 +59,9 @@ class PieceSet:
         :return: bool: If the piece was successfully captured, return True, False otherwise
         """
         live_ids = self.get_live_piece_ids()
-        for id_index, id in enumerate(live_ids):
-            if captured_piece.get_piece_id() == id:
-                self.__livePieces.pop(id_index)
+        for piece_id_index, piece_id in enumerate(live_ids):
+            if captured_piece.get_piece_id() == piece_id:
+                self.__livePieces.pop(piece_id_index)
                 self.__capturedPieces.append(captured_piece)
                 return True
         return False
@@ -80,7 +80,10 @@ class PieceSet:
         return self.__livePieces
 
     def get_live_piece_ids(self):
-        """ :return: int[]: A list containing all the list piece ids """
+        """
+        :return: int[]: A list containing all the list piece ids
+        Note: Live piece ids will be in the same order as the corresponding pieces are in __live_pieces
+        """
         live_ids = []
         for piece in self.__livePieces:
             live_ids.append(piece.get_piece_id())

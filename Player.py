@@ -3,7 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from PieceSet import PieceSet
-from Pieces import King, Rook
+from Pieces import King, Rook, Pawn
 from build_list_of_moves import build_list_of_moves
 from GameType import GameType
 
@@ -265,6 +265,11 @@ class Player(object):
                 # Register this to be that last move
                 self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
                                     (7 - dest_square.get_row(), 7 - dest_square.get_col()))
+
+            # Update that the piece has moved, this will prevent special moves from being generated in the future.
+            piece_moved = dest_square.get_occupying_piece()
+            if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
+                piece_moved.move()
 
         else:
             # Couldn't identify the type of game
