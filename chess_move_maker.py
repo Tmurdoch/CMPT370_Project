@@ -12,7 +12,7 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
     :param dest_square: GameSquare: Where we are moving to
     :param board: Board: Our game board, needed in case of a castle
     :param other_player_piece_set: The other player's piece set, we need it to capture their pieces
-    :param player: The player who is actually making the move
+    :param player: The player who is actually making the move, needed to update the last move
     """
 
     castle_move = False
@@ -42,7 +42,6 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                         dest_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
-                    player.castle()
                     castle_move = True
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
@@ -66,7 +65,6 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                     rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
-                    player.castle()
                     castle_move = True
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "

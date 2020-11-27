@@ -19,7 +19,6 @@ class Player(object):
         __name: String: The players name
         __player_type: PlayerType.AI or PlayerType.HUMAN, whether the player is a human or computer engine
         __timer: Timer: The players timer object
-        __castled: Bool: Whether or not the player has castled
         __last_move: Tuple of Tuples of Integer: ((origin row, origin col), (dest row, dest col)). This is only 
                     used for the en passant move in chess. This is not used in checkers
     """
@@ -37,7 +36,6 @@ class Player(object):
         self.__name = name
         self.__player_type = player_type
         self.__timer = timer
-        self.__castled = False
         self.__last_move = None
 
     @staticmethod
@@ -113,17 +111,6 @@ class Player(object):
     def get_timer(self):
         """ :return: Timer object of a Player """
         return self.__timer
-
-    def get_castled(self):
-        """ :return: Bool: True if the player has already castled, False otherwise """
-        return self.__castled
-
-    def castle(self):
-        """
-        Marks that the player has castled so we can make sure they don't castle again
-        Can only be called in make_move() when executing the castle
-        """
-        self.__castled = True
 
     def get_last_move(self):
         """ :return: Tuple of 2 Tuples of 2 Integer, ((origin row, origin col), (dest row, dest col)) """
