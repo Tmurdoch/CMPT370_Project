@@ -2,7 +2,7 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
-
+from Pieces import Bishop
 from build_rook_moves import rook_move_adder
 
 
@@ -58,7 +58,6 @@ def build_bishop_moves(input_game_square, input_game):
                 for col in range(input_col - 1, -1, -1):
                     # if we are not in the last col, then loop up through all the remaining columns
                     if abs(input_row - row) == abs(input_col - col):
-                        print("test")
                         # Confirm we are on the diagonal and then check the square
                         if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), row, col):
                             keep_going = False
@@ -92,7 +91,7 @@ def build_bishop_moves(input_game_square, input_game):
             if input_col > 0:
                 for col in range(input_col - 1, -1, -1):
                     # if we are not in the last col, then loop up through all the remaining columns
-                    if abs(input_col - row) == abs(input_col - col):
+                    if abs(input_row - row) == abs(input_col - col):
                         # Confirm we are on the diagonal and then check the square
                         if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), row, col):
                             keep_going = False
@@ -100,3 +99,4 @@ def build_bishop_moves(input_game_square, input_game):
                 keep_going = False
 
     return candidate_game_squares
+
