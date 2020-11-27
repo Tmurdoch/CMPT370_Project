@@ -779,7 +779,7 @@ class BoardGrid(Gtk.Grid):
     def pause_clicked(self, button):
         self.__game_obj.get_light_player().get_timer().stop()
         self.__game_obj.get_dark_player().get_timer().stop()
-        pause = PausedWindow()
+        pause = PausedWindow(self)
         pause.show_all()
 
     def help_clicked(self, button):
@@ -804,7 +804,7 @@ class BoardGrid(Gtk.Grid):
 
 
 class PausedWindow(Gtk.Window):
-    def __init__(self):
+    def __init__(self,parent):
         Gtk.Window.__init__(self, title ="Resume")
         self.set_border_width(80)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -820,8 +820,8 @@ class PausedWindow(Gtk.Window):
         self.connect("destroy", self.hide)
 
     def resume_clicked(self, button):
-        BoardGrid.__game_obj.get_light_player.get_timer().start()
-        BoardGrid.__game_obj.get_dark_player.get_timer().start()
+        parent.__game_obj.get_light_player.get_timer().start()
+        parent.__game_obj.get_dark_player.get_timer().start()
         self.hide()
 
 
