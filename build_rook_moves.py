@@ -20,41 +20,42 @@ def build_rook_moves(input_game_square, input_game):
     # The rook can be moved any number of unoccupied squares in a straight line vertically or horizontally
 
     # Vertical UP, check from the piece to top row -- (row, col) -> (0, col)
-    candidate_row = input_row
-    while candidate_row != 0:
-        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), candidate_row, input_col):
+    row_riser = input_row
+    while row_riser != 0:
+        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), row_riser, input_col):
+            print("Something")
             # If we get a false back from the rook adder, we hit a piece and should stop looping
             break
         else:
-            candidate_row -= 1
+            row_riser -= 1
 
     # Vertical DOWN, check from piece to bot row -- (row, col) -> (7, col)
-    candidate_row = input_row
-    while candidate_row != input_board.get_size() - 1:
-        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), candidate_row, input_col):
+    row_faller = input_row
+    while row_faller != input_board.get_size() - 1:
+        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), row_faller, input_col):
             # If we get a false back from the rook adder, we hit a piece and should stop looping
             break
         else:
-            candidate_row += 1
+            row_faller += 1
 
     # Horizontal RIGHT, check from piece to right col -- (row, col) -> (row, 7)
-    candidate_col = input_col
-    while candidate_col != input_board.get_size() - 1:
-        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, candidate_col):
+    col_riser = input_col
+    while col_riser != input_board.get_size() - 1:
+        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, col_riser):
             # If we get a false back from the rook adder, we hit a piece and should stop looping
             break
         else:
-            candidate_col += 1
+            col_riser += 1
 
     # Horizontal LEFT
     # check from piece to left col -- (row, col) -> (row, 0)
-    candidate_col = input_col
-    while candidate_col != 0:
-        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, candidate_col):
+    col_faller = input_col
+    while col_faller != 0:
+        if not rook_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, col_faller):
             # If we get a false back from the rook adder, we hit a piece and should stop looping
             break
         else:
-            candidate_col -= 1
+            col_faller -= 1
 
     return candidate_game_squares
 
