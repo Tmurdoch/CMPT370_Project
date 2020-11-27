@@ -169,8 +169,9 @@ class TheWindow(Gtk.Window):
         # board = BoardWindow(self.__game, self.__game_type)
         game_type = 1
         temp_game = Game(game_type, ColourCodes.RED_BLACK)
-        t1 = Timer(900, True)
-        t2 = Timer(900, True)
+
+        t1 = Timer(70, True)
+        t2 = Timer(70, True)
         temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
         temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
         # temp_game.get_light_player().__piece_set.__colour = "White"
@@ -332,13 +333,11 @@ class CustomizationGrid(Gtk.Grid):
             ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
         x += 1
         while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-            self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0],
-                                                                                       COLOUR_BOARD_STRING_LOOK_UP_TABLE[
-                                                                                           x][
-                                                                                           ColourOffset.OFFSET_LIGHT] + " " +
-                                                                                       COLOUR_BOARD_STRING_LOOK_UP_TABLE[
-                                                                                           x][
-                                                                                           ColourOffset.OFFSET_DARK]))
+            self.board_radio_buttons.append(
+                Gtk.RadioButton.new_with_label_from_widget(
+                    self.board_radio_buttons[0],
+                    COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " +
+                    COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
             x += 1
         x = 0
         while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
