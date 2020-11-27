@@ -18,7 +18,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
 from datetime import datetime
 import cairo
-import PossibleMoves
+import build_list_of_moves
 import os
 
 # make c-stdlib style definitions so
@@ -723,7 +723,7 @@ class BoardGrid(Gtk.Grid):
                     return
                 self.current_selected_location = cur_location
                 # build the possible pieces for a game square
-                self.possible_moves_for_cur_piece = PossibleMoves.build_list_of_moves(
+                self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
                     cur_location, self.__game_obj)
                 # TODO: check return value of above line, display somehow
 

@@ -144,7 +144,7 @@ class Rook(PieceInterface):
 class Pawn(PieceInterface):
     """
     Implements PieceInterface. Represents a Pawn chess piece.
-    Initially the pawn has not moved and has not been promoted
+    Initially the pawn has not moved and has not been promoted.
 
     Pawn Specific Attributes:
         __movedYet: A bool indicating if the pawn has moved yet, True if it has
@@ -166,8 +166,8 @@ class Pawn(PieceInterface):
         """
         Promote a pawn to a different type of chess piece.
         MAKE SURE TO CATCH AND USE THE NEW PIECE!
-        Pawns can only be promoted once because afterwards you should discard the pawn
-        :param class_promoted_to: String: The type of piece you would like to promote to, first letter capitalized
+        Pawns can only be promoted once because afterwards you should discard the pawn.
+        :param class_promoted_to: String: The type of piece you would like to promote to -
             Options are "queen", "knight", "bishop", and "rook"
         :return: If the promotion was successful: A new piece object
                  If the promotion was unsuccessful: None
@@ -185,13 +185,13 @@ class Pawn(PieceInterface):
 
     def move(self):
         """
-        Indicate that the pawn has moved, the pawn will no longer be able to move 2 spaces forward
+        Indicate that the pawn has moved, the pawn will no longer be able to move 2 spaces forward.
         """
         self.__movedYet = True
 
     def get_moved_yet_status(self):
         """
-        :return: Move status, True if the pawn has already made its first move, False otherwise
+        :return: Move status, True if the pawn has already made its first move, False otherwise.
         """
         return self.__movedYet
 
@@ -199,10 +199,10 @@ class Pawn(PieceInterface):
 class CheckersCoin(PieceInterface):
     """
     Implements PieceInterface. Represents a checkers coin game piece.
-    Initially the checkers coin has not been promoted
+    Initially the checkers coin has not been promoted.
 
     Checkers coin Specific Attributes:
-        __promoted: A bool representing promotion status, True if the checkers coin has been promoted
+        __promoted: A bool representing promotion status, True if the checkers coin has been promoted.
     """
 
     def __init__(self, colour):
@@ -218,12 +218,12 @@ class CheckersCoin(PieceInterface):
 
     def promote(self):
         """
-        Promote a checkers coin
+        Promote a checkers coin.
         """
         self.__promoted = True
 
     def get_promotion_status(self):
         """
-        :return: Promotion status, True if the coin has been promoted, False otherwise
+        :return: Promotion status, True if the coin has been promoted, False otherwise.
         """
         return self.__promoted
