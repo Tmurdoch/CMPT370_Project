@@ -866,9 +866,6 @@ class HowToPlayWindow(Gtk.Window):
         self.hide()
 
 
-""" will we want to pause timer while this is happening? """
-
-
 class PromotePawnWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Choose Promotion ")
