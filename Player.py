@@ -6,6 +6,7 @@ from PieceSet import PieceSet
 from Pieces import King, Rook, Pawn
 from build_list_of_moves import build_list_of_moves
 from GameType import GameType
+from checkers_move_maker import checkers_move_maker
 
 
 class Player(object):
@@ -84,105 +85,7 @@ class Player(object):
             raise Exception("There is not piece on this square")
 
         if self.__piece_set.get_piece_set_type() == GameType.CHECKERS:
-            if dest_square.get_occupying_piece() is not None:
-                # This move shouldn't have been generated
-                raise Exception(
-                    "Illegal move, this move shouldn't have been generated")
-            else:
-                if abs(origin_square.get_row() - dest_square.get_row()) == 1:
-                    # Squares are immediately adjacent, no jumping
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    origin_square.remove_occupying_piece()
-                elif abs(origin_square.get_row() - dest_square.get_row()) == 2:
-                    # Single jump
-
-                    # Now, we also need to make the capture, need to find which of the four ways we moved
-                    if ((origin_square.get_row() - dest_square.get_row()) > 0 and
-                            (origin_square.get_col() - dest_square.get_col()) > 0):
-                        # Piece we are trying to jump is in the immediate top left hand corner of the origin square
-                        square_of_capture = board.get_game_square(origin_square.get_row() - 1,
-                                                                  origin_square.get_col() - 1)
-                        if (square_of_capture.get_occupying_piece().get_colour()
-                                != origin_square.get_occupying_piece().get_colour()):
-                            # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(
-                                origin_square.get_occupying_piece())
-                            origin_square.remove_occupying_piece()
-                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
-                                raise Exception("Unable to capture piece")
-                            square_of_capture.remove_occupying_piece()
-                        else:
-                            # You are trying to jump your own piece
-                            raise Exception("You are trying to jump your own piece, trying to jump top left hand "
-                                            "corner piece")
-
-                    if ((origin_square.get_col() - dest_square.get_col())
-                            < 0 < (origin_square.get_row() - dest_square.get_row())):
-                        # Piece we are trying to jump is in the immediate top right hand corner of the origin square
-                        square_of_capture = board.get_game_square(origin_square.get_row() - 1,
-                                                                  origin_square.get_col() + 1)
-                        if (square_of_capture.get_occupying_piece().get_colour()
-                                != origin_square.get_occupying_piece().get_colour()):
-                            # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(
-                                origin_square.get_occupying_piece())
-                            origin_square.remove_occupying_piece()
-                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
-                                raise Exception("Unable to capture piece")
-                            square_of_capture.remove_occupying_piece()
-                        else:
-                            # You are trying to jump your own piece
-                            raise Exception("You are trying to jump your own piece, tyring to jump top right hand "
-                                            "corner piece")
-
-                    if ((origin_square.get_row() - dest_square.get_row())
-                            < 0 < (origin_square.get_col() - dest_square.get_col())):
-                        # Piece we are trying to jump is in the immediate bottom left hand corner of the origin
-                        # square
-                        square_of_capture = board.get_game_square(origin_square.get_row() + 1,
-                                                                  origin_square.get_col() - 1)
-                        if (square_of_capture.get_occupying_piece().get_colour()
-                                != origin_square.get_occupying_piece().get_colour()):
-                            # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(
-                                origin_square.get_occupying_piece())
-                            origin_square.remove_occupying_piece()
-                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
-                                raise Exception("Unable to capture piece")
-                            square_of_capture.remove_occupying_piece()
-                        else:
-                            # You are trying to jump your own piece
-                            raise Exception("You are trying to jump your own piece, trying to jump bottom left "
-                                            "hand corner piece")
-
-                    if ((origin_square.get_row() - dest_square.get_row()) < 0 and
-                            (origin_square.get_col() - dest_square.get_col()) < 0):
-                        # Piece we are trying to jump is in the immediate bottom right hand corner of the origin
-                        # square
-                        square_of_capture = board.get_game_square(origin_square.get_row() + 1,
-                                                                  origin_square.get_col() + 1)
-                        if (square_of_capture.get_occupying_piece().get_colour()
-                                != origin_square.get_occupying_piece().get_colour()):
-                            # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                            dest_square.put_piece_here(
-                                origin_square.get_occupying_piece())
-                            origin_square.remove_occupying_piece()
-                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
-                                raise Exception("Unable to capture piece")
-                            square_of_capture.remove_occupying_piece()
-                        else:
-                            # You are trying to jump your own piece
-                            raise Exception("You are trying to jump your own piece, trying to jump bottom "
-                                            "right hand corner piece")
-                else:
-                    # There are more than one jumps needing to take place
-                    raise Exception(
-                        "Cannot handle more than one jump right now")
-
-            # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
-            if dest_square.get_row() == 0 and not origin_square.get_occupying_piece().is_promoted():
-                origin_square.get_occupying_piece().promote()
+            checkers_move_maker(origin_square, dest_square, board, other_player.get_piece_set())
 
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
 
