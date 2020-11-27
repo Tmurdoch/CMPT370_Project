@@ -3,7 +3,6 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from PieceSet import PieceSet
-from Pieces import King, Rook, Pawn
 from build_list_of_moves import build_list_of_moves
 from GameType import GameType
 from checkers_move_maker import checkers_move_maker
