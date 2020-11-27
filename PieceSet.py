@@ -33,16 +33,22 @@ class PieceSet:
         self.__capturedPieces = []
         self.__pieceSetType = piece_set_type
         if piece_set_type == GameType.CHECKERS:
-            self.__livePieces = [Pieces.CheckersCoin(colour)] * 12
+            self.__livePieces = [Pieces.CheckersCoin(colour, 1), Pieces.CheckersCoin(colour, 2),
+                                 Pieces.CheckersCoin(colour, 3), Pieces.CheckersCoin(colour, 4),
+                                 Pieces.CheckersCoin(colour, 5), Pieces.CheckersCoin(colour, 6),
+                                 Pieces.CheckersCoin(colour, 7), Pieces.CheckersCoin(colour, 8),
+                                 Pieces.CheckersCoin(colour, 9), Pieces.CheckersCoin(colour, 10),
+                                 Pieces.CheckersCoin(colour, 11), Pieces.CheckersCoin(colour, 12)]
         elif piece_set_type == GameType.CHESS:
-            self.__livePieces = [Pieces.King(colour),
-                                 Pieces.Queen(colour),
-                                 Pieces.Rook(colour), Pieces.Rook(colour),
-                                 Pieces.Bishop(colour), Pieces.Bishop(colour),
-                                 Pieces.Knight(colour), Pieces.Knight(colour),
-                                 Pieces.Pawn(colour), Pieces.Pawn(
-                                     colour), Pieces.Pawn(colour), Pieces.Pawn(colour),
-                                 Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour), Pieces.Pawn(colour)]
+            self.__livePieces = [Pieces.King(colour, 1),
+                                 Pieces.Queen(colour, 2),
+                                 Pieces.Rook(colour, 3), Pieces.Rook(colour, 4),
+                                 Pieces.Bishop(colour, 5), Pieces.Bishop(colour, 6),
+                                 Pieces.Knight(colour, 7), Pieces.Knight(colour, 8),
+                                 Pieces.Pawn(colour, 9), Pieces.Pawn(colour, 10),
+                                 Pieces.Pawn(colour, 11), Pieces.Pawn(colour, 12),
+                                 Pieces.Pawn(colour, 13), Pieces.Pawn(colour, 14),
+                                 Pieces.Pawn(colour, 15), Pieces.Pawn(colour, 16)]
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
 

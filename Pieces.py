@@ -9,15 +9,17 @@ class PieceInterface(ABC):
     """
     The interface for a game piece.
     Common Attributes:
-        __colour: A sting representing the piece set __colour.  Starts with a capital letter (e.g. "White").
+        __colour: A sting representing the piece colour.
     """
     @abstractmethod
-    def __init__(self, colour):
+    def __init__(self, colour, piece_id):
         """
         Initialize a piece
-        :param colour: Piece __colour as a string with the first letter capitalized (e.g. "White").
+        :param colour: string: Piece colour
+        :param piece_id: int: A unique value used to identify the pieces.
         """
         self.__colour = colour
+        self.__id = piece_id
         pass
 
     @abstractmethod
@@ -40,8 +42,8 @@ class King(PieceInterface):
     Implements PieceInterface. Represents a King chess piece.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
         self.__movedYet = False
 
@@ -69,8 +71,8 @@ class Queen(PieceInterface):
     Implements PieceInterface. Represents a Queen chess piece.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
 
     def set_colour(self, colour):
@@ -85,8 +87,8 @@ class Knight(PieceInterface):
     Implements PieceInterface. Represents a Knight chess piece.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
 
     def set_colour(self, colour):
@@ -101,8 +103,8 @@ class Bishop(PieceInterface):
     Implements PieceInterface. Represents a Bishop chess piece.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
 
     def set_colour(self, colour):
@@ -117,8 +119,8 @@ class Rook(PieceInterface):
     Implements PieceInterface. Represents a Rook chess piece.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
         self.__movedYet = False
 
@@ -151,8 +153,8 @@ class Pawn(PieceInterface):
                 (Pawns can move twice only on their first move)
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
         self.__movedYet = False
 
@@ -169,17 +171,17 @@ class Pawn(PieceInterface):
         Pawns can only be promoted once because afterwards you should discard the pawn.
         :param class_promoted_to: String: The type of piece you would like to promote to -
             Options are "queen", "knight", "bishop", and "rook"
-        :return: If the promotion was successful: A new piece object
+        :return: If the promotion was successful: A new piece object with the same id
                  If the promotion was unsuccessful: None
         """
         if class_promoted_to.lower() == "queen":
-            return Queen(self.__colour)
+            return Queen(self.__colour, self.__id)
         elif class_promoted_to.lower() == "knight":
-            return Knight(self.__colour)
+            return Knight(self.__colour, self.__id)
         elif class_promoted_to.lower() == "bishop":
-            return Bishop(self.__colour)
+            return Bishop(self.__colour, self.__id)
         elif class_promoted_to.lower() == "rook":
-            return Rook(self.__colour)
+            return Rook(self.__colour, self.__id)
         else:
             return None
 
@@ -205,8 +207,8 @@ class CheckersCoin(PieceInterface):
         __promoted: A bool representing promotion status, True if the checkers coin has been promoted.
     """
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, piece_id):
+        super().__init__(colour, piece_id)
         self.__colour = colour
         self.__promoted = False
 
