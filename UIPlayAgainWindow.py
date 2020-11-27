@@ -4,7 +4,7 @@
 
 import gi
 
-from GameChoiceBox import GameChoiceBox
+from UIGameChoiceBox import GameChoiceBox
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
