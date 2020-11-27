@@ -36,13 +36,12 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                 if king_dest_square.get_occupying_piece() is None \
                         and rook_dest_square.get_occupying_piece() is None:
                     # We are good to go, execute the castle
-                    king_dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    rook_dest_square.put_piece_here(
-                        dest_square.get_occupying_piece())
+                    king_dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    rook_dest_square.put_piece_here(dest_square.get_occupying_piece())
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
                     castle_move = True
+                    rook_dest_square.get_occupying_piece.move()  # Update that our rook has moved
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
                                     "in the way, King-side error")
@@ -66,6 +65,7 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
                     castle_move = True
+                    rook_dest_square.get_occupying_piece.move()  # Update that our rook has moved
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
                                     "in the way, Queen-side error")
@@ -91,5 +91,5 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
 
     # Update that the piece has moved, this will prevent special moves from being generated when not appropriate.
     piece_moved = dest_square.get_occupying_piece()
-    if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
+    if isinstance(piece_moved, King) or isinstance(piece_moved, Pawn):
         piece_moved.move()
