@@ -9,13 +9,14 @@ class PieceInterface(ABC):
     """
     The interface for a game piece.
     Common Attributes:
-        __colour: A sting representing the piece colour.
+        __colour: string: Piece colour.
+        __piece_id: int: A unique value used to identify the pieces.
     """
     @abstractmethod
     def __init__(self, colour, piece_id):
         """
         Initialize a piece
-        :param colour: string: Piece colour
+        :param colour: string: Piece colour.
         :param piece_id: int: A unique value used to identify the pieces.
         """
         self.__colour = colour
@@ -25,14 +26,21 @@ class PieceInterface(ABC):
     @abstractmethod
     def set_colour(self, colour):
         """
-        :param colour: Piece colour as a string with the first letter capitalized (e.g. "White").
+        :param colour: Piece colour as a string.
         """
         pass
 
     @abstractmethod
     def get_colour(self):
         """
-        :return: Piece colour as a string (e.g. "White").
+        :return: Piece colour as a string.
+        """
+        pass
+
+    @abstractmethod
+    def get_piece_id(self):
+        """
+        :return: int: The pieces unique identifier.
         """
         pass
 
@@ -45,6 +53,7 @@ class King(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
         self.__movedYet = False
 
     def set_colour(self, colour):
@@ -52,6 +61,9 @@ class King(PieceInterface):
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
     def move(self):
         """
@@ -74,12 +86,16 @@ class Queen(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
 
     def set_colour(self, colour):
         self.__colour = colour
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
 
 class Knight(PieceInterface):
@@ -90,12 +106,16 @@ class Knight(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
 
     def set_colour(self, colour):
         self.__colour = colour
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
 
 class Bishop(PieceInterface):
@@ -106,12 +126,16 @@ class Bishop(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
 
     def set_colour(self, colour):
         self.__colour = colour
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
 
 class Rook(PieceInterface):
@@ -122,6 +146,7 @@ class Rook(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
         self.__movedYet = False
 
     def set_colour(self, colour):
@@ -129,6 +154,9 @@ class Rook(PieceInterface):
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
     def move(self):
         """
@@ -156,6 +184,7 @@ class Pawn(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
         self.__movedYet = False
 
     def set_colour(self, colour):
@@ -163,6 +192,9 @@ class Pawn(PieceInterface):
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
     def promote(self, class_promoted_to):
         """
@@ -210,6 +242,7 @@ class CheckersCoin(PieceInterface):
     def __init__(self, colour, piece_id):
         super().__init__(colour, piece_id)
         self.__colour = colour
+        self.__piece_id = piece_id
         self.__promoted = False
 
     def set_colour(self, colour):
@@ -217,6 +250,9 @@ class CheckersCoin(PieceInterface):
 
     def get_colour(self):
         return self.__colour
+
+    def get_piece_id(self):
+        return self.__piece_id
 
     def promote(self):
         """
