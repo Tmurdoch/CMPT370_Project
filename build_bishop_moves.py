@@ -2,7 +2,7 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
-from Pieces import Bishop
+
 from build_rook_moves import rook_move_adder
 
 
@@ -99,4 +99,3 @@ def build_bishop_moves(input_game_square, input_game):
                 keep_going = False
 
     return candidate_game_squares
-
