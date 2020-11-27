@@ -4,7 +4,7 @@
 
 from PieceSet import PieceSet
 from Pieces import King, Rook
-from PossibleMoves import build_list_of_moves
+from build_list_of_moves import build_list_of_moves
 from GameType import GameType
 
 
