@@ -332,13 +332,11 @@ class CustomizationGrid(Gtk.Grid):
             ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
         x += 1
         while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
-            self.board_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(self.board_radio_buttons[0],
-                                                                                       COLOUR_BOARD_STRING_LOOK_UP_TABLE[
-                                                                                           x][
-                                                                                           ColourOffset.OFFSET_LIGHT] + " " +
-                                                                                       COLOUR_BOARD_STRING_LOOK_UP_TABLE[
-                                                                                           x][
-                                                                                           ColourOffset.OFFSET_DARK]))
+            self.board_radio_buttons.append(
+                Gtk.RadioButton.new_with_label_from_widget(
+                    self.board_radio_buttons[0],
+                    COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " +
+                    COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
             x += 1
         x = 0
         while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
