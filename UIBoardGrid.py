@@ -6,7 +6,7 @@ import gi
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
 
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
-
+from UIHowToPlayWindow import HowToPlayWindow
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
