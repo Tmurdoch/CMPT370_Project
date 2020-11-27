@@ -32,12 +32,12 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
                 if (square_of_capture.get_occupying_piece().get_colour()
                         != origin_square.get_occupying_piece().get_colour()):
                     # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    origin_square.remove_occupying_piece()
-                    if not other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                    if other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                        dest_square.put_piece_here(origin_square.get_occupying_piece())
+                        origin_square.remove_occupying_piece()
+                        square_of_capture.remove_occupying_piece()
+                    else:
                         raise Exception("Unable to capture piece")
-                    square_of_capture.remove_occupying_piece()
                 else:
                     # You are trying to jump your own piece
                     raise Exception("You are trying to jump your own piece, trying to jump top left hand "
@@ -51,12 +51,12 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
                 if (square_of_capture.get_occupying_piece().get_colour()
                         != origin_square.get_occupying_piece().get_colour()):
                     # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    origin_square.remove_occupying_piece()
-                    if not other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                    if other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                        dest_square.put_piece_here(origin_square.get_occupying_piece())
+                        origin_square.remove_occupying_piece()
+                        square_of_capture.remove_occupying_piece()
+                    else:
                         raise Exception("Unable to capture piece")
-                    square_of_capture.remove_occupying_piece()
                 else:
                     # You are trying to jump your own piece
                     raise Exception("You are trying to jump your own piece, tyring to jump top right hand "
@@ -71,12 +71,12 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
                 if (square_of_capture.get_occupying_piece().get_colour()
                         != origin_square.get_occupying_piece().get_colour()):
                     # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    origin_square.remove_occupying_piece()
-                    if not other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                    if other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                        dest_square.put_piece_here(origin_square.get_occupying_piece())
+                        origin_square.remove_occupying_piece()
+                        square_of_capture.remove_occupying_piece()
+                    else:
                         raise Exception("Unable to capture piece")
-                    square_of_capture.remove_occupying_piece()
                 else:
                     # You are trying to jump your own piece
                     raise Exception("You are trying to jump your own piece, trying to jump bottom left "
@@ -91,12 +91,12 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
                 if (square_of_capture.get_occupying_piece().get_colour()
                         != origin_square.get_occupying_piece().get_colour()):
                     # The piece we are trying to jump is an enemy piece, go ahead and make the move
-                    dest_square.put_piece_here(
-                        origin_square.get_occupying_piece())
-                    origin_square.remove_occupying_piece()
-                    if not other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                    if other_player_piece_set.capture_piece(square_of_capture.get_occupying_piece()):
+                        dest_square.put_piece_here(origin_square.get_occupying_piece())
+                        origin_square.remove_occupying_piece()
+                        square_of_capture.remove_occupying_piece()
+                    else:
                         raise Exception("Unable to capture piece")
-                    square_of_capture.remove_occupying_piece()
                 else:
                     # You are trying to jump your own piece
                     raise Exception("You are trying to jump your own piece, trying to jump bottom "
