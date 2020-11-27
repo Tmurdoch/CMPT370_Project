@@ -189,11 +189,13 @@ class BoardGrid(Gtk.Grid):
         place the pieces on the board, stored in game->board
         first try to load from file, if file does not exist, build starting board
         """
+        """
         try:
             self.__game_obj.load_from_file()
             return
         except:
             print("no save file found")
+        """
 
         if self.__game_obj.get_game_type() == 0:
             print("is Chess")
