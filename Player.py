@@ -61,8 +61,8 @@ class Player(object):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
                 if (square_here.get_occupying_piece() is not None) and (square_here.get_occupying_piece().get_colour()):
-                    game_squares_movable_to.append(
-                        build_list_of_moves(square_here, game))
+                    game_squares_movable_to.append([square_here,
+                        build_list_of_moves(square_here, game)])
         return game_squares_movable_to
 
     def make_move(self, origin_square, dest_square, game):

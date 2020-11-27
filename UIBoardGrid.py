@@ -11,8 +11,9 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
-
+import PlayerType
 import cairo
+import random
 import build_list_of_moves
 
 SEEK_SET = 0
@@ -357,7 +358,9 @@ class BoardGrid(Gtk.Grid):
                 print(cur_location)
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
+
                 print("Made Move")
+
                 checkerboard_area.queue_draw()
                 # switch players, flip board
                 self.__game_obj.change_current_player()
@@ -370,6 +373,17 @@ class BoardGrid(Gtk.Grid):
                     self.__game_obj.get_dark_player().get_timer().stop()
                 self.__game_obj.get_board().switch_sides()
 
+                #execute AI code if necessary
+                if (self.__game_obj.get_current_player().get_player_type() == 0):
+                    AI = self.__game_obj.get_current_player()
+                    moves_for_ai = AI.build_possible_moves_for_all_pieces(self.__game_obj)
+                    #ai_current_squares = AI.get_piece_set().get_live_pieces()
+                    #execute a random move
+                    rand_move = random.choice(moves_for_ai)
+                    print(rand_move)
+                    AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1]))], self.__game_obj)
+                    self.__game_obj.change_current_player()
+                    self.__game_obj.get_board().switch_sides()
                 # reset attributes
                 self.current_selected_location = None
                 self.possible_moves_for_cur_piece = []
