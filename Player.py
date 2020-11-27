@@ -54,7 +54,8 @@ class Player(object):
         """
         Generates and returns all possible moves for all current player's pieces on the board.
         :param: Game: The current game, need to get the player and board.
-        :return: List of GameSquares for all the current player's pieces.
+        :return: 2D List of GameSquares for all the current player's pieces.
+                first element is orgin square
         """
         game_squares_movable_to = []
         for row in range(game.get_board().get_size()):
