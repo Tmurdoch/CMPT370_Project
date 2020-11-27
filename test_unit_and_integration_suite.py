@@ -119,7 +119,6 @@ def test_piece_set():
 
     # Fail to capture pieces, nothing should change
     assert not piece_set1.capture_piece(Rook(piece_set_colour, 1))
-    assert not piece_set1.capture_piece("Apple")
     assert piece_set1.get_number_of_live_pieces() == 11
     assert piece_set1.get_number_of_captured_pieces() == 1
 
@@ -2141,7 +2140,7 @@ def test_en_passant():
     # use 2 step for the dark pawn move
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 4),
                                               my_chess_game.get_board().get_game_square(4, 4),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     # sc 1
     # switch sides for light player to check if the en passant move registers
     my_chess_game.get_board().switch_sides()
@@ -2159,7 +2158,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 0),
                                               my_chess_game.get_board().get_game_square(5, 0),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2169,7 +2168,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(5, 0),
                                               my_chess_game.get_board().get_game_square(4, 0),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2179,7 +2178,7 @@ def test_en_passant():
     my_chess_game.get_board().switch_sides()
     my_chess_game.get_dark_player().make_move(my_chess_game.get_board().get_game_square(6, 2),
                                               my_chess_game.get_board().get_game_square(4, 2),
-                                              my_chess_game.get_board())
+                                              my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s3 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 6), my_chess_game)
@@ -2189,7 +2188,7 @@ def test_en_passant():
     # move right pawn 2 step
     my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 7),
                                                my_chess_game.get_board().get_game_square(4, 7),
-                                               my_chess_game.get_board())
+                                               my_chess_game)
     my_chess_game.get_board().switch_sides()
     # check possible move for an en passant
     my_moves_s4 = build_list_of_moves.build_list_of_moves(
@@ -2200,7 +2199,7 @@ def test_en_passant():
     # do the other pawn to 2 step and cause en passant; should only register one
     my_chess_game.get_light_player().make_move(my_chess_game.get_board().get_game_square(6, 5),
                                                my_chess_game.get_board().get_game_square(4, 5),
-                                               my_chess_game.get_board())
+                                               my_chess_game)
     my_chess_game.get_board().switch_sides()
     my_moves_s4 = build_list_of_moves.build_list_of_moves(
         my_chess_game.get_board().get_game_square(3, 1), my_chess_game)
