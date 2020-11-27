@@ -3,122 +3,49 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
 # Michael Luciuk, Thomas Murdoch
 
+from chess_move_adder import chess_move_adder
+
 
 def build_king_moves(input_game_square, input_game):
     """
     Build the list of possible moves for a King
     :param input_game_square: GameSquare: The origin game square that you want to build a list of moves for.
     :param input_game: The input game, required to get the game board and game type
-    :return list_of_candidate_game_squares: GameSquare[]: List of destination squares the king can legally move to
+    :return candidate_game_squares: GameSquare[]: List of destination squares the king can legally move to
     """
 
     input_piece = input_game_square.get_occupying_piece()
     input_row = input_game_square.get_row()
     input_col = input_game_square.get_col()
     input_board = input_game.get_board()
-    list_of_candidate_game_squares = []
+    candidate_game_squares = []
 
     # A king can move one square in any direction (horizontally, vertically, or diagonally),
     # unless the square is already occupied by a friendly piece, or the move would place the king in check
 
     # Check the square immediately below the kings current position
-    if input_row + 1 < input_board.get_size():
-        if input_board.get_game_square(input_row + 1, input_col).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row + 1, input_col).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row + 1, input_col))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row + 1, input_col))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col)
 
     # Check the square immediately above the kings current position
-    if input_row - 1 >= 0:
-        if input_board.get_game_square(input_row - 1,
-                                       input_col).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row - 1, input_col).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row - 1, input_col))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row - 1, input_col))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col)
 
     # Check the square immediately left of the kings current position
-    if input_col - 1 >= 0:
-        if input_board.get_game_square(input_row,
-                                       input_col - 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row, input_col - 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row, input_col - 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row, input_col - 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col - 1)
 
     # Check the square immediately right of the kings current position
-    if input_col + 1 < input_board.get_size():
-        if input_board.get_game_square(input_row,
-                                       input_col + 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row, input_col + 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row, input_col + 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row, input_col + 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row, input_col + 1)
 
     # Check the square immediately down and to the left of the kings current position
-    if input_row + 1 < input_board.get_size() and input_col - 1 >= 0:
-        if input_board.get_game_square(input_row + 1, input_col - 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row + 1, input_col - 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row + 1, input_col - 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row + 1, input_col - 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col - 1)
 
     # Check the square immediately down and to the right of the kings current position
-    if input_row + 1 < input_board.get_size() and input_col + 1 < input_board.get_size():
-        if input_board.get_game_square(input_row + 1, input_col + 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row + 1, input_col + 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row + 1, input_col + 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row + 1, input_col + 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row + 1, input_col + 1)
 
     # Check the square immediately up and to the left of the kings current position
-    if input_row - 1 >= 0 and input_col - 1 >= 0:
-        if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row - 1, input_col - 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row - 1, input_col - 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row - 1, input_col - 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col - 1)
 
     # Check the square immediately up and to the right of the kings current position
-    if input_row - 1 >= 0 and input_col + 1 < input_board.get_size():
-        if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() is not None:
-            if input_board.get_game_square(input_row - 1, input_col + 1).get_occupying_piece() \
-                    .get_colour() is not input_piece.get_colour():
-                list_of_candidate_game_squares.append(
-                    input_board.get_game_square(input_row - 1, input_col + 1))
-        else:
-            # Square was empty, add it to the list
-            list_of_candidate_game_squares.append(
-                input_board.get_game_square(input_row - 1, input_col + 1))
+    chess_move_adder(input_board, candidate_game_squares, input_piece.get_colour(), input_row - 1, input_col + 1)
 
     # Check for Castle opportunity
     #   Requirements for Castling:
@@ -139,7 +66,7 @@ def build_king_moves(input_game_square, input_game):
                 if input_board.get_game_square(7, 7).get_occupying_piece() \
                         .get_colour() is input_piece.get_colour():
                     if not input_board.get_game_square(7, 7).get_occupying_piece().get_moved_yet_status():
-                        list_of_candidate_game_squares.append(
+                        candidate_game_squares.append(
                             input_board.get_game_square(7, 7))
 
         # Queen-side
@@ -151,9 +78,9 @@ def build_king_moves(input_game_square, input_game):
                 if input_board.get_game_square(7, 0).get_occupying_piece() \
                         .get_colour() is input_piece.get_colour():
                     if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
-                        list_of_candidate_game_squares.append(
+                        candidate_game_squares.append(
                             input_board.get_game_square(7, 0))
 
-    # TODO: Review the list of candidate moves, and filter out any that would place the king in check
+    # TODO: Review the list of candidate squares, and filter out any that would place the king in check
 
-    return list_of_candidate_game_squares
+    return candidate_game_squares
