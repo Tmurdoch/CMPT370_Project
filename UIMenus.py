@@ -806,6 +806,8 @@ class BoardGrid(Gtk.Grid):
 class PausedWindow(Gtk.Window):
     def __init__(self,parent):
         Gtk.Window.__init__(self, title ="Resume")
+        # TODO actually setup this windows parent the legit way
+        self.__parent = parent
         self.set_border_width(80)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
@@ -820,8 +822,9 @@ class PausedWindow(Gtk.Window):
         self.connect("destroy", self.hide)
 
     def resume_clicked(self, button):
-        parent.__game_obj.get_light_player.get_timer().start()
-        parent.__game_obj.get_dark_player.get_timer().start()
+        # TODO either make game_obj public or access another way
+        self.__parent.__game_obj.get_light_player().get_timer().start()
+        self.__parent.__game_obj.get_dark_player().get_timer().start()
         self.hide()
 
 
