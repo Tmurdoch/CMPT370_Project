@@ -240,10 +240,21 @@ class Player(object):
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, Queen-side error")
-                # register the castle move
-                self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
-                                    (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
+            # Then check for en passant move
+            elif origin_square.get_row() == 3 and isinstance(origin_square.get_occupying_piece(), Pawn):
+                # square where enemy pawn made 2 step move last turn
+                adj_square = board.get_game_square(origin_square.get_row(), dest_square.get_col())
+                # make sure enemy at adjacent
+                if adj_square.get_occupying_piece() is not None:
+                    if adj_square.get_occupying_piece().get_colour() != \
+                            origin_square.get_occupying_piece().get_colour():
+                        # capture adj enemy and move diagonaly behind the enemy pawn
+                        if not other_player.__piece_set.capture_piece(adj_square.get_occupying_piece()):
+                            raise Exception("Unable to capture piece via En passant")
+                        adj_square.remove_occupying_piece()
+                        dest_square.put_piece_here(origin_square.get_occupying_piece())
+                        origin_square.remove_occupying_piece()
             # Else it is just a normal move
             else:
                 if dest_square.get_occupying_piece() is None:
@@ -262,10 +273,10 @@ class Player(object):
                     # Illegal move, trying to move a square that has a friendly piece
                     raise Exception(
                         "Illegal move, trying to move a square that has a friendly piece")
-                # Register this to be that last move
-                self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
-                                    (7 - dest_square.get_row(), 7 - dest_square.get_col()))
 
+            # Register this to be that last move
+            self.__last_move = ((7 - origin_square.get_row(), 7 - origin_square.get_col()),
+                                (7 - dest_square.get_row(), 7 - dest_square.get_col()))
             # Update that the piece has moved, this will prevent special moves from being generated in the future.
             piece_moved = dest_square.get_occupying_piece()
             if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
