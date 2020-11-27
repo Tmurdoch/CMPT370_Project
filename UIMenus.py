@@ -779,7 +779,8 @@ class BoardGrid(Gtk.Grid):
     def pause_clicked(self, button):
         self.__game_obj.get_light_player().get_timer().stop()
         self.__game_obj.get_dark_player().get_timer().stop()
-        pause = PausedWindow(self)
+        # dialog run here
+        self.__game_obj.get_current_player().get_timer().stop()
         pause.show_all()
 
     def help_clicked(self, button):
@@ -802,30 +803,6 @@ class BoardGrid(Gtk.Grid):
         print("This should exit")
         Gtk.main_quit()
 
-
-class PausedWindow(Gtk.Window):
-    def __init__(self,parent):
-        Gtk.Window.__init__(self, title ="Resume")
-        # TODO actually setup this windows parent the legit way
-        self.__parent = parent
-        self.set_border_width(80)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        col = Gdk.Color(2000, 6000, 200)  # dark green
-        self.modify_bg(Gtk.StateType.NORMAL, col)
-        promote_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.add(promote_box)
-
-        resume_button = Gtk.Button.new_with_label("Resume")
-        resume_button.connect("clicked", self.resume_clicked)
-
-        promote_box.add(resume_button)
-        self.connect("destroy", self.hide)
-
-    def resume_clicked(self, button):
-        # TODO either make game_obj public or access another way
-        self.__parent.__game_obj.get_light_player().get_timer().start()
-        self.__parent.__game_obj.get_dark_player().get_timer().start()
-        self.hide()
 
 
 class HowToPlayWindow(Gtk.Window):
