@@ -15,6 +15,10 @@ from GameType import GameType
 import cairo
 import build_list_of_moves
 
+SEEK_SET = 0
+SEEK_CUR = 1
+SEEK_END = 2
+
 
 class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type, game_obj):
@@ -99,7 +103,7 @@ class BoardGrid(Gtk.Grid):
 
         # load the data
         svglc = 0
-        while (svglc != 6):
+        while svglc != 6:
             # read binary to ensure no nonsense on windows
             fp = open(svg_targets[svglc], "rb")
             fp.seek(0, SEEK_END)
@@ -108,7 +112,7 @@ class BoardGrid(Gtk.Grid):
             chess_svg_light_data_array.append(fp.read(fps))
             fp.close()
             svglc += 1
-        while (svglc != len(svg_targets)):
+        while svglc != len(svg_targets):
             # read binary to ensure no nonsense on windows
             fp = open(svg_targets[svglc], "rb")
             fp.seek(0, SEEK_END)

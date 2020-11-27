@@ -8,15 +8,6 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
-# make c-stdlib style definitions so
-# the code is readable and without
-# magic numbers
-SEEK_SET = 0
-SEEK_CUR = 1
-SEEK_END = 2
-
-resume = True
-
 
 class PlayerTypeBox(Gtk.Box):
     def __init__(self):

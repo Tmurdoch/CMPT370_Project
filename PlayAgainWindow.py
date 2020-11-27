@@ -5,7 +5,6 @@
 import gi
 
 from GameChoiceBox import GameChoiceBox
-from MainMenuBox import MainMenuBox
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
@@ -51,8 +50,8 @@ class PlayAgainWindow(Gtk.Window):
 
     def main_menu_clicked(self, button):
         print('This should go to resumed game')
-        main_menu = MainMenuBox()
-        main_menu.show_all()
+        # main_menu = MainMenuBox()
+        # main_menu.show_all()
         self.hide()
 
     @staticmethod

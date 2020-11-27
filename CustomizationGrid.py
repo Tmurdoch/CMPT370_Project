@@ -13,9 +13,8 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
 
 class CustomizationGrid(Gtk.Grid):
-    def __init__(self):  # , game, game_type):
-        # self.__game = game
-        # self.__game_type = game_type
+    def __init__(self):
+
 
         Gtk.Grid.__init__(self)
         self.set_column_spacing(10)
@@ -49,14 +48,14 @@ class CustomizationGrid(Gtk.Grid):
             None, COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][
                 ColourOffset.OFFSET_DARK]))
         x += 1
-        while (x != len(COLOUR_STRING_LOOK_UP_TABLE)):
+        while x != len(COLOUR_STRING_LOOK_UP_TABLE):
             self.piece_radio_buttons.append(Gtk.RadioButton.new_with_label_from_widget(
                 self.piece_radio_buttons[0],
                 COLOUR_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_LIGHT] + " " + COLOUR_STRING_LOOK_UP_TABLE[x][
                     ColourOffset.OFFSET_DARK]))
             x += 1
         x = 0
-        while (x != len(COLOUR_STRING_LOOK_UP_TABLE)):
+        while x != len(COLOUR_STRING_LOOK_UP_TABLE):
             self.attach(self.piece_radio_buttons[x], 0, 2 + x, 1, 1)
             self.piece_radio_buttons[x].override_color(
                 Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
@@ -67,7 +66,7 @@ class CustomizationGrid(Gtk.Grid):
         self.board_radio_buttons.append(Gtk.RadioButton.new_with_label(None, COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][
             ColourOffset.OFFSET_LIGHT] + " " + COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
         x += 1
-        while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+        while x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
             self.board_radio_buttons.append(
                 Gtk.RadioButton.new_with_label_from_widget(
                     self.board_radio_buttons[0],
@@ -75,7 +74,7 @@ class CustomizationGrid(Gtk.Grid):
                     COLOUR_BOARD_STRING_LOOK_UP_TABLE[x][ColourOffset.OFFSET_DARK]))
             x += 1
         x = 0
-        while (x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE)):
+        while x != len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
             self.attach(self.board_radio_buttons[x], 4, 2 + x, 1, 1)
             self.board_radio_buttons[x].override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
             x += 1
@@ -86,7 +85,8 @@ class CustomizationGrid(Gtk.Grid):
         self.start_button = Gtk.Button.new_with_label("Start")
         self.attach(self.start_button, 4, 8, 1, 1)
 
-    def on_button_toggled(self, button, name):
+    @staticmethod
+    def on_button_toggled(button, name):
         if button.get_active():
             state = "on"
             # self.colour()

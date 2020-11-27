@@ -40,8 +40,3 @@ class HowToPlayWindow(Gtk.Window):
 
         # this gives error message but still does it??
         self.connect("destroy", self.hide)
-    # implement this when fixed the parent problem
-    """def closed(self):
-        BoardGrid.__game_obj.get_light_player().get_timer().start()
-        BoardGrid.__game_obj.get_dark_player().get_timer().start()
-        self.hide()"""
