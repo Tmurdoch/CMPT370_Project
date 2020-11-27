@@ -74,6 +74,11 @@ class Player(object):
         :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
         board = game.get_board()
+        if self is game.get_light_player():
+            other_player = game.get_dark_player()
+        else:
+            other_player = game.get_light_player()
+
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
             raise Exception("There is not piece on this square")
@@ -104,7 +109,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -123,7 +128,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -143,7 +148,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -163,7 +168,7 @@ class Player(object):
                             dest_square.put_piece_here(
                                 origin_square.get_occupying_piece())
                             origin_square.remove_occupying_piece()
-                            if not self.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
+                            if not other_player.get_piece_set().capture_piece(square_of_capture.get_occupying_piece()):
                                 raise Exception("Unable to capture piece")
                             square_of_capture.remove_occupying_piece()
                         else:
@@ -248,7 +253,7 @@ class Player(object):
                     origin_square.remove_occupying_piece()
                 elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
                     # Enemy piece there, make the capture move
-                    if not self.__piece_set.capture_piece(dest_square.get_occupying_piece()):
+                    if not other_player.__piece_set.capture_piece(dest_square.get_occupying_piece()):
                         raise Exception("Unable to capture piece.")
                     dest_square.remove_occupying_piece()
                     dest_square.put_piece_here(origin_square.get_occupying_piece())
