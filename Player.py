@@ -65,14 +65,15 @@ class Player(object):
                         build_list_of_moves(square_here, game))
         return game_squares_movable_to
 
-    def make_move(self, origin_square, dest_square, board):
+    def make_move(self, origin_square, dest_square, game):
         """
         Actually executes a move (and capture) also registers what the player last move was
         Precondition: Assuming that dest_square is a legal move for the origin_square
         :param origin_square: GameSquare: Where we are moving from
         :param dest_square: GameSquare: Where we are moving to
-        :param board: Board: Needed to look at the squares we are jumping to for checkers and for castling in chess
+        :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
+        board = game.get_board()
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
             raise Exception("There is not piece on this square")
