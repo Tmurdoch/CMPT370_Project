@@ -3,10 +3,17 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import gi
+
+from UIMainMenuBox import MainMenuBox
 from PlayerType import PlayerType
 from Game import Game
+from ResumeChoiceBox import ResumeChoiceBox
 from Timer import Timer
 from Colours import ColourCodes
+from UIBoardGrid import BoardGrid
+from UICustomizationGrid import CustomizationGrid
+from UIGameChoiceBox import GameChoiceBox
+from UIPlayerTypeBox import PlayerTypeBox
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
@@ -14,15 +21,6 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
 
 import os
-
-# make c-stdlib style definitions so
-# the code is readable and without
-# magic numbers
-SEEK_SET = 0
-SEEK_CUR = 1
-SEEK_END = 2
-
-resume = True
 
 
 class TheWindow(Gtk.Window):
@@ -36,13 +34,13 @@ class TheWindow(Gtk.Window):
         self.has_chess_save = 0
         self.has_checkers_save = 0
 
-        if (os.path.exists(directory + "/savedGame.cmpt370chess")):
+        if os.path.exists(directory + "/savedGame.cmpt370chess"):
             self.has_chess_save = 1
-        if (os.path.exists(directory + "/savedGame.cmpt370checkrs")):
+        if os.path.exists(directory + "/savedGame.cmpt370checkrs"):
             self.has_checkers_save = 1
         self.main_box = MainMenuBox(
             self.has_chess_save, self.has_checkers_save)
-        if (self.has_chess_save or self.has_checkers_save):
+        if self.has_chess_save or self.has_checkers_save:
             self.main_box.resume_button.connect(
                 "clicked", self.main_resume_clicked)
 
@@ -58,10 +56,10 @@ class TheWindow(Gtk.Window):
 
         self.resume_choice_box = ResumeChoiceBox(
             self.has_chess_save, self.has_checkers_save)
-        if (self.has_chess_save):
+        if self.has_chess_save:
             self.resume_choice_box.chess_button.connect(
                 "clicked", self.resume_choice_chess_clicked)
-        if (self.has_checkers_save):
+        if self.has_checkers_save:
             self.resume_choice_box.checkers_button.connect(
                 "clicked", self.esume_choice_checkers_clicked)
         self.resume_choice_box.back_button.connect(

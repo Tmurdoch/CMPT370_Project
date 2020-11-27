@@ -9,16 +9,6 @@ gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
 
-# make c-stdlib style definitions so
-# the code is readable and without
-# magic numbers
-SEEK_SET = 0
-SEEK_CUR = 1
-SEEK_END = 2
-
-resume = True
-
-
 class MainMenuBox(Gtk.Box):
     def __init__(self, has_chess_save, has_checkers_save):
         Gtk.Box.__init__(
@@ -30,7 +20,7 @@ class MainMenuBox(Gtk.Box):
         self.play_button.set_property("height-request", 100)
         self.pack_start(self.play_button, True, True, 0)
 
-        if (has_chess_save or has_checkers_save):
+        if has_chess_save or has_checkers_save:
             self.resume_button = Gtk.Button.new_with_label("Resume")
             # checkers_button.connect("clicked", self.resume_clicked)
             self.resume_button.set_property("width-request", 300)

@@ -5,7 +5,7 @@
 import gi
 import os
 
-from TheWindow import TheWindow
+from UITheWindow import TheWindow
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
