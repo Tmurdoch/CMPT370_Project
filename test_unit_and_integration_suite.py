@@ -87,9 +87,9 @@ def test_pieces():
     # Test the checkers coin
     checkers_coin1 = CheckersCoin(piece_set_colour3)
     assert checkers_coin1.get_colour() == piece_set_colour3
-    assert not checkers_coin1.get_promotion_status()
+    assert not checkers_coin1.is_promoted()
     checkers_coin1.promote()
-    assert checkers_coin1.get_promotion_status()
+    assert checkers_coin1.is_promoted()
     checkers_coin1.set_colour(piece_set_colour1)
     assert checkers_coin1.get_colour() == piece_set_colour1
 

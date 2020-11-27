@@ -222,7 +222,7 @@ class CheckersCoin(PieceInterface):
         """
         self.__promoted = True
 
-    def get_promotion_status(self):
+    def is_promoted(self):
         """
         :return: Promotion status, True if the coin has been promoted, False otherwise.
         """

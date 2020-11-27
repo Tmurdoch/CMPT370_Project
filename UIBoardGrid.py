@@ -258,22 +258,22 @@ class BoardGrid(Gtk.Grid):
 
                 if (not (cur_piece is None)):
                     if (game_type == GameType.CHESS):
-                        if (isinstance(cur_piece, King)):
+                        if isinstance(cur_piece, King):
                             if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
                                 piece_to_draw = self.wk
                             else:
                                 piece_to_draw = self.bk
-                        elif (isinstance(cur_piece, Queen)):
+                        elif isinstance(cur_piece, Queen):
                             if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
                                 piece_to_draw = self.wq
                             else:
                                 piece_to_draw = self.bq
-                        elif (isinstance(cur_piece, Knight)):
+                        elif isinstance(cur_piece, Knight):
                             if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
                                 piece_to_draw = self.wn
                             else:
                                 piece_to_draw = self.bn
-                        elif (isinstance(cur_piece, Bishop)):
+                        elif isinstance(cur_piece, Bishop):
                             if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
                                 piece_to_draw = self.wb
                             else:
@@ -289,7 +289,7 @@ class BoardGrid(Gtk.Grid):
                             else:
                                 piece_to_draw = self.bp
                     elif (game_type == GameType.CHECKERS):
-                        if (cur_piece.get_promotion_status()):  # 1 is king
+                        if (cur_piece.is_promoted()):  # 1 is king
                             if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
                                 piece_to_draw = self.wd
                             else:
