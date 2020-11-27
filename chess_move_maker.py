@@ -91,5 +91,5 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
 
     # Update that the piece has moved, this will prevent special moves from being generated when not appropriate.
     piece_moved = dest_square.get_occupying_piece()
-    if isinstance(piece_moved, King) or isinstance(piece_moved, Pawn):
+    if isinstance(piece_moved, King) or isinstance(piece_moved, Rook) or isinstance(piece_moved, Pawn):
         piece_moved.move()
