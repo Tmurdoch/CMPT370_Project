@@ -268,7 +268,7 @@ def test_possible_moves():
                     my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
                                                         index_piece_test[test_tuple][1]),
                     my_game)
-            #                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple] # TODO
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple]
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
                     index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Bishop":
@@ -1668,7 +1668,7 @@ def test_integration_6():
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
-            #                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col]) # TODO
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col])
             if row == 6:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
@@ -1994,12 +1994,18 @@ def test_integration_6():
     dest = my_chess_game2.get_board().get_game_square(5, 7)
     my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
 
+    assert type(dest.get_occupying_piece()).__name__ == "Knight"
+    assert origin.get_occupying_piece() is None
+
     my_chess_game2.get_board().switch_sides()
 
     # move dark pawn from 6, 5 to 4, 5
     origin = my_chess_game2.get_board().get_game_square(6, 5)
     dest = my_chess_game2.get_board().get_game_square(4, 5)
     my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
+
+    assert type(dest.get_occupying_piece()).__name__ == "Pawn"
+    assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
 
@@ -2013,10 +2019,75 @@ def test_integration_6():
 
     my_chess_game2.get_light_player().make_move(origin, filt_moves[1], my_chess_game2)
 
+    assert type(filt_moves[1].get_occupying_piece()).__name__ == "Pawn"
+    assert origin.get_occupying_piece() is None
     assert my_chess_game2.get_light_player().get_piece_set().get_number_of_captured_pieces() == 0
     assert my_chess_game2.get_dark_player().get_piece_set().get_number_of_captured_pieces() == 2
     assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "Pawn"
     assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[1]).__name__ == "Pawn"
+
+    my_chess_game2.get_board().switch_sides()
+
+    # move dark knight from 7, 1 to 5, 0
+    origin = my_chess_game2.get_board().get_game_square(7, 1)
+    dest = my_chess_game2.get_board().get_game_square(5, 0)
+    my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
+
+    assert type(dest.get_occupying_piece()).__name__ == "Knight"
+    assert origin.get_occupying_piece() is None
+
+    my_chess_game2.get_board().switch_sides()
+
+    # move light knight from 5, 7 to 3, 6
+    origin = my_chess_game2.get_board().get_game_square(5, 7)
+    dest = my_chess_game2.get_board().get_game_square(3, 6)
+    my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
+
+    assert type(dest.get_occupying_piece()).__name__ == "Knight"
+    assert origin.get_occupying_piece() is None
+
+    my_chess_game2.get_board().switch_sides()
+
+    # move dark bishop from 7, 2 to 6, 3
+    origin = my_chess_game2.get_board().get_game_square(7, 2)
+    dest = my_chess_game2.get_board().get_game_square(6, 3)
+    my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
+
+    assert type(dest.get_occupying_piece()).__name__ == "Bishop"
+    assert origin.get_occupying_piece() is None
+
+    my_chess_game2.get_board().switch_sides()
+
+    # move light knight from 3, 7 to 1, 7 to capture a pawn
+    origin = my_chess_game2.get_board().get_game_square(3, 6)
+    dest = my_chess_game2.get_board().get_game_square(1, 7)
+    my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
+
+    assert type(dest.get_occupying_piece()).__name__ == "Knight"
+    assert origin.get_occupying_piece() is None
+    assert my_chess_game2.get_light_player().get_piece_set().get_number_of_captured_pieces() == 0
+    assert my_chess_game2.get_dark_player().get_piece_set().get_number_of_captured_pieces() == 3
+    assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "Pawn"
+    assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[1]).__name__ == "Pawn"
+    assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[2]).__name__ == "Pawn"
+
+    my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
+
+    my_chess_game2.get_board().print_game_board()
+    # do a castle for dark player
+    origin = my_chess_game2.get_board().get_game_square(7, 3)
+    # my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
+    moves = build_list_of_moves.build_list_of_moves(origin, my_chess_game2)
+    filt_moves = build_list_of_moves.filter_check_moves(origin, my_chess_game2, moves)
+    assert sorted([x.get_row_and_column() for x in moves]) == sorted([(7, 2), (6, 4), (7, 0)])
+    assert sorted([x.get_row_and_column() for x in filt_moves]) == sorted([(7, 0)])
+
+    my_chess_game2.get_dark_player().make_move(origin, filt_moves[0], my_chess_game2)
+
+    assert type(my_chess_game2.get_board().get_game_square(7, 1).get_occupying_piece()).__name__ is "King"
+    assert type(my_chess_game2.get_board().get_game_square(7, 2).get_occupying_piece()).__name__ is "Rook"
+    assert origin.get_occupying_piece() is None
 
 
 # ---------------------------------------------------------------------------

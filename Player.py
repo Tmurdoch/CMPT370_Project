@@ -49,8 +49,7 @@ class Player(object):
         """
         return build_list_of_moves(game_square, game)
 
-    @staticmethod
-    def build_possible_moves_for_all_pieces(game):
+    def build_possible_moves_for_all_pieces(self, game):
         """
         Generates and returns all possible moves for all current player's pieces on the board.
         :param: Game: The current game, need to get the player and board.
@@ -60,7 +59,8 @@ class Player(object):
         for row in range(game.get_board().get_size()):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
-                if (square_here.get_occupying_piece() is not None) and (square_here.get_occupying_piece().get_colour()):
+                if (square_here.get_occupying_piece() is not None) and \
+                        (square_here.get_occupying_piece().get_colour() is self.get_piece_set().get_colour()):
                     game_squares_movable_to.append(
                         build_list_of_moves(square_here, game))
         return game_squares_movable_to
@@ -187,8 +187,9 @@ class Player(object):
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
 
             # First check if the move is a castle
+            # light player
             if origin_square.get_row() == 7 and origin_square.get_col() == 4 \
-                    and isinstance(origin_square.get_occupying_piece(), King):
+                    and isinstance(origin_square.get_occupying_piece(), King) and self is game.get_light_player():
                 # The king was chosen, check to see if the destination squares were rooks
 
                 # Check king-side
@@ -240,7 +241,62 @@ class Player(object):
                         else:
                             raise Exception("The castle move should not have been generated because there are pieces "
                                             "in the way, Queen-side error")
+            # dark player
+            elif origin_square.get_row() == 7 and origin_square.get_col() == 3 \
+                    and isinstance(origin_square.get_occupying_piece(), King) and self is game.get_dark_player():
+                # The king was chosen, check to see if the destination squares were rooks
 
+                # Check king-side
+                if dest_square.get_row() == 7 and dest_square.get_col() == 0 \
+                        and isinstance(dest_square.get_occupying_piece(), Rook):
+                    # We have the right pieces, let's confirm that neither piece have moved yet
+                    if not origin_square.get_occupying_piece().get_moved_yet_status() \
+                            and not dest_square.get_occupying_piece().get_moved_yet_status():
+                        # We are good to go ahead and make the king-side castle
+                        king_dest_square = board.get_game_square(7, 1)
+                        rook_dest_square = board.get_game_square(7, 2)
+
+                        # These destination squares should be empty, but let's check
+                        if king_dest_square.get_occupying_piece() is None \
+                                and rook_dest_square.get_occupying_piece() is None:
+                            # We are good to go, execute the castle
+                            king_dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(
+                                dest_square.get_occupying_piece())
+                            origin_square.remove_occupying_piece()
+                            dest_square.remove_occupying_piece()
+                            self.castle()
+                        else:
+                            raise Exception(
+                                "The castle move should not have been generated because there are pieces "
+                                "in the way, King-side error")
+
+                # Check queen-side
+                if dest_square.get_row() == 7 and dest_square.get_col() == 7 and \
+                        isinstance(dest_square.get_occupying_piece(), Rook):
+                    # We have the right pieces, let's confirm that neither piece have moved yet
+                    if not origin_square.get_occupying_piece().get_moved_yet_status() and \
+                            not dest_square.get_occupying_piece().get_moved_yet_status():
+                        # We are good to go ahead and make the queen-side castle
+                        king_dest_square = board.get_game_square(7, 5)
+                        rook_dest_square = board.get_game_square(7, 4)
+
+                        # These destination squares should be empty, but let's check
+                        if king_dest_square.get_occupying_piece() is None \
+                                and rook_dest_square.get_occupying_piece() is None:
+                            # We are good to go, execute the castle
+                            king_dest_square.put_piece_here(
+                                origin_square.get_occupying_piece())
+                            rook_dest_square.put_piece_here(
+                                dest_square.get_occupying_piece())
+                            origin_square.remove_occupying_piece()
+                            dest_square.remove_occupying_piece()
+                            self.castle()
+                        else:
+                            raise Exception(
+                                "The castle move should not have been generated because there are pieces "
+                                "in the way, Queen-side error")
             # Then check for en passant move
             elif origin_square.get_row() == 3 and isinstance(origin_square.get_occupying_piece(), Pawn):
                 # square where enemy pawn made 2 step move last turn
