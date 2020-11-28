@@ -1919,7 +1919,6 @@ def test_integration_6():
 
     # create a chess and checkers game
     my_chess_game2 = Game(gt_chess, gc_wb)
-    my_checkers_game2 = Game(gt_checkers, gc_rb)
 
     # build the players in game
 
@@ -1929,20 +1928,9 @@ def test_integration_6():
     # chess player dark ai 2nd turn
     my_chess_game2.build_dark_player("Dark AI", pt_ai, timer)
 
-    # checkers player light ai 1st turn
-    my_checkers_game2.build_light_player("Light AI", pt_ai, timer)
-
-    # checkers player dark human 2nd turn
-    my_checkers_game2.build_dark_player("Dark HU", pt_human, timer)
-
     # Build Chess Board on my_chess_game using the games light and dark player piece set
     my_chess_game2.get_board().build_chess_board(my_chess_game2.get_light_player().get_piece_set().get_live_pieces(),
                                                  my_chess_game2.get_dark_player().get_piece_set().get_live_pieces())
-
-    # Build Checkers Board on my_checkers_game using the games light and dark player piece set
-    my_checkers_game2.get_board().build_checkers_board(
-        my_checkers_game2.get_light_player().get_piece_set().get_live_pieces(),
-        my_checkers_game2.get_dark_player().get_piece_set().get_live_pieces())
 
     # Testing chess player make move
 
@@ -1956,6 +1944,7 @@ def test_integration_6():
 
     # switch sides
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     assert type(dest.get_occupying_piece()).__name__ == "Pawn"
     assert origin.get_occupying_piece() is None
@@ -1966,6 +1955,7 @@ def test_integration_6():
     my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move light pawn from 4, 4 to 3, 3 capture enemy pawn
     origin = my_chess_game2.get_board().get_game_square(4, 4)
@@ -1981,6 +1971,7 @@ def test_integration_6():
     assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "Pawn"
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move dark pawn from 6, 3 to 4, 3 capture enemy pawn
     origin = my_chess_game2.get_board().get_game_square(6, 3)
@@ -1988,6 +1979,7 @@ def test_integration_6():
     my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move light knight from 7, 6 to 5, 7
     origin = my_chess_game2.get_board().get_game_square(7, 6)
@@ -1998,6 +1990,7 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move dark pawn from 6, 5 to 4, 5
     origin = my_chess_game2.get_board().get_game_square(6, 5)
@@ -2008,6 +2001,7 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # do en passant for light player 3, 3 to 2, 2
     # (2, 2) is from the filtered list of moves
@@ -2027,6 +2021,7 @@ def test_integration_6():
     assert type(my_chess_game2.get_dark_player().get_piece_set().get_captured_pieces()[1]).__name__ == "Pawn"
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move dark knight from 7, 1 to 5, 0
     origin = my_chess_game2.get_board().get_game_square(7, 1)
@@ -2037,6 +2032,7 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move light knight from 5, 7 to 3, 6
     origin = my_chess_game2.get_board().get_game_square(5, 7)
@@ -2047,6 +2043,7 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move dark bishop from 7, 2 to 6, 3
     origin = my_chess_game2.get_board().get_game_square(7, 2)
@@ -2057,6 +2054,7 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
     my_chess_game2.get_board().switch_sides()
+    my_chess_game2.change_current_player()
 
     # move light knight from 3, 7 to 1, 7 to capture a pawn
     origin = my_chess_game2.get_board().get_game_square(3, 6)
@@ -2074,7 +2072,6 @@ def test_integration_6():
     my_chess_game2.get_board().switch_sides()
     my_chess_game2.change_current_player()
 
-    my_chess_game2.get_board().print_game_board()
     # do a castle for dark player
     origin = my_chess_game2.get_board().get_game_square(7, 3)
     # my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
@@ -2391,3 +2388,114 @@ def test_en_passant():
         my_chess_game.get_board().get_game_square(3, 1), my_chess_game)
     assert sorted([x.get_row_and_column()
                    for x in my_moves_s4]) == sorted([(2, 1), (1, 1), (2, 2)])
+
+
+def test_checkers_integ6():
+    # game types chess = 0 checkers = 1
+    gt_chess = 0
+    gt_checkers = 1
+    # Piece Set colours for players
+    gc_wb = ColourCodes.WHITE_BLACK
+    gc_rb = ColourCodes.RED_BLACK
+
+    # create a chess and checkers game
+    my_checkers_game = Game(gt_checkers, gc_rb)
+
+    # pl - player light pd player dark
+    pt_human = PlayerType.HUMAN
+    pt_ai = PlayerType.AI
+
+    # Timer set at 60 and to be inactive
+    timer = Timer(60, False)
+
+    my_checkers_game = Game(gt_checkers, gc_rb)
+
+    # checkers player light ai 1st turn
+    my_checkers_game.build_light_player("Light AI", pt_ai, timer)
+
+    # checkers player dark human 2nd turn
+    my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
+
+    # Build Checkers Board on my_checkers_game using the games light and dark player piece set
+    my_checkers_game.get_board().build_checkers_board(
+        my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
+        my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
+
+    # move light coin from 5, 0 to 4, 1
+    origin = my_checkers_game.get_board().get_game_square(5, 0)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    my_checkers_game.get_light_player().make_move(origin, my_move[0], my_checkers_game)
+
+    my_checkers_game.change_current_player()
+    my_checkers_game.get_board().switch_sides()
+
+    # move dark coin from 5, 4 to 4, 5
+    origin = my_checkers_game.get_board().get_game_square(5, 4)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    # print([x.get_row_and_column() for x in my_move])
+    my_checkers_game.get_dark_player().make_move(origin, my_move[1], my_checkers_game)
+
+    assert origin.get_occupying_piece() is None
+    assert type(my_move[1].get_occupying_piece()).__name__ is "CheckersCoin"
+
+    my_checkers_game.change_current_player()
+    my_checkers_game.get_board().switch_sides()
+
+    # move light coin from 4, 1 to 2, 3
+    origin = my_checkers_game.get_board().get_game_square(4, 1)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    my_checkers_game.get_light_player().make_move(origin, my_move[1], my_checkers_game)
+
+    assert origin.get_occupying_piece() is None
+    assert type(my_move[1].get_occupying_piece()).__name__ is "CheckersCoin"
+
+    assert my_checkers_game.get_light_player().get_piece_set().get_number_of_captured_pieces() == 0
+    assert my_checkers_game.get_dark_player().get_piece_set().get_number_of_captured_pieces() == 1
+    assert type(my_checkers_game.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
+
+    my_checkers_game.change_current_player()
+    my_checkers_game.get_board().switch_sides()
+
+    # move dark coin from 6, 3 to 4, 5 capture
+    origin = my_checkers_game.get_board().get_game_square(6, 3)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    my_checkers_game.get_dark_player().make_move(origin, my_move[0], my_checkers_game)
+
+    assert origin.get_occupying_piece() is None
+    assert type(my_move[0].get_occupying_piece()).__name__ is "CheckersCoin"
+
+    assert my_checkers_game.get_light_player().get_piece_set().get_number_of_captured_pieces() == 1
+    assert my_checkers_game.get_dark_player().get_piece_set().get_number_of_captured_pieces() == 1
+    assert type(my_checkers_game.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
+    assert type(my_checkers_game.get_light_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
+
+    my_checkers_game.change_current_player()
+    my_checkers_game.get_board().switch_sides()
+
+    # move light coin from 5, 2 to 4, 1
+    origin = my_checkers_game.get_board().get_game_square(5, 2)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    my_checkers_game.get_light_player().make_move(origin, my_move[0], my_checkers_game)
+
+    assert origin.get_occupying_piece() is None
+    assert type(my_move[0].get_occupying_piece()).__name__ is "CheckersCoin"
+
+    my_checkers_game.change_current_player()
+    my_checkers_game.get_board().switch_sides()
+
+    # move dark coin from 4, 5 to 2, 7 capture
+    origin = my_checkers_game.get_board().get_game_square(4, 5)
+    my_move = build_list_of_moves.build_coin_moves(origin, my_checkers_game)
+    my_checkers_game.get_dark_player().make_move(origin, my_move[1], my_checkers_game)
+
+    assert origin.get_occupying_piece() is None
+    assert type(my_move[1].get_occupying_piece()).__name__ is "CheckersCoin"
+
+    assert my_checkers_game.get_light_player().get_piece_set().get_number_of_captured_pieces() == 2
+    assert my_checkers_game.get_dark_player().get_piece_set().get_number_of_captured_pieces() == 1
+    assert type(my_checkers_game.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
+    assert type(my_checkers_game.get_light_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
+    assert type(my_checkers_game.get_light_player().get_piece_set().get_captured_pieces()[1]).__name__ == "CheckersCoin"
+
+    # print("\n", [x.get_row_and_column() for x in my_move])
+    # my_checkers_game.get_board().print_game_board()

@@ -67,7 +67,6 @@ def build_king_moves(input_game_square, input_game):
             if input_board.get_game_square(7, 5).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 6).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 7).get_occupying_piece() is not None:
-                print("\n KS 1")
                 if type(input_board.get_game_square(7, 7).get_occupying_piece()).__name__ == "Rook":
                     if input_board.get_game_square(7, 7).get_occupying_piece() \
                             .get_colour() is input_piece.get_colour():
@@ -80,12 +79,9 @@ def build_king_moves(input_game_square, input_game):
                     input_board.get_game_square(7, 2).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 1).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 0).get_occupying_piece() is not None:
-                print("\n QS 1")
                 if type(input_board.get_game_square(7, 0).get_occupying_piece()).__name__ == "Rook":
-                    print("\n Qs 2")
                     if input_board.get_game_square(7, 0).get_occupying_piece() \
                             .get_colour() is input_piece.get_colour():
-                        print("\n Qs 3")
                         if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
                             candidate_game_squares.append(
                                 input_board.get_game_square(7, 0))
@@ -95,7 +91,6 @@ def build_king_moves(input_game_square, input_game):
             if input_board.get_game_square(7, 1).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 2).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 0).get_occupying_piece() is not None:
-                print("\n KS 1")
                 if type(input_board.get_game_square(7, 0).get_occupying_piece()).__name__ == "Rook":
                     if input_board.get_game_square(7, 0).get_occupying_piece() \
                             .get_colour() is input_piece.get_colour():
@@ -108,12 +103,9 @@ def build_king_moves(input_game_square, input_game):
                     input_board.get_game_square(7, 5).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 6).get_occupying_piece() is None and \
                     input_board.get_game_square(7, 7).get_occupying_piece() is not None:
-                print("\n QS 1")
                 if type(input_board.get_game_square(7, 7).get_occupying_piece()).__name__ == "Rook":
-                    print("\n Qs 2")
                     if input_board.get_game_square(7, 7).get_occupying_piece() \
                             .get_colour() is input_piece.get_colour():
-                        print("\n Qs 3")
                         if not input_board.get_game_square(7, 7).get_occupying_piece().get_moved_yet_status():
                             candidate_game_squares.append(
                                 input_board.get_game_square(7, 7))
