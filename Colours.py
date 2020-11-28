@@ -19,6 +19,9 @@ class ColourBoardCodes(IntEnum):
     This enum contains constants that indicate what type of colours the board will have.
      Format LIGHT_DARK.
     """
+    # TODO change these so there is not
+    # camoflage nonsense going on with
+    # the piece colours
     WHITE_BLACK = 0
     RED_BLACK = 1
 
