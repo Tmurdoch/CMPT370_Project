@@ -380,8 +380,9 @@ class BoardGrid(Gtk.Grid):
                     #ai_current_squares = AI.get_piece_set().get_live_pieces()
                     #execute a random move
                     rand_move = random.choice(moves_for_ai)
-                    print(rand_move)
-                    AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1]))], self.__game_obj)
+                    print(rand_move[0], rand_move[1], len(rand_move[1]))
+                    #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
+                    AI.make_move(rand_move[0], rand_move[1][0], self.__game_obj)
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
                 # reset attributes

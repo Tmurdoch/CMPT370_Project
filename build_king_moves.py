@@ -57,29 +57,58 @@ def build_king_moves(input_game_square, input_game):
 
     if not input_piece.get_moved_yet_status():
         # The king has not moved yet, we can go ahead and check for castle opportunities
+        # playets have different king side and queenside when the board is switched
+        # light - > ['Rook  '], ['E     '], ['E     '], ['E     '], ['King  '], ['E     '], ['E     '], ['Rook  ']
+        # switch row
+        # dark - > ['Rook  '], ['E     '], ['E     '], ['King  '], ['E     '], ['E     '], ['E     '], ['Rook  ']
+        # for light player
+        if input_game.get_current_player() is input_game.get_light_player():
+            # King-side
+            if input_board.get_game_square(7, 5).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 6).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 7).get_occupying_piece() is not None:
+                if type(input_board.get_game_square(7, 7).get_occupying_piece()).__name__ == "Rook":
+                    if input_board.get_game_square(7, 7).get_occupying_piece() \
+                            .get_colour() is input_piece.get_colour():
+                        if not input_board.get_game_square(7, 7).get_occupying_piece().get_moved_yet_status():
+                            candidate_game_squares.append(
+                                input_board.get_game_square(7, 7))
 
-        # King-side
-        if input_board.get_game_square(7, 5).get_occupying_piece() is None and \
-                input_board.get_game_square(7, 6).get_occupying_piece() is None and \
-                input_board.get_game_square(7, 7).get_occupying_piece() is not None:
-            if type(input_board.get_game_square(7, 7).get_occupying_piece()).__name__ == "Rook":
-                if input_board.get_game_square(7, 7).get_occupying_piece() \
-                        .get_colour() is input_piece.get_colour():
-                    if not input_board.get_game_square(7, 7).get_occupying_piece().get_moved_yet_status():
-                        candidate_game_squares.append(
-                            input_board.get_game_square(7, 7))
+            # Queen-side
+            if input_board.get_game_square(7, 3).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 2).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 1).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 0).get_occupying_piece() is not None:
+                if type(input_board.get_game_square(7, 0).get_occupying_piece()).__name__ == "Rook":
+                    if input_board.get_game_square(7, 0).get_occupying_piece() \
+                            .get_colour() is input_piece.get_colour():
+                        if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
+                            candidate_game_squares.append(
+                                input_board.get_game_square(7, 0))
+        # for dark player
+        if input_game.get_current_player() is input_game.get_dark_player():
+            # King-side
+            if input_board.get_game_square(7, 1).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 2).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 0).get_occupying_piece() is not None:
+                if type(input_board.get_game_square(7, 0).get_occupying_piece()).__name__ == "Rook":
+                    if input_board.get_game_square(7, 0).get_occupying_piece() \
+                            .get_colour() is input_piece.get_colour():
+                        if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
+                            candidate_game_squares.append(
+                                input_board.get_game_square(7, 0))
 
-        # Queen-side
-        if input_board.get_game_square(7, 3).get_occupying_piece() is None and \
-                input_board.get_game_square(7, 2).get_occupying_piece() is None and \
-                input_board.get_game_square(7, 1).get_occupying_piece() is None and \
-                input_board.get_game_square(7, 0).get_occupying_piece() is not None:
-            if type(input_board.get_game_square(7, 0).get_occupying_piece()).__name__ == "Rook":
-                if input_board.get_game_square(7, 0).get_occupying_piece() \
-                        .get_colour() is input_piece.get_colour():
-                    if not input_board.get_game_square(7, 0).get_occupying_piece().get_moved_yet_status():
-                        candidate_game_squares.append(
-                            input_board.get_game_square(7, 0))
+            # Queen-side
+            if input_board.get_game_square(7, 4).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 5).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 6).get_occupying_piece() is None and \
+                    input_board.get_game_square(7, 7).get_occupying_piece() is not None:
+                if type(input_board.get_game_square(7, 7).get_occupying_piece()).__name__ == "Rook":
+                    if input_board.get_game_square(7, 7).get_occupying_piece() \
+                            .get_colour() is input_piece.get_colour():
+                        if not input_board.get_game_square(7, 7).get_occupying_piece().get_moved_yet_status():
+                            candidate_game_squares.append(
+                                input_board.get_game_square(7, 7))
 
     # TODO: Review the list of candidate squares, and filter out any that would place the king in check
 
