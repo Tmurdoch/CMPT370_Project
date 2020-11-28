@@ -26,7 +26,7 @@ class HowToPlayWindow(Gtk.Window):
         label = Gtk.Label()
         if game == GameType.CHESS:
             try:
-                fp = open("chessrules.txt","r")
+                fp = open("chessrules.txt","r",encoding="utf8")
                 chess_rules = fp.read()
                 fp.close()
                 label.set_markup(chess_rules)
@@ -34,7 +34,7 @@ class HowToPlayWindow(Gtk.Window):
                 label.set_markup("Something went wrong reading How to Play")
         elif game == GameType.CHECKERS:
             try:
-                fp = open("checkersrules.txt","r")
+                fp = open("checkersrules.txt","r",encoding="utf8")
                 checkers_rules = fp.read()
                 fp.close()
                 label.set_markup(checkers_rules)
