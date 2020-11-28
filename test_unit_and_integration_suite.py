@@ -269,6 +269,7 @@ def test_possible_moves():
                                                         index_piece_test[test_tuple][1]),
                     my_game)
                 assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple]
+
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
                     index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Bishop":
@@ -276,8 +277,9 @@ def test_possible_moves():
                     my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
                                                         index_piece_test[test_tuple][1]),
                     my_game)
-                assert sorted([x.get_row_and_column()
-                               for x in pm_gs]) == pc_moves_bishop[test_tuple]
+
+                assert sorted([x.get_row_and_column()for x in pm_gs]) == pc_moves_bishop[test_tuple]
+
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
                     index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Knight":
@@ -384,7 +386,7 @@ def test_possible_moves():
                                                              get_game_square(1, 0).get_occupying_piece())
     my_game.get_board().get_game_square(1, 0).remove_occupying_piece()
 
-    # move king from 4, 0 to 7, 4
+    # move king from to 7, 4, to 4, 0
     my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().
                                                              get_game_square(7, 4).get_occupying_piece())
     my_game.get_board().get_game_square(7, 4).remove_occupying_piece()
@@ -865,7 +867,6 @@ def test_player():
     assert pt_human.get_timer() == timer1
     assert pt_human.get_piece_set() is not None
     assert pt_human.get_player_type() == PlayerType.HUMAN
-    assert not pt_human.get_castled()
 
     # test ai player
     assert pt_ai.get_name() == "AI 1"
@@ -873,7 +874,6 @@ def test_player():
     assert pt_ai.get_timer() == timer2
     assert pt_ai.get_piece_set() is not None
     assert pt_ai.get_player_type() == PlayerType.AI
-    assert not pt_ai.get_castled()
 
 
 def test_integration_1():
@@ -1141,7 +1141,6 @@ def test_integration_3():
     player1 = Player(p1_name, p1_colour, game_type_chess, p1_type, timer)
     player1_pieceset = player1.get_piece_set()
     assert player1_pieceset.get_colour() is p1_colour
-    assert not player1.get_castled()
     assert player1.get_name() is p1_name
     assert player1.get_player_type() is 1
     assert player1.get_timer() is timer
@@ -1156,7 +1155,6 @@ def test_integration_3():
     player2 = Player(p2_name, p2_colour, game_type_chess, p2_type, timer)
     player2_pieceset = player2.get_piece_set()
     assert player2_pieceset.get_colour() is p2_colour
-    assert not player2.get_castled()
     assert player2.get_name() is p2_name
     assert player2.get_player_type() is 0
     assert player2.get_timer() is timer
@@ -1269,7 +1267,6 @@ def test_integration_4():
     ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
 
     # --- player light human testing
-    assert not pl_chess.get_castled()
     assert pl_chess.get_name() is "Light HU"
     assert pl_chess.get_player_type() is 1
     assert pl_chess.get_timer() is timer
@@ -1281,7 +1278,6 @@ def test_integration_4():
             "Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
 
     # --- player dark ai testing
-    assert not pd_chess.get_castled()
     assert pd_chess.get_name() is "Dark AI"
     assert pd_chess.get_player_type() is 0
     assert pd_chess.get_timer() is timer
@@ -1293,7 +1289,6 @@ def test_integration_4():
             "Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
 
     # --- current player
-    assert not pc_chess.get_castled()
     assert pc_chess.get_name() is "Light HU"
     assert pc_chess.get_player_type() is 1
     assert pc_chess.get_timer() is timer
@@ -1678,7 +1673,7 @@ def test_integration_6():
     # switch player
     my_chess_game.get_board().switch_sides()
     # current player change to dark player
-    # only difference should be the switch possition of the King and Queen
+    # only difference should be the switch position of the King and Queen
     # but at the start of the turn nothing changes on the expected possible moves
 
     # dark player
@@ -1874,8 +1869,7 @@ def test_integration_6():
             elif row == 2:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
                                                                    my_chess_game)
-                assert sorted([x.get_row_and_column()
-                               for x in my_moves]) == sorted(chess_r2_tar[col2])
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r2_tar[col2])
 
     # testing Checkers
 
@@ -1973,7 +1967,7 @@ def test_integration_6():
     my_chess_game2.get_board().switch_sides()
     my_chess_game2.change_current_player()
 
-    # move dark pawn from 6, 3 to 4, 3 capture enemy pawn
+    # move dark pawn from 6, 3 to 4, 3
     origin = my_chess_game2.get_board().get_game_square(6, 3)
     dest = my_chess_game2.get_board().get_game_square(4, 3)
     my_chess_game2.get_light_player().make_move(origin, dest, my_chess_game2)
