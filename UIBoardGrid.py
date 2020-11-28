@@ -225,7 +225,9 @@ class BoardGrid(Gtk.Grid):
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if ycount % 2:
+                if ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50)))):
+                    cairo_ctx.set_source_rgb(1, .5, 0)
+                elif ycount % 2:
                     cairo_ctx.set_source_rgb(0.300, .155, 0.119)
                 else:
                     cairo_ctx.set_source_rgb(0, 1, 1)
@@ -382,7 +384,7 @@ class BoardGrid(Gtk.Grid):
                 # build the possible pieces for a game square
                 self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
                     cur_location, self.__game_obj)
-                # TODO: check return value of above line, display somehow
+                checkerboard_area.queue_draw()
 
     def create_location_list(self, size):
         """
