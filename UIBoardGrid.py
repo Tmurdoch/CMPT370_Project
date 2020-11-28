@@ -93,17 +93,11 @@ class BoardGrid(Gtk.Grid):
                        "media/gfx/regular/wn.svg",
                        "media/gfx/regular/wb.svg",
                        "media/gfx/regular/wr.svg",
-                       "media/gfx/regular/wp.svg",
-                       "media/gfx/regular/bk.svg",
-                       "media/gfx/regular/bq.svg",
-                       "media/gfx/regular/bn.svg",
-                       "media/gfx/regular/bb.svg",
-                       "media/gfx/regular/br.svg",
-                       "media/gfx/regular/bp.svg"]
+                       "media/gfx/regular/wp.svg"]
 
         # load the data
         svglc = 0
-        while svglc != 6:
+        while svglc != len(svg_targets):
             # read binary to ensure no nonsense on windows
             fp = open(svg_targets[svglc], "rb")
             fp.seek(0, SEEK_END)
@@ -112,6 +106,7 @@ class BoardGrid(Gtk.Grid):
             chess_svg_light_data_array.append(fp.read(fps))
             fp.close()
             svglc += 1
+        svglc = 0
         while svglc != len(svg_targets):
             # read binary to ensure no nonsense on windows
             fp = open(svg_targets[svglc], "rb")
@@ -134,7 +129,7 @@ class BoardGrid(Gtk.Grid):
         svglc = 0
         while (svglc != len(chess_svg_dark_data_array)):
             chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(
-                b"000000", COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
+                b"f9f9f9", COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
             svglc += 1
 
         # get light handles
