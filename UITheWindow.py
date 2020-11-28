@@ -102,6 +102,8 @@ class TheWindow(Gtk.Window):
 
     def main_resume_clicked(self, button):
         print('This should go to resumed game')
+        self.main_box.hide()
+        self.resume_choice_box.show()
         return
 
     def game_choice_chess_clicked(self, button):
@@ -122,20 +124,24 @@ class TheWindow(Gtk.Window):
         self.main_box.show()
 
     def resume_choice_chess_clicked(self, button):
-        print('Chess was chosen')  # put next window here
+        print('Resume chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
-        self.game_choice_box.hide()
-        self.player_type.show()
+        self.resume_choice_box.hide()
+        print("SEE TODO STUFF NERE THIS LINE")
+        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
+        # BUTTON BEFORE STARTING THE LOADED GAME
 
     def resume_choice_checkers_clicked(self, button):
-        print('Checkers was chosen')  # put next window here
+        print('Resume checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
-        self.game_choice_box.hide()
-        self.player_type.show()
+        self.resume_choice_box.hide()
+        print("SEE TODO STUFF NERE THIS LINE")
+        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
+        # BUTTON BEFORE STARTING THE LOADED GAME
 
     def resume_choice_back_clicked(self, button):
         print("This should go back to Main Menu Window")
-        self.game_choice_box.hide()
+        self.resume_choice_box.hide()
         self.main_box.show()
 
     def player_type_single_clicked(self, button):
@@ -153,7 +159,7 @@ class TheWindow(Gtk.Window):
     def player_type_back_clicked(self, button):
         print("This should go back to Game Choice Window")
         self.player_type.hide()
-        self.game_type.show()
+        self.game_choice_box.show()
 
     def customization_back_clicked(self, button):
         print("This should go back to Game Choice Window")
@@ -165,7 +171,21 @@ class TheWindow(Gtk.Window):
         # TODO: allow for users to set game type, right now hard coded as checkers
         self.customization.hide()
         # board = BoardWindow(self.__game, self.__game_type)
+
+        piece_colour=0
+        while (piece_colour!=len(self.customization.piece_radio_buttons)):
+            if (self.customization.piece_radio_buttons[piece_colour].get_active()):
+                break
+            piece_colour += 1
+
+        board_colour=0
+        while (board_colour!=len(self.customization.board_radio_buttons)):
+            if (self.customization.board_radio_buttons[board_colour].get_active()):
+                break
+            board_colour += 1
         
+        temp_game = Game(self.game_type, piece_colour, board_colour)
+
         t1 = Timer(70, True)
         t2 = Timer(70, True)
 

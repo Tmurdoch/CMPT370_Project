@@ -6,11 +6,12 @@ import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
+from GameType import GameType, GAME_TYPE_STRING_LOOK_UP_TABLE
 
 
 class HowToPlayWindow(Gtk.Window):
     def __init__(self, game):
-        Gtk.Window.__init__(self, title="How to Play " + game)
+        Gtk.Window.__init__(self, title="How to Play " + GAME_TYPE_STRING_LOOK_UP_TABLE[game])
         self.set_border_width(50)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_size_request(200, 400)
@@ -23,20 +24,26 @@ class HowToPlayWindow(Gtk.Window):
         scrolled = Gtk.ScrolledWindow(vexpand=True)
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         label = Gtk.Label()
-        if game == "Chess":
-            file = open("chessrules.txt", encoding="utf8")
-            chess_rules = file.read()
-            label.set_markup(chess_rules)
+        if game == GameType.CHESS:
+            try:
+                fp = open("chessrules.txt","r",encoding="utf8")
+                chess_rules = fp.read()
+                fp.close()
+                label.set_markup(chess_rules)
+            except:
+                label.set_markup("Something went wrong reading How to Play")
+        elif game == GameType.CHECKERS:
+            try:
+                fp = open("checkersrules.txt","r",encoding="utf8")
+                checkers_rules = fp.read()
+                fp.close()
+                label.set_markup(checkers_rules)
+            except:
+                label.set_markup("Something went wrong reading How to Play")
         else:
-            file = open("checkersrules.txt", encoding="utf8")
-            checkers_rules = file.read()
-            label.set_markup(checkers_rules)
-
+            label.set_markup("Congratulations you won! (you broke this really badly)")
         label.override_color(Gtk.StateFlags.NORMAL,
                              Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
 
         scrolled.add(label)
         help_box.add(scrolled)
-
-        # this gives error message but still does it??
-        self.connect("destroy", self.hide)

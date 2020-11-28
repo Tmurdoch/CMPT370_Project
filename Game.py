@@ -2,7 +2,7 @@
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
-from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE
+from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 from Player import Player
 from Board import Board
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
@@ -33,13 +33,14 @@ class Game:
     Attributes:
         __game_type: int: GameType enum
         __colour_mode: A ColourCodes enum that encodes the players colours
+        __board_colour_mode: A ColourCodes enum that encodes the board colours
         __light_player: Player: The light player object
         __dark_player: Player: The dark player object
         __board: Board: The game board
         __game_status: GameStatus: The current status of the game
     """
 
-    def __init__(self, game_type, colour_mode):
+    def __init__(self, game_type, colour_mode, board_colour_mode):
         """
         Initialize the game object, players are built later
         :param game_type: GameType: The type of game (chess or checkes)
@@ -60,6 +61,12 @@ class Game:
         if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
+        if board_colour_mode >= len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
+            raise Exception("wrongColourOrSomethingFigureOutLater")
+        self.__board_colour_mode = board_colour_mode
+        #if board_colour_mode == colour_mode:
+        #    #hard to see checkers pieces, perfect camoflage
+        #    assert(0)
         self.__board = Board(8)  # TODO: Should this board size be hard coded?
         return
 
@@ -405,6 +412,14 @@ class Game:
         :return: IntEnum of the current player colour
         """
         return self.__colour_mode
+
+
+    def get_board_colour_mode(self):
+        """
+        Get the colour mode enum for the current game
+        :return: IntEnum of the current player colour
+        """
+        return self.__board_colour_mode
 
 
 # if (__name__ == "__main__"):
