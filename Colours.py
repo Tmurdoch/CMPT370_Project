@@ -10,8 +10,8 @@ class ColourCodes(IntEnum):
     This enum contains constants that indicate what type of colours the players will have.
      Format LIGHT_DARK.
     """
-    WHITE_BLACK = 0
-    RED_BLACK = 1
+    BROWN_GREY = 0
+    PINK_BLUE = 1
 
 
 class ColourBoardCodes(IntEnum):
@@ -23,7 +23,8 @@ class ColourBoardCodes(IntEnum):
     # camoflage nonsense going on with
     # the piece colours
     WHITE_BLACK = 0
-    RED_BLACK = 1
+    RED_GREEN = 1
+    YELLOW_BLUE = 3
 
 
 class ColourOffset(IntEnum):
@@ -39,7 +40,7 @@ class ColourOffset(IntEnum):
     OFFSET_DARK_HEX = 3
 
 
-COLOUR_STRING_LOOK_UP_TABLE = [("Brown", "Gray", b"88654E", b"606060"),
+COLOUR_STRING_LOOK_UP_TABLE = [("Brown", "Grey", b"88654E", b"606060"),
                                ("HotPink", "Blue", b"FF69B4", b"005FFF")]
 
 COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black", b"FFFFFF", b"000000"),

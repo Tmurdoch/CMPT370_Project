@@ -165,7 +165,7 @@ def test_possible_moves():
     """
     # make sure that game is created correctly
     # chess = 0
-    my_game = Game(0, ColourCodes.WHITE_BLACK, ColourBoardCodes.RED_BLACK)
+    my_game = Game(0, ColourCodes.BROWN_GREY, ColourBoardCodes.RED_GREEN)
     assert my_game.get_dark_player() is None
     assert my_game.get_light_player() is None
     assert my_game.get_current_player() is None
@@ -174,13 +174,13 @@ def test_possible_moves():
     my_game.build_dark_player(
         "Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game.get_dark_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.BROWN_GREY][ColourOffset.OFFSET_DARK]
 
     # create light player
     my_game.build_light_player(
         "Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game.get_light_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.BROWN_GREY][ColourOffset.OFFSET_LIGHT]
 
     # check if players are correctly assigned
     assert my_game.get_current_player() is my_game.get_light_player()
@@ -476,7 +476,7 @@ def test_possible_moves():
 
     # -----------TEST CHECKERS PIECES POSSIBLE MOVES ----------------------------------------------------
     # checkers = 1
-    my_game_2 = Game(1, ColourCodes.RED_BLACK, ColourBoardCodes.WHITE_BLACK)
+    my_game_2 = Game(1, ColourCodes.PINK_BLUE, ColourBoardCodes.WHITE_BLACK)
     assert my_game_2.get_dark_player() is None
     assert my_game_2.get_light_player() is None
     assert my_game_2.get_current_player() is None
@@ -485,13 +485,13 @@ def test_possible_moves():
     my_game_2.build_dark_player(
         "Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_dark_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_DARK]
 
     # create light player
     my_game_2.build_light_player(
         "Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_light_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_LIGHT]
 
     # check if players are correctly assigned
     assert my_game_2.get_current_player() is my_game_2.get_light_player()
@@ -559,18 +559,18 @@ def test_possible_moves():
     # test edge cases when coin is promoted
     # recreate the tests for checkers because pieces there are promoted
 
-    my_game_2 = Game(1, ColourCodes.RED_BLACK, ColourBoardCodes.WHITE_BLACK)
+    my_game_2 = Game(1, ColourCodes.PINK_BLUE, ColourBoardCodes.WHITE_BLACK)
     # create dark player
     my_game_2.build_dark_player(
         "Player1", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_dark_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_DARK]
 
     # create light player
     my_game_2.build_light_player(
         "Player2", PlayerType.HUMAN, Timer(60, enabled=True))
     assert my_game_2.get_light_player().get_piece_set().get_colour() == \
-           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+           COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_LIGHT]
 
     dark_set2 = my_game_2.get_dark_player().get_piece_set().get_live_pieces()
     light_set2 = my_game_2.get_light_player().get_piece_set().get_live_pieces()
@@ -766,10 +766,10 @@ def test_game():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    gc_rb = ColourCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -813,9 +813,9 @@ def test_game():
     my_checkers_game.build_dark_player("Dark HU", pt_human, timer)
 
     # Test chess after player initialization
-    assert my_chess_game.get_dark_player().get_piece_set().get_colour() is "Black"
-    assert my_chess_game.get_light_player().get_piece_set().get_colour() is "White"
-    assert my_chess_game.get_current_player().get_piece_set().get_colour() is "White"
+    assert my_chess_game.get_dark_player().get_piece_set().get_colour() is "Grey"
+    assert my_chess_game.get_light_player().get_piece_set().get_colour() is "Brown"
+    assert my_chess_game.get_current_player().get_piece_set().get_colour() is "Brown"
     assert my_chess_game.get_board().get_size() == 8
     assert my_chess_game.get_game_type() == 0
 
@@ -1219,10 +1219,10 @@ def test_integration_4():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    gc_rb = ColourCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -1279,11 +1279,11 @@ def test_integration_4():
     # --- main game testing
     assert my_chess_game.get_game_type() == gt_chess
     assert pl_chess.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.BROWN_GREY][ColourOffset.OFFSET_LIGHT]
     assert pd_chess.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_DARK]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.BROWN_GREY][ColourOffset.OFFSET_DARK]
     assert pc_chess.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.BROWN_GREY][ColourOffset.OFFSET_LIGHT]
 
     # --- player light human testing
     assert pl_chess.get_name() is "Light HU"
@@ -1322,11 +1322,11 @@ def test_integration_4():
     # -- CHECKERS
     assert my_checkers_game.get_game_type() == gt_checkers
     assert pl_checkers.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_LIGHT]
     assert pd_checkers.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_DARK]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_DARK]
     assert pc_checkers.get_colour(
-    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.RED_BLACK][ColourOffset.OFFSET_LIGHT]
+    ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.PINK_BLUE][ColourOffset.OFFSET_LIGHT]
 
     # --- player light ai testing
     assert pl_checkers.get_name() is "Light AI"
@@ -1389,10 +1389,10 @@ def test_integration_5():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    gc_rb = ColourCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -1627,10 +1627,10 @@ def test_integration_6():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    gc_rb = ColourCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -2110,8 +2110,8 @@ def test_integration_6():
 def test_check():
     gt_chess = 0
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -2205,7 +2205,7 @@ def test_check():
     # test checks and redo the board
     gt_chess = 0
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -2275,8 +2275,8 @@ def test_en_passant():
     """
     gt_chess = 0
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_chess_game = Game(gt_chess, gc_wb, bc_rb)
@@ -2414,10 +2414,10 @@ def test_checkers_integ6():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.WHITE_BLACK
-    gc_rb = ColourCodes.RED_BLACK
+    gc_wb = ColourCodes.BROWN_GREY
+    gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_BLACK
+    bc_rb = ColourBoardCodes.RED_GREEN
 
     # create a chess and checkers game
     my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
