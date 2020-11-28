@@ -189,7 +189,7 @@ class TheWindow(Gtk.Window):
         t1 = Timer(70, True)
         t2 = Timer(70, True)
 
-        temp_game = Game(self.game_type, ColourCodes.RED_BLACK)
+
         if self.multiplayer == 1:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
             temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
