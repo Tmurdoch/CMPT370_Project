@@ -820,9 +820,9 @@ def test_game():
     assert my_chess_game.get_game_type() == 0
 
     # Test checkers after player initialization
-    assert my_checkers_game.get_dark_player().get_piece_set().get_colour() is "Black"
-    assert my_checkers_game.get_light_player().get_piece_set().get_colour() is "Red"
-    assert my_checkers_game.get_current_player().get_piece_set().get_colour() is "Red"
+    assert my_checkers_game.get_dark_player().get_piece_set().get_colour() is "Blue"
+    assert my_checkers_game.get_light_player().get_piece_set().get_colour() is "HotPink"
+    assert my_checkers_game.get_current_player().get_piece_set().get_colour() is "HotPink"
     assert my_checkers_game.get_board().get_size() == 8
     assert my_checkers_game.get_game_type() == 1
 
@@ -1461,7 +1461,7 @@ def test_integration_5():
                 row = 6
             # check if each peace are the correct colour and at the right spot
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() == "White"
+                row, col).get_occupying_piece().get_colour() == "Brown"
             assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
                    chess_r7[rows][col]
 
@@ -1477,7 +1477,7 @@ def test_integration_5():
                 row = 1
             # check if each peace are the correct colour and at the right spot
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() == "Black"
+                row, col).get_occupying_piece().get_colour() == "Grey"
             assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
                    chess_r7[rows][col]
 
@@ -1500,7 +1500,7 @@ def test_integration_5():
     # y = 0 dark player y = 1 light player
     y = 0
 
-    checker_colour = ["Black", "Red"]
+    checker_colour = ["Blue", "HotPink"]
     for row in range(my_checkers_game.get_board().get_size()):
         for col in range(my_checkers_game.get_board().get_size()):
             # rows 3 and 4 are middle rows that are empty
@@ -1550,7 +1550,7 @@ def test_integration_5():
                 row = 6
             # check if each peace are the correct colour and at the right spot
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() == "Black"
+                row, col).get_occupying_piece().get_colour() == "Grey"
             assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
                    chess_nr7[rows][col]
 
@@ -1566,7 +1566,7 @@ def test_integration_5():
                 row = 1
             # check if each peace are the correct colour and at the right spot
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() == "White"
+                row, col).get_occupying_piece().get_colour() == "Brown"
             assert type(my_chess_game.get_board().get_game_square(row, col).get_occupying_piece()).__name__ is \
                    chess_nr7[rows][col]
 
@@ -1588,7 +1588,7 @@ def test_integration_5():
     # y = 0 dark player y = 1 light player
     y = 0
 
-    checker_colour = ["Red", "Black"]
+    checker_colour = ["HotPink", "Blue"]
     for row in range(my_checkers_game.get_board().get_size()):
         for col in range(my_checkers_game.get_board().get_size()):
             # rows 3 and 4 are middle rows that are empty
@@ -1682,7 +1682,7 @@ def test_integration_6():
     for row in range(7, 5, -1):
         for col in range(0, 8):
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() is "White"
+                row, col).get_occupying_piece().get_colour() is "Brown"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
@@ -1703,7 +1703,7 @@ def test_integration_6():
     for row in range(7, 5, -1):
         for col in range(0, 8):
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() is "Black"
+                row, col).get_occupying_piece().get_colour() is "Grey"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
@@ -1724,7 +1724,7 @@ def test_integration_6():
     for row in range(7, 5, -1):
         for col in range(0, 8):
             assert my_chess_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() is "White"
+                row, col).get_occupying_piece().get_colour() is "Brown"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
@@ -1752,7 +1752,7 @@ def test_integration_6():
         col_count = 0
         for col in range(start, 8, 2):
             assert my_checkers_game.get_board().get_game_square(
-                row, col).get_occupying_piece().get_colour() is "Red"
+                row, col).get_occupying_piece().get_colour() is "HotPink"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(
                     my_checkers_game.get_board().get_game_square(row, col),
@@ -1786,7 +1786,7 @@ def test_integration_6():
         col_count = 0
         for col in range(start, 8, 2):
             assert my_checkers_game.get_board().get_game_square(row,
-                                                                col).get_occupying_piece().get_colour() is "Black"
+                                                                col).get_occupying_piece().get_colour() is "Blue"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(
                     my_checkers_game.get_board().get_game_square(row, col),
@@ -1819,7 +1819,7 @@ def test_integration_6():
         col_count = 0
         for col in range(start, 8, 2):
             assert my_checkers_game.get_board().get_game_square(row,
-                                                                col).get_occupying_piece().get_colour() is "Red"
+                                                                col).get_occupying_piece().get_colour() is "HotPink"
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(
                     my_checkers_game.get_board().get_game_square(row, col),
