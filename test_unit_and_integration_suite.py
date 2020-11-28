@@ -268,7 +268,8 @@ def test_possible_moves():
                     my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
                                                         index_piece_test[test_tuple][1]),
                     my_game)
-#                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple] # TODO
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_queen[test_tuple]
+
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
                     index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Bishop":
@@ -276,8 +277,9 @@ def test_possible_moves():
                     my_game.get_board().get_game_square(index_piece_test[test_tuple][0],
                                                         index_piece_test[test_tuple][1]),
                     my_game)
-                assert sorted([x.get_row_and_column()
-                               for x in pm_gs]) == pc_moves_bishop[test_tuple]
+
+                assert sorted([x.get_row_and_column()for x in pm_gs]) == pc_moves_bishop[test_tuple]
+
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
                     index_piece_test[test_tuple][1]).get_occupying_piece()).__name__ is "Knight":
@@ -384,7 +386,7 @@ def test_possible_moves():
                                                              get_game_square(1, 0).get_occupying_piece())
     my_game.get_board().get_game_square(1, 0).remove_occupying_piece()
 
-    # move king from 4, 0 to 7, 4
+    # move king from to 7, 4, to 4, 0
     my_game.get_board().get_game_square(4, 0).put_piece_here(my_game.get_board().
                                                              get_game_square(7, 4).get_occupying_piece())
     my_game.get_board().get_game_square(7, 4).remove_occupying_piece()
@@ -1669,7 +1671,7 @@ def test_integration_6():
             if row == 7:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
-#                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col]) # TODO
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r7_pm[col])
             if row == 6:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col),
                                                                    my_chess_game)
@@ -1679,7 +1681,7 @@ def test_integration_6():
     # switch player
     my_chess_game.get_board().switch_sides()
     # current player change to dark player
-    # only difference should be the switch possition of the King and Queen
+    # only difference should be the switch position of the King and Queen
     # but at the start of the turn nothing changes on the expected possible moves
 
     # dark player
@@ -1866,8 +1868,7 @@ def test_integration_6():
             elif row == 2:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
                                                                    my_chess_game)
-                assert sorted([x.get_row_and_column()
-                               for x in my_moves]) == sorted(chess_r2_tar[col2])
+                assert sorted([x.get_row_and_column() for x in my_moves]) == sorted(chess_r2_tar[col2])
 
     # testing Checkers
 
