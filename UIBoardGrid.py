@@ -11,10 +11,11 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
-
+from PlayerType import PlayerType
 import cairo
+import random
 import build_list_of_moves
-
+from selectBest import select_best
 SEEK_SET = 0
 SEEK_CUR = 1
 SEEK_END = 2
@@ -55,19 +56,24 @@ class BoardGrid(Gtk.Grid):
         self.timer_area = Gtk.Label()  # Player 1 time
         self.add(self.timer_area)
         self.timer_area_2 = Gtk.Label()  # Player 2 time
-        self.attach_next_to(self.timer_area_2, self.timer_area, Gtk.PositionType.RIGHT, 3, 1)
+        self.attach_next_to(self.timer_area_2, self.timer_area,
+                            Gtk.PositionType.RIGHT, 3, 1)
 
         player1_label = Gtk.Label()  # Label for Player 1 timer
         player1_label.set_markup("<b>Player 1 Time Remaining</b>")
         player1_label.set_justify(Gtk.Justification.CENTER)
-        player1_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(player1_label, self.timer_area, Gtk.PositionType.TOP, 1, 1)
+        player1_label.override_color(
+            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.attach_next_to(player1_label, self.timer_area,
+                            Gtk.PositionType.TOP, 1, 1)
 
         player2_label = Gtk.Label()  # Label for Player 2 timer
         player2_label.set_markup("<b>Player 2 Time Remaining</b>")
         player2_label.set_justify(Gtk.Justification.CENTER)
-        player2_label.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach_next_to(player2_label, player1_label, Gtk.PositionType.RIGHT, 1, 1)
+        player2_label.override_color(
+            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.attach_next_to(player2_label, player1_label,
+                            Gtk.PositionType.RIGHT, 1, 1)
 
         # just to see if promotion works
         # promote_button = Gtk.Button.new_with_label("promote?")
@@ -76,7 +82,7 @@ class BoardGrid(Gtk.Grid):
 
         self.help_button = Gtk.Button.new_with_label("Help?")
         self.help_button.connect("clicked", self.help_clicked)
-        self.attach(self.help_button,1 ,4, 1, 1)
+        self.attach(self.help_button, 1, 4, 1, 1)
 
         self.save_quit_button = Gtk.Button.new_with_label("Save and Quit")
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
@@ -370,7 +376,9 @@ class BoardGrid(Gtk.Grid):
                 print(cur_location)
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
+
                 print("Made Move")
+
                 checkerboard_area.queue_draw()
                 # switch players, flip board
                 self.__game_obj.change_current_player()
@@ -383,6 +391,19 @@ class BoardGrid(Gtk.Grid):
                     self.__game_obj.get_dark_player().get_timer().stop()
                 self.__game_obj.get_board().switch_sides()
 
+                # execute AI code if necessary
+                if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
+                    AI = self.__game_obj.get_current_player()
+                    moves_for_ai = AI.build_possible_moves_for_all_pieces(
+                        self.__game_obj)
+                    # execute a random move
+                    #rand_move = random.choice(moves_for_ai)
+                    rand_move = select_best(moves_for_ai)
+                    #print(rand_move[0], rand_move[1], len(rand_move[1]))
+                    #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
+                    AI.make_move(rand_move[0], rand_move[1], self.__game_obj)
+                    self.__game_obj.change_current_player()
+                    self.__game_obj.get_board().switch_sides()
                 # reset attributes
                 self.current_selected_location = None
                 self.possible_moves_for_cur_piece = []
@@ -423,20 +444,28 @@ class BoardGrid(Gtk.Grid):
         # needs to have True or it only runs once
 
         # get the minutes from Players' time remaining
-        player1_time = int(self.__game_obj.get_light_player().get_timer().get_time_remaining_s() // 60)
-        player2_time = int(self.__game_obj.get_dark_player().get_timer().get_time_remaining_s() // 60)
+        player1_time = int(self.__game_obj.get_light_player(
+        ).get_timer().get_time_remaining_s() // 60)
+        player2_time = int(self.__game_obj.get_dark_player(
+        ).get_timer().get_time_remaining_s() // 60)
         # get the seconds from Player's time remaining
-        player1_time_sec = int(self.__game_obj.get_light_player().get_timer().get_time_remaining_s() % 60)
-        player2_time_sec = int(self.__game_obj.get_dark_player().get_timer().get_time_remaining_s() % 60)
+        player1_time_sec = int(self.__game_obj.get_light_player(
+        ).get_timer().get_time_remaining_s() % 60)
+        player2_time_sec = int(self.__game_obj.get_dark_player(
+        ).get_timer().get_time_remaining_s() % 60)
 
-        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)  # format the minutes and seconds to be
-        p2_time = "{:2d}:{:02d}".format(player2_time, player2_time_sec)  # normal clock looking
+        # format the minutes and seconds to be
+        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)
+        p2_time = "{:2d}:{:02d}".format(
+            player2_time, player2_time_sec)  # normal clock looking
 
         # bold the times and set them to be white
         self.timer_area.set_markup("<b>" + p1_time + "</b>")
-        self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.timer_area.override_color(
+            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
-        self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.timer_area_2.override_color(
+            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         return True
 
         # Initialize Timer

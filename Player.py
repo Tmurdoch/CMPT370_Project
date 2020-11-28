@@ -52,7 +52,8 @@ class Player(object):
         """
         Generates and returns all possible moves for all current player's pieces on the board.
         :param: Game: The current game, need to get the player and board.
-        :return: List of GameSquares for all the current player's pieces.
+        :return: 2D List of GameSquares for all the current player's pieces.
+                first element is orgin square
         """
         game_squares_movable_to = []
         for row in range(game.get_board().get_size()):
@@ -60,9 +61,16 @@ class Player(object):
                 square_here = game.get_board().get_game_square(row, col)
                 if (square_here.get_occupying_piece() is not None) and \
                         (square_here.get_occupying_piece().get_colour() is self.get_piece_set().get_colour()):
-                    game_squares_movable_to.append(
-                        build_list_of_moves(square_here, game))
-        return game_squares_movable_to
+                    game_squares_movable_to.append([square_here,
+                                                    build_list_of_moves(square_here, game)])
+
+        # add pieces that have atleast one possible move
+        return_list = []
+        for potential_move in game_squares_movable_to:
+            if len(potential_move[1]) != 0:
+                return_list.append(potential_move)
+
+        return return_list
 
     def make_move(self, origin_square, dest_square, game):
         """
@@ -83,14 +91,17 @@ class Player(object):
             raise Exception("There is not piece on the origin square")
 
         if self.__piece_set.get_piece_set_type() == GameType.CHECKERS:
-            checkers_move_maker(origin_square, dest_square, board, other_player.get_piece_set())
+            checkers_move_maker(origin_square, dest_square,
+                                board, other_player.get_piece_set())
 
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
-            chess_move_maker(origin_square, dest_square, board, other_player.get_piece_set(), self, game)
+            chess_move_maker(origin_square, dest_square, board,
+                             other_player.get_piece_set(), self, game)
 
         else:
             # Couldn't identify the type of game
-            raise Exception("The player's piece set is neither of type checkers or type chess")
+            raise Exception(
+                "The player's piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
         """ :return: PieceSet: The player's piece set """

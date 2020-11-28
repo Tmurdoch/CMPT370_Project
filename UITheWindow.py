@@ -34,6 +34,10 @@ class TheWindow(Gtk.Window):
         self.has_chess_save = 0
         self.has_checkers_save = 0
 
+        #flags for UI
+        self.singleplayer = 0
+        self.multiplayer = 0
+
         if os.path.exists(directory + "/savedGame.cmpt370chess"):
             self.has_chess_save = 1
         if os.path.exists(directory + "/savedGame.cmpt370checkrs"):
@@ -144,11 +148,13 @@ class TheWindow(Gtk.Window):
         print('Single Player was chosen')  # put next window here
         self.player_type.hide()
         self.customization.show()
+        self.singleplayer = 1
 
     def player_type_multi_clicked(self, button):
         print('Multi Player was chosen')  # put next window here
         self.player_type.hide()
         self.customization.show()
+        self.multiplayer = 1
 
     def player_type_back_clicked(self, button):
         print("This should go back to Game Choice Window")
@@ -182,8 +188,15 @@ class TheWindow(Gtk.Window):
 
         t1 = Timer(70, True)
         t2 = Timer(70, True)
-        temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
-        temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
+
+        temp_game = Game(self.game_type, ColourCodes.RED_BLACK)
+        if self.multiplayer == 1:
+            temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
+            temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
+        else: 
+            temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
+            temp_game.build_dark_player("dark player", PlayerType.AI, t2)
+
         # temp_game.get_light_player().__piece_set.__colour = "White"
         #                                                   \/ should it?
         # TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
