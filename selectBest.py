@@ -8,18 +8,19 @@ import random
 def select_best(candidate_game_squares):
     """
     Chooses and returns the best game square to move to from a list of candidate squares.
-    :param: GameSquare[]: List of GameSquares to choose from.
-    :return: GameSquare: The best game square to move to. Returns None if there are no moves for that square.
+    :param: GameSquare[[game_sq][possible_moves_for_it], [][], ...]: List of GameSquares to choose from.
+    :return: GameSquare[][]: [origin_square][square_moving_to]. Returns None if there are no moves for that square.
     """
-    if not candidate_game_squares:
+    random_move = random.choice(candidate_game_squares)
+    if not random_move:
         # List of moves is empty
         return None
-    elif len(candidate_game_squares) == 1:
+    elif len(random_move[1]) == 1:
         # The is only one move, it has to be the best
-        return candidate_game_squares[0]
+        return [random_move[0], random_move[1]]
     else:
         # TODO: Some AI code to evaluate the list of moves to choose the best one, in the mean time we are just
         #  returning the first one in the list
         # Right now we will just return a random candidate
-        random_index = (random.randrange(0, len(candidate_game_squares), 1))
-        return candidate_game_squares[random_index]
+        random_index = (random.randrange(0, len(random_move[1]), 1))
+        return [random_move[0], random_move[1][random_index]]
