@@ -86,7 +86,7 @@ class Player(object):
             checkers_move_maker(origin_square, dest_square, board, other_player.get_piece_set())
 
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
-            chess_move_maker(origin_square, dest_square, board, other_player.get_piece_set(), self)
+            chess_move_maker(origin_square, dest_square, board, other_player.get_piece_set(), self, game)
 
         else:
             # Couldn't identify the type of game
