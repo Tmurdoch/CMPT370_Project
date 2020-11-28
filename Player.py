@@ -48,8 +48,7 @@ class Player(object):
         """
         return build_list_of_moves(game_square, game)
 
-    @staticmethod
-    def build_possible_moves_for_all_pieces(game):
+    def build_possible_moves_for_all_pieces(self, game):
         """
         Generates and returns all possible moves for all current player's pieces on the board.
         :param: Game: The current game, need to get the player and board.
@@ -59,7 +58,8 @@ class Player(object):
         for row in range(game.get_board().get_size()):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
-                if (square_here.get_occupying_piece() is not None) and (square_here.get_occupying_piece().get_colour()):
+                if (square_here.get_occupying_piece() is not None) and \
+                        (square_here.get_occupying_piece().get_colour() is self.get_piece_set().get_colour()):
                     game_squares_movable_to.append(
                         build_list_of_moves(square_here, game))
         return game_squares_movable_to
@@ -86,7 +86,7 @@ class Player(object):
             checkers_move_maker(origin_square, dest_square, board, other_player.get_piece_set())
 
         elif self.__piece_set.get_piece_set_type() == GameType.CHESS:
-            chess_move_maker(origin_square, dest_square, board, other_player.get_piece_set(), self)
+            chess_move_maker(origin_square, dest_square, board, other_player.get_piece_set(), self, game)
 
         else:
             # Couldn't identify the type of game
