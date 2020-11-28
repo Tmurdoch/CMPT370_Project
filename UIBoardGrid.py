@@ -185,6 +185,17 @@ class BoardGrid(Gtk.Grid):
         self.bc = Rsvg.Handle.new_from_data(checkers_svg_data_array[2])
         self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
 
+        # Setup board colour
+        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX]
+        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_DARK_HEX]
+        self.lbhr = int(b"0x"+light_board_colour_hex[0:2],0)/255
+        self.lbhg = int(b"0x"+light_board_colour_hex[2:4],0)/255
+        self.lbhb = int(b"0x"+light_board_colour_hex[4:6],0)/255
+        self.dbhr = int(b"0x"+dark_board_colour_hex[0:2],0)/255
+        self.dbhg = int(b"0x"+dark_board_colour_hex[2:4],0)/255
+        self.dbhb = int(b"0x"+dark_board_colour_hex[4:6],0)/255
+
+
     def place_pieces(self):
         """
         place the pieces on the board, stored in game->board
@@ -219,15 +230,6 @@ class BoardGrid(Gtk.Grid):
         i = spacing
         width = checkerboard_area.get_allocated_width()
         height = checkerboard_area.get_allocated_height()
-        # TODO take this out of this event handler so it doesn't run EVERY time a frame is drawn
-        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX]
-        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_DARK_HEX]
-        lbhr = int(b"0x"+light_board_colour_hex[0:2],0)/255
-        lbhg = int(b"0x"+light_board_colour_hex[2:4],0)/255
-        lbhb = int(b"0x"+light_board_colour_hex[4:6],0)/255
-        dbhr = int(b"0x"+dark_board_colour_hex[0:2],0)/255
-        dbhg = int(b"0x"+dark_board_colour_hex[2:4],0)/255
-        dbhb = int(b"0x"+dark_board_colour_hex[4:6],0)/255
 
         cairo_ctx.save()
 
@@ -240,9 +242,9 @@ class BoardGrid(Gtk.Grid):
                 elif ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece)):
                     cairo_ctx.set_source_rgb(.5, 0, .5)
                 elif ycount % 2:
-                    cairo_ctx.set_source_rgb(lbhr, lbhg, lbhb)
+                    cairo_ctx.set_source_rgb(self.lbhr, self.lbhg, self.lbhb)
                 else:
-                    cairo_ctx.set_source_rgb(dbhr, dbhg, dbhb)
+                    cairo_ctx.set_source_rgb(self.dbhr, self.dbhg, self.dbhb)
                 # If we're outside the clip this will do nothing.
                 cairo_ctx.rectangle(i, j,
                                     check_size,
