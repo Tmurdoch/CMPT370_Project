@@ -39,9 +39,9 @@ class ColourOffset(IntEnum):
     OFFSET_DARK_HEX = 3
 
 
-COLOUR_STRING_LOOK_UP_TABLE = [("White", "Black", b"FFFFFF", b"000000"),
-                               ("Red", "Black", b"FF0000", b"000000")]
+COLOUR_STRING_LOOK_UP_TABLE = [("Brown", "Gray", b"88654E", b"606060"),
+                               ("HotPink", "Blue", b"FF69B4", b"005FFF")]
 
 COLOUR_BOARD_STRING_LOOK_UP_TABLE = [("White", "Black", b"FFFFFF", b"000000"),
-                                     ("Red", "Black",  b"FF0000", b"000000"),
-                                     ("Yellow", "Blue", b"FFFF00", b"0000FF")]
+                                     ("Red", "LightGreen",  b"FF3333", b"99FFAA"),
+                                     ("LightYellow", "Aquamarine", b"FFCC99", b"66DDAA")]
