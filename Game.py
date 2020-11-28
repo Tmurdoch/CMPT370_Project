@@ -358,6 +358,11 @@ class Game:
                         self.__dark_player.get_piece_set().get_live_pieces()[
                             15-i]
                     )
+                for i in range(16-found_light_checkers_pieces):
+                    self.__light_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[
+                            15-i]
+                    )
             elif self.__game_type == GameType.CHESS:
                 pass
             # delete the file after loading
