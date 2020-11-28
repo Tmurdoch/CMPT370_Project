@@ -171,8 +171,14 @@ class TheWindow(Gtk.Window):
             if (self.customization.piece_radio_buttons[piece_colour].get_active()):
                 break
             piece_colour += 1
+
+        board_colour=0
+        while (board_colour!=len(self.customization.board_radio_buttons)):
+            if (self.customization.board_radio_buttons[board_colour].get_active()):
+                break
+            board_colour += 1
         
-        temp_game = Game(self.game_type, piece_colour)
+        temp_game = Game(self.game_type, piece_colour, board_colour)
 
         t1 = Timer(70, True)
         t2 = Timer(70, True)

@@ -15,7 +15,6 @@ class Board:
     Attributes:
         __size: int: Board size, board is always square so length and width are the same.
         __gameBoard: 2D list of GameSquares.
-        __boardTheme: Color scheme of the board, see Colours.py for more.
     """
 
     def __init__(self, size):
@@ -29,7 +28,6 @@ class Board:
             raise TypeError("Size must be a Positive Integer")
 
         self.__size = size
-        self.__boardTheme = BoardTheme.BlackWhite
         self.__gameBoard = []
         for r in range(size):
             row = []
@@ -227,11 +225,3 @@ class Board:
         print("\nBoard Pieces Colour")
         [print(row) for row in board_pieces_colour]
 
-
-class BoardTheme(IntEnum):
-    """
-    Enum for a list of color that the board can change into.
-    """
-    BlackWhite = 1
-    GreenYellow = 2
-    DarkBrownLightBrown = 3
