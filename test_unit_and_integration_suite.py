@@ -7,6 +7,7 @@ from unittest import mock
 from PieceSet import PieceSet
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn, CheckersCoin
 import build_list_of_moves
+import filter_moves
 from Timer import Timer
 import time  # For testing the timer
 from GameSquare import GameSquare
@@ -2001,7 +2002,7 @@ def test_integration_6():
     # (2, 2) is from the filtered list of moves
     origin = my_chess_game2.get_board().get_game_square(3, 3)
     moves = build_list_of_moves.build_list_of_moves(origin, my_chess_game2)
-    filt_moves = build_list_of_moves.filter_check_moves(origin, my_chess_game2, moves)
+    filt_moves = filter_moves.filter_check_moves(origin, my_chess_game2, moves)
 
     assert len(filt_moves) == 2
 
@@ -2070,7 +2071,7 @@ def test_integration_6():
     origin = my_chess_game2.get_board().get_game_square(7, 3)
     # my_chess_game2.get_dark_player().make_move(origin, dest, my_chess_game2)
     moves = build_list_of_moves.build_list_of_moves(origin, my_chess_game2)
-    filt_moves = build_list_of_moves.filter_check_moves(origin, my_chess_game2, moves)
+    filt_moves = filter_moves.filter_check_moves(origin, my_chess_game2, moves)
     assert sorted([x.get_row_and_column() for x in moves]) == sorted([(7, 2), (6, 4), (7, 0)])
     assert sorted([x.get_row_and_column() for x in filt_moves]) == sorted([(7, 0)])
 
@@ -2114,7 +2115,7 @@ def test_check():
     # test filter moves using old tests
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(7, 4),
                                                        my_chess_game)
-    filtered_moves = build_list_of_moves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4),
+    filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4),
                                                             my_chess_game,
                                                             my_moves)
 
@@ -2163,7 +2164,7 @@ def test_check():
             if row == 5:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
                                                                    my_chess_game)
-                filtered_moves = build_list_of_moves.filter_check_moves(
+                filtered_moves = filter_moves.filter_check_moves(
                     my_chess_game.get_board().get_game_square(row, col2),
                     my_chess_game, my_moves)
                 assert sorted([x.get_row_and_column()
@@ -2171,7 +2172,7 @@ def test_check():
             elif row == 2:
                 my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(row, col2),
                                                                    my_chess_game)
-                filtered_moves = build_list_of_moves.filter_check_moves(
+                filtered_moves = filter_moves.filter_check_moves(
                     my_chess_game.get_board().get_game_square(row, col2),
                     my_chess_game,
                     my_moves)
@@ -2218,7 +2219,7 @@ def test_check():
     # pawn at (6, 4)
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                        my_chess_game)
-    filtered_moves = build_list_of_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
+    filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                             my_chess_game,
                                                             my_moves)
     assert sorted([x.get_row_and_column()
@@ -2237,7 +2238,7 @@ def test_check():
     # pawn at (6, 4)
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                        my_chess_game)
-    filtered_moves = build_list_of_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
+    filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                             my_chess_game,
                                                             my_moves)
     assert sorted([x.get_row_and_column()
