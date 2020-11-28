@@ -868,7 +868,6 @@ def test_player():
     assert pt_human.get_timer() == timer1
     assert pt_human.get_piece_set() is not None
     assert pt_human.get_player_type() == PlayerType.HUMAN
-    assert not pt_human.get_castled()
 
     # test ai player
     assert pt_ai.get_name() == "AI 1"
@@ -876,7 +875,6 @@ def test_player():
     assert pt_ai.get_timer() == timer2
     assert pt_ai.get_piece_set() is not None
     assert pt_ai.get_player_type() == PlayerType.AI
-    assert not pt_ai.get_castled()
 
 
 def test_integration_1():
@@ -1144,7 +1142,6 @@ def test_integration_3():
     player1 = Player(p1_name, p1_colour, game_type_chess, p1_type, timer)
     player1_pieceset = player1.get_piece_set()
     assert player1_pieceset.get_colour() is p1_colour
-    assert not player1.get_castled()
     assert player1.get_name() is p1_name
     assert player1.get_player_type() is 1
     assert player1.get_timer() is timer
@@ -1159,7 +1156,6 @@ def test_integration_3():
     player2 = Player(p2_name, p2_colour, game_type_chess, p2_type, timer)
     player2_pieceset = player2.get_piece_set()
     assert player2_pieceset.get_colour() is p2_colour
-    assert not player2.get_castled()
     assert player2.get_name() is p2_name
     assert player2.get_player_type() is 0
     assert player2.get_timer() is timer
@@ -1272,7 +1268,6 @@ def test_integration_4():
     ) is COLOUR_STRING_LOOK_UP_TABLE[ColourCodes.WHITE_BLACK][ColourOffset.OFFSET_LIGHT]
 
     # --- player light human testing
-    assert not pl_chess.get_castled()
     assert pl_chess.get_name() is "Light HU"
     assert pl_chess.get_player_type() is 1
     assert pl_chess.get_timer() is timer
@@ -1284,7 +1279,6 @@ def test_integration_4():
             "Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
 
     # --- player dark ai testing
-    assert not pd_chess.get_castled()
     assert pd_chess.get_name() is "Dark AI"
     assert pd_chess.get_player_type() is 0
     assert pd_chess.get_timer() is timer
@@ -1296,7 +1290,6 @@ def test_integration_4():
             "Rook", "Knight", "Bishop", "Queen", "King", "Pawn"]
 
     # --- current player
-    assert not pc_chess.get_castled()
     assert pc_chess.get_name() is "Light HU"
     assert pc_chess.get_player_type() is 1
     assert pc_chess.get_timer() is timer
