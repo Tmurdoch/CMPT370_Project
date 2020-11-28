@@ -452,7 +452,7 @@ class BoardGrid(Gtk.Grid):
         print("This should go to HowToPlay Window")
         # self.__game_obj.get_light_player().get_timer().stop()
         # self.__game_obj.get_dark_player().get_timer().stop()
-        board = HowToPlayWindow(self.__game)
+        board = HowToPlayWindow(self.__game_obj.get_game_type())
         board.show_all()
         # self.hide()
 
