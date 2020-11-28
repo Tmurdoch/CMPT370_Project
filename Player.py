@@ -61,10 +61,17 @@ class Player(object):
                 square_here = game.get_board().get_game_square(row, col)
                 if (square_here.get_occupying_piece() is not None) and \
                         (square_here.get_occupying_piece().get_colour() is self.get_piece_set().get_colour()):
-                    game_squares_movable_to.append(
-                        build_list_of_moves(square_here, game))
->>>>>>> master
-        return game_squares_movable_to
+                    game_squares_movable_to.append([square_here,
+                        build_list_of_moves(square_here, game)])
+        
+        #add pieces that have atleast one possible move
+        return_list = []
+        for potential_move in game_squares_movable_to:
+            if len(potential_move[1]) != 0:
+                return_list.append(potential_move)
+
+
+        return return_list
 
     def make_move(self, origin_square, dest_square, game):
         """
