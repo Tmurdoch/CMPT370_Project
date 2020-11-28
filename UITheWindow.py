@@ -120,7 +120,7 @@ class TheWindow(Gtk.Window):
         self.main_box.show()
 
     def resume_choice_chess_clicked(self, button):
-        print('Chess was chosen')  # put next window here
+        print('Resume chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.resume_choice_box.hide()
         print("SEE TODO STUFF NERE THIS LINE")
@@ -128,7 +128,7 @@ class TheWindow(Gtk.Window):
         # BUTTON BEFORE STARTING THE LOADED GAME
 
     def resume_choice_checkers_clicked(self, button):
-        print('Checkers was chosen')  # put next window here
+        print('Resume checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
         self.resume_choice_box.hide()
         print("SEE TODO STUFF NERE THIS LINE")
