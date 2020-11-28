@@ -227,6 +227,8 @@ class BoardGrid(Gtk.Grid):
             while j < height:
                 if ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50)))):
                     cairo_ctx.set_source_rgb(1, .5, 0)
+                elif ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece)):
+                    cairo_ctx.set_source_rgb(.5, 0, .5)
                 elif ycount % 2:
                     cairo_ctx.set_source_rgb(0.300, .155, 0.119)
                 else:
