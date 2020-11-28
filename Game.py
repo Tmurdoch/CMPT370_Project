@@ -64,9 +64,9 @@ class Game:
         if board_colour_mode >= len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__board_colour_mode = board_colour_mode
-        if board_colour_mode == colour_mode:
-            #hard to see checkers pieces, perfect camoflage
-            assert(0)
+        #if board_colour_mode == colour_mode:
+        #    #hard to see checkers pieces, perfect camoflage
+        #    assert(0)
         self.__board = Board(8)  # TODO: Should this board size be hard coded?
         return
 
