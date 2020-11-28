@@ -413,28 +413,6 @@ class BoardGrid(Gtk.Grid):
                     cur_location, self.__game_obj)
                 checkerboard_area.queue_draw()
 
-    def create_location_list(self, size):
-        """
-        creates a 2d list of size n where each i in the list is [x, y] and
-        denotes a location to be placed on the UI window
-        this is for locations the mouse will click on the grid, to later be
-        indexed to get gamesquare at that grid location
-        @return: 2d list of integers
-        """
-        cur_length = 50
-        rv_list = []
-
-        for i in range(size):
-            col_list = []
-            cur_width = 50
-            for j in range(size):
-                col_list.append([cur_width, cur_length])
-                cur_width += 50
-            cur_length += 50
-            rv_list.append(col_list)
-
-        return rv_list
-
     def display_timer(self):
         # needs to have True or it only runs once
 
