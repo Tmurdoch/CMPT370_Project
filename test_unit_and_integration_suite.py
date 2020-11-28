@@ -11,8 +11,8 @@ import filter_moves
 from Timer import Timer
 import time  # For testing the timer
 from GameSquare import GameSquare
-from Board import Board, BoardTheme
-from Colours import ColourOffset, ColourCodes, COLOUR_STRING_LOOK_UP_TABLE
+from Board import Board
+from Colours import ColourOffset, ColourCodes, ColourBoardCodes, COLOUR_STRING_LOOK_UP_TABLE
 from Game import Game
 from PlayerType import PlayerType
 from Player import Player
@@ -150,7 +150,7 @@ def test_possible_moves():
     """
     # make sure that game is created correctly
     # chess = 0
-    my_game = Game(0, ColourCodes.WHITE_BLACK)
+    my_game = Game(0, ColourCodes.WHITE_BLACK, ColourBoardCodes.RED_BLACK)
     assert my_game.get_dark_player() is None
     assert my_game.get_light_player() is None
     assert my_game.get_current_player() is None
@@ -461,7 +461,7 @@ def test_possible_moves():
 
     # -----------TEST CHECKERS PIECES POSSIBLE MOVES ----------------------------------------------------
     # checkers = 1
-    my_game_2 = Game(1, ColourCodes.RED_BLACK)
+    my_game_2 = Game(1, ColourCodes.RED_BLACK, ColourBoardCodes.WHITE_BLACK)
     assert my_game_2.get_dark_player() is None
     assert my_game_2.get_light_player() is None
     assert my_game_2.get_current_player() is None
@@ -544,7 +544,7 @@ def test_possible_moves():
     # test edge cases when coin is promoted
     # recreate the tests for checkers because pieces there are promoted
 
-    my_game_2 = Game(1, ColourCodes.RED_BLACK)
+    my_game_2 = Game(1, ColourCodes.RED_BLACK, ColourBoardCodes.WHITE_BLACK)
     # create dark player
     my_game_2.build_dark_player(
         "Player1", PlayerType.HUMAN, Timer(60, enabled=True))
@@ -657,8 +657,7 @@ def test_board():
             row, col) in [r for r in my_board.get_game_board()[row]]
         # test if the initialized board square in board has None for occupying_piece
         assert my_board.get_game_square(row, col).get_occupying_piece() is None
-        # test theme is black white at default
-        assert my_board.get_board_theme() is BoardTheme.BlackWhite
+
 
 
 def test_game_square():
@@ -754,10 +753,12 @@ def test_game():
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
     gc_rb = ColourCodes.RED_BLACK
+    bc_wb = ColourBoardCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -1205,10 +1206,12 @@ def test_integration_4():
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
     gc_rb = ColourCodes.RED_BLACK
+    bc_wb = ColourBoardCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # test if game is initialized correctly
     # for chess game
@@ -1373,10 +1376,12 @@ def test_integration_5():
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
     gc_rb = ColourCodes.RED_BLACK
+    bc_wb = ColourBoardCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # test if game is initialized correctly
     # for chess game
@@ -1609,10 +1614,12 @@ def test_integration_6():
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
     gc_rb = ColourCodes.RED_BLACK
+    bc_wb = ColourBoardCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -1913,7 +1920,7 @@ def test_integration_6():
     # testing make move on player
 
     # create a chess and checkers game
-    my_chess_game2 = Game(gt_chess, gc_wb)
+    my_chess_game2 = Game(gt_chess, gc_wb, bc_rb)
 
     # build the players in game
 
@@ -2089,9 +2096,10 @@ def test_check():
     gt_chess = 0
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -2185,7 +2193,7 @@ def test_check():
     gc_wb = ColourCodes.WHITE_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -2253,9 +2261,10 @@ def test_en_passant():
     gt_chess = 0
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_chess_game = Game(gt_chess, gc_wb)
+    my_chess_game = Game(gt_chess, gc_wb, bc_rb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -2392,9 +2401,11 @@ def test_checkers_integ6():
     # Piece Set colours for players
     gc_wb = ColourCodes.WHITE_BLACK
     gc_rb = ColourCodes.RED_BLACK
+    bc_wb = ColourBoardCodes.WHITE_BLACK
+    bc_rb = ColourBoardCodes.RED_BLACK
 
     # create a chess and checkers game
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -2403,7 +2414,7 @@ def test_checkers_integ6():
     # Timer set at 60 and to be inactive
     timer = Timer(60, False)
 
-    my_checkers_game = Game(gt_checkers, gc_rb)
+    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # checkers player light ai 1st turn
     my_checkers_game.build_light_player("Light AI", pt_ai, timer)
