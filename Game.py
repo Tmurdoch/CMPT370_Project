@@ -11,6 +11,7 @@ from GameStatus import GameStatus
 import struct
 import os
 from GameType import GameType
+from save_to_file import save_to_file
 
 MAGIC = b"cmpt370checkerschess"
 CURRENT_FILE_VERSION = 0
@@ -113,89 +114,7 @@ class Game:
         path: string describing file path to save too
         :return: None
         """
-        # caller of save_to_file()
-        # is responsible for the try except
-        # error handling
-        fp = open(path+"/save-game.cmpt370" +
-                  GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
-        # write magic
-        fp.write(MAGIC)
-        game_mode = self.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
-        ai_in_game = not ((self.__light_player.get_player_type()) and (
-            self.__dark_player.get_player_type()))  # good
-        dark_player_is_ai = not (self.__dark_player.get_player_type())  # good
-        dark_player_turn = self.__dark_player is self.__current_player  # good
-        board_height = self.get_board().get_size()  # good
-        board_width = board_height  # good
-        colours = self.__colour_mode  # good
-        timer_enabled = self.__dark_player.get_timer().get_enabled()  # good
-        light_player_time = self.__light_player.get_timer().get_time_remaining_s()  # good
-        dark_player_time = self.__dark_player.get_timer().get_time_remaining_s()  # good
-        board_colour = self.__board_colour_mode
-        unused_reserved = 117
-        # write the header struct
-        fp.write(struct.pack(">BBBBBBBBBBBff", CURRENT_FILE_VERSION, game_mode,
-                             ai_in_game, dark_player_is_ai, dark_player_turn,
-                             board_height, board_width, colours, timer_enabled,
-                             board_colour, unused_reserved,
-                             light_player_time, dark_player_time))
-        row = 0
-        while row != board_height:
-            col = 0
-            while col != board_width:
-                cur_piece = self.__board.get_game_square(
-                    row, col).get_occupying_piece()
-                if cur_piece is None:
-                    fp.write((0).to_bytes(1, byteorder="big"))
-                    col += 1
-                    continue
-                # check if it is dark and set the dark bit
-                if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK]:
-                    output_piece = 0b100000
-                else:
-                    output_piece = 0
-                # decode object to char
-                if self.__game_type == GameType.CHESS:
-                    if isinstance(cur_piece, King):
-                        if cur_piece.get_moved_yet_status():
-                            # moved king
-                            output_piece += ord("L")
-                        else:
-                            # Regular king
-                            output_piece += ord("K")
-                    elif isinstance(cur_piece, Queen):
-                        output_piece += ord("Q")
-                    elif isinstance(cur_piece, Knight):
-                        output_piece += ord("N")
-                    elif isinstance(cur_piece, Bishop):
-                        output_piece += ord("B")
-                    elif isinstance(cur_piece, Rook):
-                        if cur_piece.get_moved_yet_status():
-                            output_piece += ord("S")
-                        else:
-                            output_piece += ord("R")
-                    elif isinstance(cur_piece, Pawn):
-                        if cur_piece.get_moved_yet_status():
-                            # The pawn is a moved pawn
-                            output_piece += ord("M")
-                        else:
-                            # The pawn is an unmoved pawn
-                            output_piece += ord("P")
-                    else:
-                        # unidentified piece, shouldn't be possible
-                        fp.close()
-                        assert 0
-                elif self.__game_type == GameType.CHECKERS:
-                    output_piece += (1 + cur_piece.is_promoted())
-                else:
-                    # unidentified game, shouldn't be possible
-                    fp.close()
-                    assert 0
-                # write data
-                fp.write(output_piece.to_bytes(1, byteorder="big"))
-                col += 1
-            row += 1
-        fp.close()
+        save_to_file(self, path)
 
     def load_from_file(self, path):
         """

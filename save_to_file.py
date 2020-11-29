@@ -22,26 +22,27 @@ SEEK_END = 2
 
 def save_to_file(game, path):
     """
-    Saves the current game state to a file
-    path: string describing file path to save too
+    Saves the current game state to file.
+    :param game: The game you would like to save to file
+    :param path: string: describing file path to save too
     :return: None
     """
     fp = open(path+"/save-game.cmpt370" +
-              GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
+              GAME_TYPE_STRING_LOOK_UP_TABLE[game.get_game_type()], "wb")
     # write magic
     fp.write(MAGIC)
-    game_mode = game.__game_type  # TODO: Isn't this a string? "chess" or "checkers"
-    ai_in_game = not ((game.__light_player.get_player_type()) and (
-        game.__dark_player.get_player_type()))  # good
-    dark_player_is_ai = not (game.__dark_player.get_player_type())  # good
-    dark_player_turn = game.__dark_player is game.__current_player  # good
+    game_mode = game.get_game_type()  # TODO: Isn't this a string? "chess" or "checkers"
+    ai_in_game = not ((game.get_light_player().get_player_type()) and (
+        game.get_dark_player().get_player_type()))  # good
+    dark_player_is_ai = not (game.get_dark_player().get_player_type())  # good
+    dark_player_turn = game.get_dark_player() is game.get_current_player()  # good
     board_height = game.get_board().get_size()  # good
     board_width = board_height  # good
-    colours = game.__colour_mode  # good
-    timer_enabled = game.__dark_player.get_timer().get_enabled()  # good
-    light_player_time = game.__light_player.get_timer().get_time_remaining_s()  # good
-    dark_player_time = game.__dark_player.get_timer().get_time_remaining_s()  # good
-    board_colour = game.__board_colour_mode
+    colours = game.get_colour_mode()  # good
+    timer_enabled = game.get_dark_player().get_timer().get_enabled()  # good
+    light_player_time = game.get_light_player().get_timer().get_time_remaining_s()  # good
+    dark_player_time = game.get_dark_player().get_timer().get_time_remaining_s()  # good
+    board_colour = game.get_board_colour_mode()
     unused_reserved = 117
     # write the header struct
     fp.write(struct.pack(">BBBBBBBBBBBff", CURRENT_FILE_VERSION, game_mode,
@@ -53,19 +54,19 @@ def save_to_file(game, path):
     while row != board_height:
         col = 0
         while col != board_width:
-            cur_piece = game.__board.get_game_square(
+            cur_piece = game.get_board().get_game_square(
                 row, col).get_occupying_piece()
             if cur_piece is None:
                 fp.write((0).to_bytes(1, byteorder="big"))
                 col += 1
                 continue
             # check if it is dark and set the dark bit
-            if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_DARK]:
+            if cur_piece.get_colour() == COLOUR_STRING_LOOK_UP_TABLE[game.get_colour_mode()][ColourOffset.OFFSET_DARK]:
                 output_piece = 0b100000
             else:
                 output_piece = 0
             # decode object to char
-            if game.__game_type == GameType.CHESS:
+            if game.get_game_type() == GameType.CHESS:
                 if isinstance(cur_piece, King):
                     if cur_piece.get_moved_yet_status():
                         # moved king
@@ -95,7 +96,7 @@ def save_to_file(game, path):
                     # unidentified piece, shouldn't be possible
                     fp.close()
                     assert 0
-            elif game.__game_type == GameType.CHECKERS:
+            elif game.get_game_type() == GameType.CHECKERS:
                 output_piece += (1 + cur_piece.is_promoted())
             else:
                 # unidentified game, shouldn't be possible
