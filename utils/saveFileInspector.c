@@ -47,6 +47,12 @@ int main(int argc, char *argv[])
 	uint8_t magic[]={'c','m','p','t','3','7','0','c','h','e','c','k','e','r','s','c','h','e','s','s'};
 	unsigned char retcode = 0;
 
+	#ifdef __ORDER_LITTLE_ENDIAN__
+	printf("LE machine\n");
+	#else
+	printf("BE machine\n");
+	#endif
+
 	if (argc != 2)
 	{
 		printf("specify file\n");
