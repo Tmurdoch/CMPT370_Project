@@ -185,6 +185,17 @@ class BoardGrid(Gtk.Grid):
         self.bc = Rsvg.Handle.new_from_data(checkers_svg_data_array[2])
         self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
 
+        # Setup board colour
+        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX]
+        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_DARK_HEX]
+        self.lbhr = int(b"0x"+light_board_colour_hex[0:2],0)/255
+        self.lbhg = int(b"0x"+light_board_colour_hex[2:4],0)/255
+        self.lbhb = int(b"0x"+light_board_colour_hex[4:6],0)/255
+        self.dbhr = int(b"0x"+dark_board_colour_hex[0:2],0)/255
+        self.dbhg = int(b"0x"+dark_board_colour_hex[2:4],0)/255
+        self.dbhb = int(b"0x"+dark_board_colour_hex[4:6],0)/255
+
+
     def place_pieces(self):
         """
         place the pieces on the board, stored in game->board
@@ -219,15 +230,6 @@ class BoardGrid(Gtk.Grid):
         i = spacing
         width = checkerboard_area.get_allocated_width()
         height = checkerboard_area.get_allocated_height()
-        # TODO take this out of this event handler so it doesn't run EVERY time a frame is drawn
-        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX]
-        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_DARK_HEX]
-        lbhr = int(b"0x"+light_board_colour_hex[0:2],0)/255
-        lbhg = int(b"0x"+light_board_colour_hex[2:4],0)/255
-        lbhb = int(b"0x"+light_board_colour_hex[4:6],0)/255
-        dbhr = int(b"0x"+dark_board_colour_hex[0:2],0)/255
-        dbhg = int(b"0x"+dark_board_colour_hex[2:4],0)/255
-        dbhb = int(b"0x"+dark_board_colour_hex[4:6],0)/255
 
         cairo_ctx.save()
 
@@ -240,9 +242,9 @@ class BoardGrid(Gtk.Grid):
                 elif ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece)):
                     cairo_ctx.set_source_rgb(.5, 0, .5)
                 elif ycount % 2:
-                    cairo_ctx.set_source_rgb(lbhr, lbhg, lbhb)
+                    cairo_ctx.set_source_rgb(self.lbhr, self.lbhg, self.lbhb)
                 else:
-                    cairo_ctx.set_source_rgb(dbhr, dbhg, dbhb)
+                    cairo_ctx.set_source_rgb(self.dbhr, self.dbhg, self.dbhb)
                 # If we're outside the clip this will do nothing.
                 cairo_ctx.rectangle(i, j,
                                     check_size,
@@ -412,28 +414,6 @@ class BoardGrid(Gtk.Grid):
                 self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
                     cur_location, self.__game_obj)
                 checkerboard_area.queue_draw()
-
-    def create_location_list(self, size):
-        """
-        creates a 2d list of size n where each i in the list is [x, y] and
-        denotes a location to be placed on the UI window
-        this is for locations the mouse will click on the grid, to later be
-        indexed to get gamesquare at that grid location
-        @return: 2d list of integers
-        """
-        cur_length = 50
-        rv_list = []
-
-        for i in range(size):
-            col_list = []
-            cur_width = 50
-            for j in range(size):
-                col_list.append([cur_width, cur_length])
-                cur_width += 50
-            cur_length += 50
-            rv_list.append(col_list)
-
-        return rv_list
 
     def display_timer(self):
         # needs to have True or it only runs once
