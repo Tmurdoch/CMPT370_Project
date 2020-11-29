@@ -23,6 +23,10 @@ struct fileheadstruct
 	uint32_t darkPlayerTime;
 }__attribute__((packed));
 
+char *gameType[] = {"Checkers", "Chess"};
+char *pcolours[] = {"BROWN_GREY", "PINK_BLUE"};
+char *bcolours[] = {"WHITE_BLACK", "RED_GREEN", "YELLOW_BLUE"};
+
 //intel is a plague
 //POWER & ultrasparc master race
 uint32_t makeEndianStupidForX86CPUS(uint32_t x)
@@ -64,6 +68,10 @@ int main(int argc, char *argv[])
 	if (fps!=FILE_VER_ZERO_HEADER_SIZE+(8*8))
 	{
 		printf("size of file is incorrect, expected %i got %li\n", FILE_VER_ZERO_HEADER_SIZE+(8*8), fps);
+		if (fps==20)
+		{
+			printf("it is likely the save system crashed while generating the file is exactly as long as the magic\n");
+		}
 		return 1;
 	}
 
@@ -74,7 +82,11 @@ int main(int argc, char *argv[])
 		printf("Download more ram m8\n");
 	}
 
-	fread(file, FILE_VER_ZERO_HEADER_SIZE+(8*8), 1, fp);
+	if (!fread(file, FILE_VER_ZERO_HEADER_SIZE+(8*8), 1, fp))
+	{
+		printf("couldn't read the whole file for some reason\n");
+		return 1;
+	}
 	fclose(fp);
 
 	filehead = file;
@@ -90,17 +102,43 @@ int main(int argc, char *argv[])
 
 	printf("Version:\t%i\n",filehead->version);
 	printf("GameMode:\t%i\n",filehead->gameMode);
+	if (filehead->gameMode>=2)
+	{
+		printf("\tinvalid\n");
+		retcode = 1;
+	}
+	else
+	{
+		printf("\t%s\n",gameType[filehead->gameMode]);
+	}
 	printf("aiInGame:\t%i\n",filehead->aiInGame);
 	printf("darkisai:\t%i\n",filehead->darkPlayerisAI);
 	printf("darkPlayerTurn:\t%i\n",filehead->darkPlayerTurn);
 	printf("height: \t%i\n",filehead->boardHeight);
 	printf("width:  \t%i\n",filehead->boardWidth);
 	printf("Version:\t%i\n",filehead->version);
-	printf("pcolour:\t%i\n",filehead->colours);
+	printf("pcolour:\t%i",filehead->colours);
+	if (filehead->colours >= (sizeof(pcolours)/sizeof(pcolours[0])))
+	{
+		printf("\tinvalid\n");
+		retcode = 1;
+	}
+	else
+	{
+		printf("\t%s\n",pcolours[filehead->colours]);
+	}
 	printf("timer:  \t%i\n",filehead->timerEnabled);
-	printf("bcolour:\t%i\n",filehead->boardColour);
+	printf("bcolour:\t%i",filehead->boardColour);
+	if (filehead->boardColour >= (sizeof(bcolours)/sizeof(bcolours[0])))
+	{
+		printf("\tinvalid\n");
+		retcode = 1;
+	}
+	else
+	{
+		printf("\t%s\n",bcolours[filehead->boardColour]);
+	}
 	printf("unused: \t%i\n",filehead->unusedReserved);
-	printf("player: \t%i\n",filehead->colours);
 	#ifdef __ORDER_LITTLE_ENDIAN__
 	printf("ltime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->lightPlayerTime));
 	printf("dtime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->darkPlayerTime));
@@ -122,5 +160,5 @@ int main(int argc, char *argv[])
 		y++;
 	}
 	free(file);
-	return 0;
+	return retcode;
 }
