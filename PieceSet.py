@@ -124,7 +124,7 @@ class PieceSet:
     def get_colour(self):
         """ :return: The colour of the piece set """
         # All pieces will be the same colour, so just look at one
-        if len(self.__livePieces) >= 0:
+        if len(self.__livePieces) > 0:
             return self.__livePieces[0].get_colour()
         else:
             return self.__capturedPieces[0].get_colour()

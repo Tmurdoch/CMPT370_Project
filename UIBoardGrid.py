@@ -3,6 +3,8 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import gi
+
+from GameStatus import GameStatus
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
 
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
@@ -13,7 +15,6 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 from GameType import GameType
 from PlayerType import PlayerType
 import cairo
-import random
 import build_list_of_moves
 from selectBest import select_best
 SEEK_SET = 0
@@ -372,7 +373,7 @@ class BoardGrid(Gtk.Grid):
 
             # check if making a move
             if cur_location in self.possible_moves_for_cur_piece:
-                print("The destination square chosen was confimred to be in the list of possible moves.")
+                print("The destination square chosen was confirmed to be in the list of possible moves.")
                 # move the piece
                 print(self.current_selected_location)
                 print(cur_location)
@@ -393,6 +394,15 @@ class BoardGrid(Gtk.Grid):
                     self.__game_obj.get_light_player().get_timer().start()
                     self.__game_obj.get_dark_player().get_timer().stop()
                 self.__game_obj.get_board().switch_sides()
+                print("#################### Checking Game Status #########################")
+                game_status = self.__game_obj.check_for_game_over()
+                print("#################### ----------------------- #######################")
+                if game_status == GameStatus.DARK_VICTORIOUS:
+                    raise Exception("Dark has won!")
+                elif game_status == GameStatus.LIGHT_VICTORIOUS:
+                    raise Exception("Light has won!")
+                else:
+                    print("Game still in progress, no winner yet\n")
 
                 # execute AI code if necessary
                 if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
@@ -421,6 +431,16 @@ class BoardGrid(Gtk.Grid):
 
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
+                    print("#################### Checking Game Status #########################")
+                    game_status = self.__game_obj.check_for_game_over()
+                    print("#################### ----------------------- #######################")
+                    if game_status == GameStatus.DARK_VICTORIOUS:
+                        raise Exception("Dark has won!")
+                    elif game_status == GameStatus.LIGHT_VICTORIOUS:
+                        raise Exception("Light has won!")
+                    else:
+                        print("Game still in progress, no winner yet\n")
+
                 # reset attributes
                 self.current_selected_location = None
                 self.possible_moves_for_cur_piece = []

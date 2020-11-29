@@ -128,27 +128,43 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
-#        if self.__game_type == GameType.CHECKERS or self.__game_type == GameType.CHESS:
-#            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
-#                if self.__current_player is self.__light_player:
-#                    self.__game_status = GameStatus.DARK_VICTORIOUS
-#                else:
-#                   self.__game_status = GameStatus.LIGHT_VICTORIOUS
-        """
-        elif self.__game_type == GameType.CHESS:
-            # TODO CHESS
-            print("do stuff")
-        else:
-            # unknown game
-            assert 0
-        """
         return
 
     def check_for_game_over(self):
         """
         Checks to see if the game is over
-        :return: Bool: if the game is over"""
-        return bool(self.__game_status)
+        :return: GameStatus: Current Game Status"""
+
+        if self.__current_player is self.__light_player:
+            light_player_moves = self.__light_player.build_possible_moves_for_all_pieces(self)
+            self.get_board().switch_sides()
+            dark_player_moves = self.__dark_player.build_possible_moves_for_all_pieces(self)
+            self.get_board().switch_sides()
+        else:
+            dark_player_moves = self.__dark_player.build_possible_moves_for_all_pieces(self)
+            self.get_board().switch_sides()
+            light_player_moves = self.__light_player.build_possible_moves_for_all_pieces(self)
+            self.get_board().switch_sides()
+
+        if self.__game_type == GameType.CHECKERS:
+            if len(light_player_moves) == 0:
+                return GameStatus.DARK_VICTORIOUS
+            elif len(dark_player_moves) == 0:
+                return GameStatus.LIGHT_VICTORIOUS
+            else:
+                return GameStatus.IN_PROGRESS
+
+        elif self.__game_type == GameType.CHESS:
+            # TODO: Just checks for stalemate, expand to also check for checkmate
+            if len(light_player_moves) == 0:
+                return GameStatus.DARK_VICTORIOUS
+            elif len(dark_player_moves) == 0:
+                return GameStatus.LIGHT_VICTORIOUS
+            else:
+                return GameStatus.IN_PROGRESS
+
+        else:
+            raise Exception("Can't check for game over, game is neither type chess nor checkers")
 
     def get_colour_mode(self):
         """
@@ -171,16 +187,3 @@ class Game:
     def set_board_colour_mode(self, board_colour_mode):
         """ :param board_colour_mode: The board colour mode. """
         self.__board_colour_mode = board_colour_mode
-
-
-# if (__name__ == "__main__"):
-#    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
-#
-#    piece_obj = King("Red")
-#
-#    game_obj.get_board().get_game_square(0, 0).put_piece_here(self.__dark_player.get_piece_set().)
-#    game_obj.get_board().print_game_board()
-#    timer_obj = Timer(10, 20, 0)
-#    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.save_to_file()
