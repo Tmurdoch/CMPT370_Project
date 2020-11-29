@@ -58,12 +58,21 @@ class PieceSet:
         :param captured_piece: a piece to capture
         :return: bool: If the piece was successfully captured, return True, False otherwise
         """
+        print("capture_piece() was called on piece id " + str(captured_piece.get_piece_id()))
+
         live_ids = self.get_live_piece_ids()
+
+        print("Here is the list of all the live ids: ")
+        print(live_ids)
+
         for piece_id_index, piece_id in enumerate(live_ids):
             if captured_piece.get_piece_id() == piece_id:
                 self.__livePieces.pop(piece_id_index)
                 self.__capturedPieces.append(captured_piece)
                 return True
+            else:
+                print("The piece you are trying to capture has id: " + str(captured_piece.get_piece_id()) +
+                      ", but that was not found in the list of ids :(")
         return False
 
     def get_captured_pieces(self):

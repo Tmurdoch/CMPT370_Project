@@ -1,7 +1,9 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
-
+from Board import Board
+from GameSquare import GameSquare
+from PieceSet import PieceSet
 from Pieces import King, Rook, Pawn
 
 
@@ -15,6 +17,25 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
     :param player: The player who is actually making the move, needed to update the last move
     :param game: The game to know what player is currently at the bottom of the board
     """
+
+    print("The chess_move_maker has been called.")
+    if not isinstance(origin_square, GameSquare):
+        raise Exception("The origin square passed to the chess_move_maker() was not of type GameSquare object.")
+
+    if not isinstance(dest_square, GameSquare):
+        raise Exception("The destination square passed to the chess_move_maker() was not a GameSquare object.")
+
+    if not isinstance(board, Board):
+        raise Exception("The board passed to the chess_move_maker() was not a Board object.")
+
+    if not isinstance(other_player_piece_set, PieceSet):
+        raise Exception("The piece set passed to the chess_move_maker() was not a PieceSet object.")
+
+    if type(player).__class__.__name__ != "Player":
+        raise Exception("The player (current player) passed to the chess_move_maker() was not a Player object.")
+
+    if type(game).__class__.__name__ != "Game":
+        raise Exception("The game passed to the chess_move_maker() was not a game object.")
 
     castle_move = False
 
