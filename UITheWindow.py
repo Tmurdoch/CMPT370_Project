@@ -25,7 +25,7 @@ import os
 
 class TheWindow(Gtk.Window):
     def __init__(self, directory):
-        Gtk.Window.__init__(self, title="Main Menu")
+        Gtk.Window.__init__(self, title="370CC Main Menu")
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
@@ -95,33 +95,45 @@ class TheWindow(Gtk.Window):
         # fixed the exit stalling problem
         self.connect("destroy", Gtk.main_quit)
 
+    def change_state(self, leaving, going):
+        leaving.hide()
+        going.show()
+        if going is self.main_box:
+            self.set_title("370CC Main Menu")
+        elif going is self.game_choice_box:
+            self.set_title("370CC - Chose Game Type")
+        elif going is self.resume_choice_box:
+            self.set_title("370CC - Choose What Game To Load")
+        elif going is self.player_type:
+            self.set_title("370CC - Choose Opponent")
+        elif going is self.customization:
+            self.set_title("370CC - Choose Colours")
+
     def main_play_clicked(self, button):
         print('Play was chosen')
-        self.main_box.hide()
-        self.game_choice_box.show()
+        self.change_state(self.main_box, self.game_choice_box)
+        
 
     def main_resume_clicked(self, button):
         print('This should go to resumed game')
-        self.main_box.hide()
-        self.resume_choice_box.show()
-        return
+        self.change_state(self.main_box, self.resume_choice_box)
 
     def game_choice_chess_clicked(self, button):
         print('Chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
-        self.game_choice_box.hide()
-        self.player_type.show()
+        self.change_state(self.game_choice_box, self.player_type)
+
 
     def game_choice_checkers_clicked(self, button):
         print('Checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
-        self.game_choice_box.hide()
-        self.player_type.show()
+        self.change_state(self.game_choice_box, self.player_type)
 
     def game_choice_back_clicked(self, button):
         print("This should go back to Main Menu Window")
         self.game_choice_box.hide()
         self.main_box.show()
+        self.change_state(self.game_choice_box, self.main_box)
 
     def resume_choice_chess_clicked(self, button):
         print('Resume chess was chosen')  # put next window here
@@ -146,25 +158,22 @@ class TheWindow(Gtk.Window):
 
     def player_type_single_clicked(self, button):
         print('Single Player was chosen')  # put next window here
-        self.player_type.hide()
-        self.customization.show()
+        self.change_state(self.player_type, self.customization)
         self.singleplayer = 1
 
     def player_type_multi_clicked(self, button):
         print('Multi Player was chosen')  # put next window here
-        self.player_type.hide()
-        self.customization.show()
+        self.change_state(self.player_type, self.customization)
+        self.set_title("370CC - Chose Colours")
         self.multiplayer = 1
 
     def player_type_back_clicked(self, button):
         print("This should go back to Game Choice Window")
-        self.player_type.hide()
-        self.game_choice_box.show()
+        self.change_state(self.player_type, self.game_choice_box)
 
     def customization_back_clicked(self, button):
         print("This should go back to Game Choice Window")
-        self.customization.hide()
-        self.player_type.show()
+        self.change_state(self.customization, self.player_type)
 
     def customization_start_clicked(self, button):
         print("This should go to Board Window")
