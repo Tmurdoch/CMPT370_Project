@@ -131,13 +131,13 @@ class Game:
         timer_enabled = self.__dark_player.get_timer().get_enabled()  # good
         light_player_time = self.__light_player.get_timer().get_time_remaining_s()  # good
         dark_player_time = self.__dark_player.get_timer().get_time_remaining_s()  # good
-        light_player_castled = self.__light_player.get_castled()
-        dark_player_castled = self.__dark_player.get_castled()
+        board_colour = self.__board_colour_mode
+        unused_reserved = 117
         # write the header struct
         fp.write(struct.pack(">BBBBBBBBBBBff", CURRENT_FILE_VERSION, game_mode,
                              ai_in_game, dark_player_is_ai, dark_player_turn,
                              board_height, board_width, colours, timer_enabled,
-                             light_player_castled, dark_player_castled,
+                             board_colour, unused_reserved,
                              light_player_time, dark_player_time))
         row = 0
         while row != board_height:
@@ -236,7 +236,7 @@ class Game:
             fp.seek(20, SEEK_SET)
             f = fp.read(FILE_VER_ZERO_HEADER_SIZE-20)
             CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, \
-                board_width, colours, timer_enabled, light_player_castled, dark_player_castled, light_player_time, \
+                board_width, colours, timer_enabled, board_colour, unused_reserved, light_player_time, \
                 dark_player_time = struct.unpack(">BBBBBBBBBBBff", f)
 
             if file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height)):
@@ -266,14 +266,10 @@ class Game:
                                     (not (ai_in_game and (not dark_player_is_ai))),
                                     Timer(light_player_time, timer_enabled))
 
-            if light_player_castled:
-                self.__light_player.castle()
 
             self.build_dark_player("NotUsedInThisVersionOfSaves",
                                    (not (ai_in_game and dark_player_is_ai)),
                                    Timer(dark_player_time, timer_enabled))
-            if dark_player_castled:
-                self.__dark_player.castle()
 
             # For now assume they are ideal piece sets
             self.__light_player.build_piece_set(

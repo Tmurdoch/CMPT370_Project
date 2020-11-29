@@ -30,6 +30,7 @@ class TheWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
         self.modify_bg(Gtk.StateType.NORMAL, col)
+        self.directory = directory
 
         self.has_chess_save = 0
         self.has_checkers_save = 0
@@ -210,6 +211,6 @@ class TheWindow(Gtk.Window):
         #                                                   \/ should it?
         # TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
         # TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
-        self.board = BoardGrid("Test", "multiplayer", temp_game)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
