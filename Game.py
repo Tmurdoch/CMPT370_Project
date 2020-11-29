@@ -3,6 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
+from GameType import GameType
 from Player import Player
 from Board import Board
 from GameStatus import GameStatus
