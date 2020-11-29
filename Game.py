@@ -492,20 +492,6 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
-#        if self.__game_type == GameType.CHECKERS or self.__game_type == GameType.CHESS:
-#            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
-#                if self.__current_player is self.__light_player:
-#                    self.__game_status = GameStatus.DARK_VICTORIOUS
-#                else:
-#                   self.__game_status = GameStatus.LIGHT_VICTORIOUS
-        """
-        elif self.__game_type == GameType.CHESS:
-            # TODO CHESS
-            print("do stuff")
-        else:
-            # unknown game
-            assert 0
-        """
         return
 
     def check_for_game_over(self):
@@ -533,7 +519,13 @@ class Game:
                 return GameStatus.IN_PROGRESS
 
         elif self.__game_type == GameType.CHESS:
-            return GameStatus.IN_PROGRESS
+            # TODO: Just checks for stalemate, expand to also check for checkmate
+            if len(light_player_moves) == 0:
+                return GameStatus.DARK_VICTORIOUS
+            elif len(dark_player_moves) == 0:
+                return GameStatus.LIGHT_VICTORIOUS
+            else:
+                return GameStatus.IN_PROGRESS
 
         else:
             raise Exception("Can't check for game over, game is neither type chess nor checkers")
