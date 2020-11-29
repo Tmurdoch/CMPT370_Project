@@ -81,7 +81,6 @@ class Player(object):
         :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
         if type(origin_square).__name__ != "GameSquare":
-
             raise Exception("The origin square passed to make_move() is not a Game Square object." +
                             type(origin_square).__name__)
 
@@ -94,8 +93,10 @@ class Player(object):
         board = game.get_board()
         if self is game.get_light_player():
             other_player = game.get_dark_player()
-        else:
+        elif self is game.get_dark_player():
             other_player = game.get_light_player()
+        else:
+            raise Exception("Player not identified.")
 
         if origin_square.get_occupying_piece() is None:
             # There is no piece here, raise an exception
