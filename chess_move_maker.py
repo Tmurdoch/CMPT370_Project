@@ -146,6 +146,7 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
     if not castle_move:
 
         # Then check for en passant move
+        en_passant_move = False
         if origin_square.get_row() == 3 and isinstance(origin_square.get_occupying_piece(), Pawn):
             # square where enemy pawn made 2 step move last turn
             adj_square = board.get_game_square(origin_square.get_row(), dest_square.get_col())
@@ -158,22 +159,24 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                         raise Exception("Unable to capture piece via En passant")
                     adj_square.remove_occupying_piece()
                     dest_square.put_piece_here(origin_square.get_occupying_piece())
+                    en_passant_move = True
                     origin_square.remove_occupying_piece()
 
-        elif dest_square.get_occupying_piece() is None:
-            # We can go ahead and make the move
-            dest_square.put_piece_here(origin_square.get_occupying_piece())
-            origin_square.remove_occupying_piece()
-        elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
-            # Enemy piece there, make the capture move
-            if not other_player_piece_set.capture_piece(dest_square.get_occupying_piece()):
-                raise Exception("Unable to capture piece.")
-            dest_square.remove_occupying_piece()
-            dest_square.put_piece_here(origin_square.get_occupying_piece())
-            origin_square.remove_occupying_piece()
-        else:
-            # Illegal move, trying to move a square that has a friendly piece
-            raise Exception("Illegal move, trying to move a square that has a friendly piece")
+        if not en_passant_move:
+            if dest_square.get_occupying_piece() is None:
+                # We can go ahead and make the move
+                dest_square.put_piece_here(origin_square.get_occupying_piece())
+                origin_square.remove_occupying_piece()
+            elif dest_square.get_occupying_piece().get_colour() != origin_square.get_occupying_piece().get_colour():
+                # Enemy piece there, make the capture move
+                if not other_player_piece_set.capture_piece(dest_square.get_occupying_piece()):
+                    raise Exception("Unable to capture piece.")
+                dest_square.remove_occupying_piece()
+                dest_square.put_piece_here(origin_square.get_occupying_piece())
+                origin_square.remove_occupying_piece()
+            else:
+                # Illegal move, trying to move a square that has a friendly piece
+                raise Exception("Illegal move, trying to move a square that has a friendly piece")
 
     player.set_last_move(((7 - origin_square.get_row(), 7 - origin_square.get_col()),
                           (7 - dest_square.get_row(), 7 - dest_square.get_col())))
