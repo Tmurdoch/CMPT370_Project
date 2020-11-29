@@ -3,9 +3,6 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import GameSquare as Gs
-from enum import IntEnum
-
-# TODO: Get rid of the internal board theme enum.  Board theme should be passed into board init.
 
 
 class Board:
