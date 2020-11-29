@@ -39,6 +39,11 @@ class PieceSet:
                                  Pieces.CheckersCoin(colour, 7), Pieces.CheckersCoin(colour, 8),
                                  Pieces.CheckersCoin(colour, 9), Pieces.CheckersCoin(colour, 10),
                                  Pieces.CheckersCoin(colour, 11), Pieces.CheckersCoin(colour, 12)]
+            self.__all = []
+            x = 0
+            while x != len(self.__livePieces):
+                self.__all.append(self.__livePieces[x])
+                x += 1
         elif piece_set_type == GameType.CHESS:
             self.__livePieces = [Pieces.King(colour, 1),
                                  Pieces.Queen(colour, 2),
@@ -49,6 +54,11 @@ class PieceSet:
                                  Pieces.Pawn(colour, 11), Pieces.Pawn(colour, 12),
                                  Pieces.Pawn(colour, 13), Pieces.Pawn(colour, 14),
                                  Pieces.Pawn(colour, 15), Pieces.Pawn(colour, 16)]
+            self.__all = []
+            x = 0
+            while x != len(self.__livePieces):
+                self.__all.append(self.__livePieces[x])
+                x += 1
         else:
             raise Exception("piece_set_type can only be Chess or Checkers")
 
@@ -89,6 +99,9 @@ class PieceSet:
     def get_live_pieces(self):
         """ :return: Piece[]: The list of live (non-captured) pieces """
         return self.__livePieces
+
+    def get_all_pieces(self):
+        return self.__all
 
     def get_live_piece_ids(self):
         """

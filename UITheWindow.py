@@ -141,9 +141,13 @@ class TheWindow(Gtk.Window):
         print('Resume chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.resume_choice_box.hide()
-        print("SEE TODO STUFF NERE THIS LINE")
-        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
-        # BUTTON BEFORE STARTING THE LOADED GAME
+
+        temp_game = Game(self.game_type, 0, 0)
+        temp_game.load_from_file(self.directory)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
+        self.grid.attach(self.board, 0, 0, 1, 1)
+        self.board.show()
+
 
     def resume_choice_checkers_clicked(self, button):
         print('Resume checkers was chosen')  # put next window here
@@ -152,12 +156,10 @@ class TheWindow(Gtk.Window):
 
         temp_game = Game(self.game_type, 0, 0)
         temp_game.load_from_file(self.directory)
-        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
-        print("SEE TODO STUFF NERE THIS LINE")
-        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
-        # BUTTON BEFORE STARTING THE LOADED GAME
+
 
     def resume_choice_back_clicked(self, button):
         print("This should go back to Main Menu Window")

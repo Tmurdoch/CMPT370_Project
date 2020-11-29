@@ -262,6 +262,8 @@ class Game:
             self.__board = Board(board_height)
             self.__colour_mode = colours
 
+            self.__board_colour_mode = board_colour
+
             self.build_light_player("NotUsedInThisVersionOfSaves",
                                     (not (ai_in_game and (not dark_player_is_ai))),
                                     Timer(light_player_time, timer_enabled))
@@ -311,103 +313,104 @@ class Game:
                         if chr(board_data[board_data_index]).lower() == "k":
                             if is_dark:
                                 assert found_dark_king != 1
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[0])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[0])
                                 found_dark_king += 1
                             else:
                                 assert found_light_king != 1
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[0])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[0])
                                 found_light_king += 1
-                        if chr(board_data[board_data_index]).lower() == "l": # lima - just in case your fonts suck Il1
+                        elif chr(board_data[board_data_index]).lower() == "l": # lima - just in case your fonts suck Il1
                             if is_dark:
                                 assert found_dark_king != 1
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[0])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[0])
                                 found_dark_king += 1
                             else:
                                 assert found_light_king != 1
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[0])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[0])
                                 found_light_king += 1
                             cur_square.get_occupying_piece().move()
                         elif chr(board_data[board_data_index]).lower() == "q":
                             if is_dark:
                                 assert found_dark_queen != 1
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[1])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[1])
                                 found_dark_queen += 1
                             else:
                                 assert found_light_queen != 1
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[1])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[1])
                                 found_light_queen += 1
                         elif chr(board_data[board_data_index]).lower() == "n":
                             if is_dark:
                                 assert (found_dark_knight != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[6+found_dark_knight])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[6+found_dark_knight])
                                 found_dark_knight += 1
                             else:
                                 assert (found_light_knight != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[6+found_light_knight])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[6+found_light_knight])
                                 found_light_knight += 1
                         elif chr(board_data[board_data_index]).lower() == "b":
                             if is_dark:
                                 assert (found_dark_bishop != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[4+found_dark_bishop])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[4+found_dark_bishop])
                                 found_dark_bishop += 1
                             else:
                                 assert (found_light_bishop != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[4+found_light_bishop])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[4+found_light_bishop])
                                 found_light_bishop += 1
                         elif chr(board_data[board_data_index]).lower() == "r":
                             if is_dark:
                                 assert (found_dark_rook != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_dark_rook])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[2+found_dark_rook])
                                 found_dark_rook += 1
                             else:
                                 assert (found_light_rook != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[2+found_light_rook])
                                 found_light_rook += 1
                         elif chr(board_data[board_data_index]).lower() == "s":
                             if is_dark:
                                 assert (found_dark_rook != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_dark_rook])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[2+found_dark_rook])
                                 found_dark_rook += 1
                             else:
                                 assert (found_light_rook != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[2+found_light_rook])
                                 found_light_rook += 1
                             cur_square.get_occupying_piece().move()
                         elif chr(board_data[board_data_index]).lower() == "p":
                             # The pawn is an unmoved pawn
                             if is_dark:
                                 assert (found_dark_pawn != 8)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[8+found_dark_pawn])
                                 found_dark_pawn += 1
                             else:
                                 assert (found_light_pawn != 8)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_light_pawn])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[8+found_light_pawn])
                                 found_light_pawn += 1
                         elif chr(board_data[board_data_index]).lower() == "m":
                             # The pawn is an moved pawn
                             if is_dark:
                                 assert (found_dark_pawn != 8)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_all_pieces()[8+found_dark_pawn])
                                 found_dark_pawn += 1
                             else:
                                 assert (found_light_pawn != 8)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_light_pawn])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_all_pieces()[8+found_light_pawn])
                                 found_light_pawn += 1
                             cur_square.get_occupying_piece().move()
                         else:
                             # unidentified piece, shouldn't be possible
+                            print(chr(board_data[board_data_index]))
                             assert 0
 
                     elif self.__game_type == GameType.CHECKERS:
                         if is_dark:
                             cur_square.put_piece_here(
-                                self.__dark_player.get_piece_set().get_live_pieces()[
+                                self.__dark_player.get_piece_set().get_all_pieces()[
                                     found_dark_checkers_pieces]
                             )
                             found_dark_checkers_pieces += 1
                         else:
                             cur_square.put_piece_here(
-                                self.__light_player.get_piece_set().get_live_pieces()[
+                                self.__light_player.get_piece_set().get_all_pieces()[
                                     found_light_checkers_pieces]
                             )
                             found_light_checkers_pieces += 1
@@ -442,52 +445,52 @@ class Game:
                 #king
                 if not found_dark_king:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[0])
+                        self.__dark_player.get_piece_set().get_all_pieces()[0])
                 if not found_light_king:
                     self.__light_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[0])
+                        self.__light_player.get_piece_set().get_all_pieces()[0])
                 #queen
                 if not found_dark_queen:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[1])
+                        self.__dark_player.get_piece_set().get_all_pieces()[1])
                 if not found_light_queen:
                     self.__light_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[1])
+                        self.__light_player.get_piece_set().get_all_pieces()[1])
                 #rook
                 while found_dark_rook != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[1+found_dark_rook])
+                        self.__dark_player.get_piece_set().get_all_pieces()[1+found_dark_rook])
                     found_dark_rook -= 1
                 while found_light_rook != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[1+found_light_rook])
+                        self.__light_player.get_piece_set().get_all_pieces()[1+found_light_rook])
                     found_light_rook -= 1
                 #bishop
                 while found_dark_bishop != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[3+found_dark_bishop])
+                        self.__dark_player.get_piece_set().get_all_pieces()[3+found_dark_bishop])
                     found_dark_bishop -= 1
                 while found_light_bishop != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[3+found_light_bishop])
+                        self.__light_player.get_piece_set().get_all_pieces()[3+found_light_bishop])
                     found_light_bishop -= 1
                 #knight
                 while found_dark_knight != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[5+found_dark_knight])
+                        self.__dark_player.get_piece_set().get_all_pieces()[5+found_dark_knight])
                     found_dark_knight -= 1
                 while found_light_knight != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[5+found_light_knight])
+                        self.__light_player.get_piece_set().get_all_pieces()[5+found_light_knight])
                     found_light_knight -= 1
                 #pawn
                 while found_dark_pawn != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__dark_player.get_piece_set().get_live_pieces()[7+found_dark_pawn])
+                        self.__dark_player.get_piece_set().get_all_pieces()[7+found_dark_pawn])
                     found_dark_pawn -= 1
                 while found_light_pawn != 0:
                     self.__dark_player.get_piece_set().capture_piece(
-                        self.__light_player.get_piece_set().get_live_pieces()[7+found_light_pawn])
+                        self.__light_player.get_piece_set().get_all_pieces()[7+found_light_pawn])
                     found_light_pawn -= 1
             # delete the file after loading
             os.remove(path+"/save-game.cmpt370" +

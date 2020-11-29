@@ -22,7 +22,7 @@ SEEK_END = 2
 
 
 class BoardGrid(Gtk.Grid):
-    def __init__(self, game, game_type, game_obj, home):
+    def __init__(self, game, game_type, game_obj, home, load_from_file=False):
         """
         @param game_obj: actual game object, initialize by Game()
         @attribute current_selected_piece: Piece obejct, last clicked on piece
@@ -32,7 +32,8 @@ class BoardGrid(Gtk.Grid):
         self.__game = game
         self.__game_obj = game_obj
         self.home = home
-        self.place_pieces()
+        if (not load_from_file):
+            self.place_pieces()
         self.surface = None
         # save the selected piece so we can check if they click on a possible
         # moves for that piece
