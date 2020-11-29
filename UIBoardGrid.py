@@ -22,7 +22,7 @@ SEEK_END = 2
 
 
 class BoardGrid(Gtk.Grid):
-    def __init__(self, game, game_type, game_obj):
+    def __init__(self, game, game_type, game_obj, home, load_from_file=False):
         """
         @param game_obj: actual game object, initialize by Game()
         @attribute current_selected_piece: Piece obejct, last clicked on piece
@@ -31,7 +31,9 @@ class BoardGrid(Gtk.Grid):
         Gtk.Grid.__init__(self)
         self.__game = game
         self.__game_obj = game_obj
-        self.place_pieces()
+        self.home = home
+        if (not load_from_file):
+            self.place_pieces()
         self.surface = None
         # save the selected piece so we can check if they click on a possible
         # moves for that piece
@@ -491,4 +493,11 @@ class BoardGrid(Gtk.Grid):
 
     def save_quit_clicked(self, button):
         print("This should exit")
+        self.__game_obj.save_to_file(self.home)
+        #try:
+        #    self.__game_obj.save_to_file(self.home)
+        #except:
+        #    # TODO show message dialog here with error
+        #    print("save failed")
+        # yolo quit out even if save failed
         Gtk.main_quit()
