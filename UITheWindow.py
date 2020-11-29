@@ -7,7 +7,7 @@ import gi
 from UIMainMenuBox import MainMenuBox
 from PlayerType import PlayerType
 from Game import Game
-from ResumeChoiceBox import ResumeChoiceBox
+from UIResumeChoiceBox import ResumeChoiceBox
 from Timer import Timer
 from Colours import ColourCodes
 from UIBoardGrid import BoardGrid
@@ -39,9 +39,9 @@ class TheWindow(Gtk.Window):
         self.singleplayer = 0
         self.multiplayer = 0
 
-        if os.path.exists(directory + "/savedGame.cmpt370chess"):
+        if os.path.exists(directory + "/save-game.cmpt370Chess"):
             self.has_chess_save = 1
-        if os.path.exists(directory + "/savedGame.cmpt370checkrs"):
+        if os.path.exists(directory + "/save-game.cmpt370Checkers"):
             self.has_checkers_save = 1
         self.main_box = MainMenuBox(
             self.has_chess_save, self.has_checkers_save)
@@ -66,7 +66,7 @@ class TheWindow(Gtk.Window):
                 "clicked", self.resume_choice_chess_clicked)
         if self.has_checkers_save:
             self.resume_choice_box.checkers_button.connect(
-                "clicked", self.esume_choice_checkers_clicked)
+                "clicked", self.resume_choice_checkers_clicked)
         self.resume_choice_box.back_button.connect(
             "clicked", self.resume_choice_back_clicked)
 

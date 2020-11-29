@@ -116,7 +116,7 @@ class Game:
         # caller of save_to_file()
         # is responsible for the try except
         # error handling
-        fp = open(path+"/save-game.370" +
+        fp = open(path+"/save-game.cmpt370" +
                   GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "wb")
         # write magic
         fp.write(MAGIC)
@@ -211,7 +211,7 @@ class Game:
         # caller of load_from_file()
         # is responsible for the try except
         # error handling
-        fp = open(path+"/save-game.370" +
+        fp = open(path+"/save-game.cmpt370" +
                   GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type], "rb")
         read_magic = fp.read(20)
         if read_magic != MAGIC:
