@@ -457,41 +457,41 @@ class Game:
                     self.__light_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_all_pieces()[1])
                 #rook
-                while found_dark_rook != 0:
+                while found_dark_rook != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_all_pieces()[1+found_dark_rook])
-                    found_dark_rook -= 1
-                while found_light_rook != 0:
+                    found_dark_rook += 1
+                while found_light_rook != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_all_pieces()[1+found_light_rook])
-                    found_light_rook -= 1
+                    found_light_rook += 1
                 #bishop
-                while found_dark_bishop != 0:
+                while found_dark_bishop != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_all_pieces()[3+found_dark_bishop])
-                    found_dark_bishop -= 1
-                while found_light_bishop != 0:
+                    found_dark_bishop += 1
+                while found_light_bishop != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_all_pieces()[3+found_light_bishop])
-                    found_light_bishop -= 1
+                    found_light_bishop += 1
                 #knight
-                while found_dark_knight != 0:
+                while found_dark_knight != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_all_pieces()[5+found_dark_knight])
-                    found_dark_knight -= 1
-                while found_light_knight != 0:
+                    found_dark_knight += 1
+                while found_light_knight != 2:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_all_pieces()[5+found_light_knight])
-                    found_light_knight -= 1
+                    found_light_knight += 1
                 #pawn
-                while found_dark_pawn != 0:
+                while found_dark_pawn != 8:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_all_pieces()[7+found_dark_pawn])
-                    found_dark_pawn -= 1
-                while found_light_pawn != 0:
+                    found_dark_pawn += 1
+                while found_light_pawn != 8:
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_all_pieces()[7+found_light_pawn])
-                    found_light_pawn -= 1
+                    found_light_pawn += 1
             # delete the file after loading
             os.remove(path+"/save-game.cmpt370" +
                       GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
