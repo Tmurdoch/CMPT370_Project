@@ -187,16 +187,3 @@ class Game:
     def set_board_colour_mode(self, board_colour_mode):
         """ :param board_colour_mode: The board colour mode. """
         self.__board_colour_mode = board_colour_mode
-
-
-# if (__name__ == "__main__"):
-#    game_obj = Game("chess", Colours.Colour_Codes.RED_BLACK)
-#
-#    piece_obj = King("Red")
-#
-#    game_obj.get_board().get_game_square(0, 0).put_piece_here(self.__dark_player.get_piece_set().)
-#    game_obj.get_board().print_game_board()
-#    timer_obj = Timer(10, 20, 0)
-#    game_obj.build_light_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.build_dark_player("tom", PlayerType.human, timer_obj, 1)
-#    game_obj.save_to_file()
