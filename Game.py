@@ -384,12 +384,12 @@ class Game:
             self.__current_player = self.__light_player
         else:
             self.__current_player = self.__dark_player
-        if self.__game_type == GameType.CHECKERS or self.__game_type == GameType.CHESS:
-            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
-                if self.__current_player is self.__light_player:
-                    self.__game_status = GameStatus.DARK_VICTORIOUS
-                else:
-                    self.__game_status = GameStatus.LIGHT_VICTORIOUS
+#        if self.__game_type == GameType.CHECKERS or self.__game_type == GameType.CHESS:
+#            if 0 == len(self.__current_player.build_possible_moves_for_all_pieces(self)):
+#                if self.__current_player is self.__light_player:
+#                    self.__game_status = GameStatus.DARK_VICTORIOUS
+#                else:
+#                   self.__game_status = GameStatus.LIGHT_VICTORIOUS
         """
         elif self.__game_type == GameType.CHESS:
             # TODO CHESS

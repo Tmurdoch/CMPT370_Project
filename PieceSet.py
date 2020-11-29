@@ -69,6 +69,8 @@ class PieceSet:
             if captured_piece.get_piece_id() == piece_id:
                 self.__livePieces.pop(piece_id_index)
                 self.__capturedPieces.append(captured_piece)
+                print("Capture successful, now here is the list of all the live ids: ")
+                print(live_ids)
                 return True
 
         print("The piece you are trying to capture has id: " + str(captured_piece.get_piece_id()) +

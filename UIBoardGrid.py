@@ -378,8 +378,7 @@ class BoardGrid(Gtk.Grid):
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
 
-                print("...We have returned from make move and are now continuing")
-                print("")
+                print("...We have returned from make move and are now continuing \n")
 
                 checkerboard_area.queue_draw()
                 # switch players, flip board
@@ -395,7 +394,7 @@ class BoardGrid(Gtk.Grid):
 
                 # execute AI code if necessary
                 if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
-                    print("The AI is now going to compute and pick it's move")
+                    print("The AI is now going to compute and pick it's move...")
                     AI = self.__game_obj.get_current_player()
                     moves_for_ai = AI.build_possible_moves_for_all_pieces(
                         self.__game_obj)
@@ -403,18 +402,21 @@ class BoardGrid(Gtk.Grid):
                     # execute a random move
                     #rand_move = random.choice(moves_for_ai)
                     rand_move = select_best(moves_for_ai)
-                    print("Here is the move that was chosen:")
-                    print(rand_move)
 
                     if type(rand_move[0]).__name__ != "GameSquare":
                         raise Exception("Origin square is not a game square, so it won't be passed to make_move()")
                     if type(rand_move[1]).__name__ != "GameSquare":
                         raise Exception("Destination square is not a game square, so it won't be passed to make_move()")
 
+                    print("Here is the move that was chosen:")
+                    print("From " + str(rand_move[0].get_row_and_column()) + " to "
+                          + str(rand_move[1].get_row_and_column()))
+
                     #print(rand_move[0], rand_move[1], len(rand_move[1]))
                     #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
                     AI.make_move(rand_move[0], rand_move[1], self.__game_obj)
-                    print("AI move made, now switching current player and switching back sides...")
+                    print("...AI move made, now switching current player and switching back sides... \n")
+
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
                 # reset attributes
