@@ -271,13 +271,6 @@ class Game:
                                    (not (ai_in_game and dark_player_is_ai)),
                                    Timer(dark_player_time, timer_enabled))
 
-            # For now assume they are ideal piece sets
-            self.__light_player.build_piece_set(
-                GAME_TYPE_STRING_LOOK_UP_TABLE[game_mode], COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][0])
-            self.__dark_player.build_piece_set(
-                GAME_TYPE_STRING_LOOK_UP_TABLE[game_mode], COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][1])
-            # TODO: Right now we are just putting random chess pieces on the board, we need to put on pieces from the
-            #  pieceset onto the board and then capture all the pieces that we didn't find on the board
 
             # setup board here
             board_data_index = 0
@@ -431,16 +424,20 @@ class Game:
             # put all the pieces that were not placed on the board into the captured lists
             if self.__game_type == GameType.CHECKERS:
                 # Start at the back of the list of live pieces not placed on the board and capture them
-                for i in range(16-found_dark_checkers_pieces):
+                i = 0
+                while i != (12-found_dark_checkers_pieces):
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_live_pieces()[
-                            15-i]
+                            11-i]
                     )
-                for i in range(16-found_light_checkers_pieces):
+                    i += 1
+                i = 0
+                while i != (12-found_light_checkers_pieces):
                     self.__light_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_live_pieces()[
-                            15-i]
+                            11-i]
                     )
+                    i += 1
             elif self.__game_type == GameType.CHESS:
                 #king
                 if not found_dark_king:
@@ -493,7 +490,7 @@ class Game:
                         self.__light_player.get_piece_set().get_live_pieces()[7+found_light_pawn])
                     found_light_pawn -= 1
             # delete the file after loading
-            os.remove(path+"/save-game.370" +
+            os.remove(path+"/save-game.cmpt370" +
                       GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
             return
 

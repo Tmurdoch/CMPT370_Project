@@ -87,6 +87,7 @@ class TheWindow(Gtk.Window):
         self.grid = Gtk.Grid()
         self.grid.attach(self.main_box, 0, 0, 1, 1)
         self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
+        self.grid.attach(self.resume_choice_box, 0, 0, 1, 1)
         self.grid.attach(self.player_type, 0, 0, 1, 1)
         self.grid.attach(self.customization, 0, 0, 1, 1)
 
@@ -148,6 +149,12 @@ class TheWindow(Gtk.Window):
         print('Resume checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
         self.resume_choice_box.hide()
+
+        temp_game = Game(self.game_type, 0, 0)
+        temp_game.load_from_file(self.directory)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
+        self.grid.attach(self.board, 0, 0, 1, 1)
+        self.board.show()
         print("SEE TODO STUFF NERE THIS LINE")
         # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
         # BUTTON BEFORE STARTING THE LOADED GAME
