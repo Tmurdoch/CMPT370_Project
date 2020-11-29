@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Version:\t%i\n",filehead->version);
-	printf("GameMode:\t%i\n",filehead->gameMode);
+	printf("GameMode:\t%i",filehead->gameMode);
 	if (filehead->gameMode>=2)
 	{
 		printf("\tinvalid\n");
