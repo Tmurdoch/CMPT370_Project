@@ -85,6 +85,12 @@ class TheWindow(Gtk.Window):
         self.customization.start_button.connect(
             "clicked", self.customization_start_clicked)
 
+        self.main_box.set_hexpand(True)
+        self.game_choice_box.set_hexpand(True)
+        self.resume_choice_box.set_hexpand(True)
+        self.player_type.set_hexpand(True)
+        self.customization.set_hexpand(True)
+        
         self.grid = Gtk.Grid()
         self.grid.attach(self.main_box, 0, 0, 1, 1)
         self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
