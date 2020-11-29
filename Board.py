@@ -99,41 +99,33 @@ class Board:
         :param player1_pieces: Piece[]: A list of player 1's live pieces
         :param player2_pieces: Piece[]: A list of player 2's live pieces
         """
-        # list of index inside piece set for light player and dark player
-        # 0, 4, 8 are indexes in the list of checkers pieces in pieceSet for a player
-        # used so we can evenly take away checkers and put it in the board
-        checker_indexes = [[0, 4, 8], [0, 4, 8]]
-        # iterating through columns 0, 2, 4, 6
-        # these are the column index where the piece will be set
-        for col in range(0, 8, 2):
-            # put the checkers pieces from player 1 and player 2 piece sets using specific indexes
-            # 7, 5 are for the light player and 1 is for dark player these
-            # these numbers are specific rows where player piece start from edge column
-            self.__gameBoard[7][col].put_piece_here(
-                player1_pieces[checker_indexes[0][0]])
-            self.__gameBoard[5][col].put_piece_here(
-                player1_pieces[checker_indexes[1][1]])
-            self.__gameBoard[1][col].put_piece_here(
-                player2_pieces[checker_indexes[0][2]])
-            checker_indexes[0][0] += 1
-            checker_indexes[1][1] += 1
-            checker_indexes[0][2] += 1
+        # Put the first players pieces on the board
+        self.__gameBoard[7][0].put_piece_here(player1_pieces[0])
+        self.__gameBoard[7][2].put_piece_here(player1_pieces[1])
+        self.__gameBoard[7][4].put_piece_here(player1_pieces[2])
+        self.__gameBoard[7][6].put_piece_here(player1_pieces[3])
+        self.__gameBoard[6][1].put_piece_here(player1_pieces[4])
+        self.__gameBoard[6][3].put_piece_here(player1_pieces[5])
+        self.__gameBoard[6][5].put_piece_here(player1_pieces[6])
+        self.__gameBoard[6][7].put_piece_here(player1_pieces[7])
+        self.__gameBoard[5][0].put_piece_here(player1_pieces[8])
+        self.__gameBoard[5][2].put_piece_here(player1_pieces[9])
+        self.__gameBoard[5][4].put_piece_here(player1_pieces[10])
+        self.__gameBoard[5][6].put_piece_here(player1_pieces[11])
 
-        # iterating through columns 1, 3, 5, 7
-        # these are the column index where the piece will be set
-        for col in range(1, 8, 2):
-            # put the checkers piece from player 1 or player 2 piece sets using specific indexes
-            # 6 is for the light player and 2, 0 are for dark player
-            # these numbers are specific rows where player piece start from edge column
-            self.__gameBoard[6][col].put_piece_here(
-                player1_pieces[checker_indexes[0][1]])
-            self.__gameBoard[2][col].put_piece_here(
-                player2_pieces[checker_indexes[1][2]])
-            self.__gameBoard[0][col].put_piece_here(
-                player2_pieces[checker_indexes[1][0]])
-            checker_indexes[0][1] += 1
-            checker_indexes[1][2] += 1
-            checker_indexes[1][0] += 1
+        # Put the second players pieces on the board
+        self.__gameBoard[0][1].put_piece_here(player2_pieces[0])
+        self.__gameBoard[0][3].put_piece_here(player2_pieces[1])
+        self.__gameBoard[0][5].put_piece_here(player2_pieces[2])
+        self.__gameBoard[0][7].put_piece_here(player2_pieces[3])
+        self.__gameBoard[1][0].put_piece_here(player2_pieces[4])
+        self.__gameBoard[1][2].put_piece_here(player2_pieces[5])
+        self.__gameBoard[1][4].put_piece_here(player2_pieces[6])
+        self.__gameBoard[1][6].put_piece_here(player2_pieces[7])
+        self.__gameBoard[2][1].put_piece_here(player2_pieces[8])
+        self.__gameBoard[2][3].put_piece_here(player2_pieces[9])
+        self.__gameBoard[2][5].put_piece_here(player2_pieces[10])
+        self.__gameBoard[2][7].put_piece_here(player2_pieces[11])
 
     def switch_sides(self):
         """
