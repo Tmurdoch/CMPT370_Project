@@ -55,6 +55,10 @@ class Game:
         self.__board = Board(8)  # TODO: Should this board size be hard coded?
         return
 
+    def set_board(self, board):
+        """ :param board: The game board, probably coming from file """
+        self.__board = board
+
     def get_light_player(self):
         """:return: Player: The light player object"""
         return self.__light_player
