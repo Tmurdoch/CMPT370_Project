@@ -157,6 +157,10 @@ class Game:
         """
         return self.__colour_mode
 
+    def set_colour_mode(self, colour_mode):
+        """ :param colour_mode: The board colour mode. """
+        self.__colour_mode = colour_mode
+
     def get_board_colour_mode(self):
         """
         Get the colour mode enum for the current game
