@@ -157,7 +157,12 @@ class Game:
                 # decode object to char
                 if self.__game_type == GameType.CHESS:
                     if isinstance(cur_piece, King):
-                        output_piece += ord("K")
+                        if cur_piece.get_moved_yet_status():
+                            # moved king
+                            output_piece += ord("L")
+                        else:
+                            # Regular king
+                            output_piece += ord("K")
                     elif isinstance(cur_piece, Queen):
                         output_piece += ord("Q")
                     elif isinstance(cur_piece, Knight):
@@ -165,7 +170,10 @@ class Game:
                     elif isinstance(cur_piece, Bishop):
                         output_piece += ord("B")
                     elif isinstance(cur_piece, Rook):
-                        output_piece += ord("R")
+                        if cur_piece.get_moved_yet_status():
+                            output_piece += ord("S")
+                        else:
+                            output_piece += ord("R")
                     elif isinstance(cur_piece, Pawn):
                         if cur_piece.get_moved_yet_status():
                             # The pawn is a moved pawn
@@ -320,6 +328,16 @@ class Game:
                                 assert found_light_king != 1
                                 cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[0])
                                 found_light_king += 1
+                        if chr(board_data[board_data_index]).lower() == "l": # lima - just in case your fonts suck Il1
+                            if is_dark:
+                                assert found_dark_king != 1
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[0])
+                                found_dark_king += 1
+                            else:
+                                assert found_light_king != 1
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[0])
+                                found_light_king += 1
+                            cur_square.get_occupying_piece().move()
                         elif chr(board_data[board_data_index]).lower() == "q":
                             if is_dark:
                                 assert found_dark_queen != 1
@@ -356,6 +374,16 @@ class Game:
                                 assert (found_light_rook != 2)
                                 cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
                                 found_light_rook += 1
+                        elif chr(board_data[board_data_index]).lower() == "s":
+                            if is_dark:
+                                assert (found_dark_rook != 2)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_dark_rook])
+                                found_dark_rook += 1
+                            else:
+                                assert (found_light_rook != 2)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
+                                found_light_rook += 1
+                            cur_square.get_occupying_piece().move()
                         elif chr(board_data[board_data_index]).lower() == "p":
                             # The pawn is an unmoved pawn
                             if is_dark:
