@@ -23,7 +23,7 @@ struct fileheadstruct
 	uint32_t darkPlayerTime;
 }__attribute__((packed));
 
-char *gameType[] = {"Checkers", "Chess"};
+char *gameType[] = {"Chess", "Checkers"};
 char *pcolours[] = {"BROWN_GREY", "PINK_BLUE"};
 char *bcolours[] = {"WHITE_BLACK", "RED_GREEN", "YELLOW_BLUE"};
 
