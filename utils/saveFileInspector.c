@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define FILE_VER_ZERO_HEADER_SIZE 39
+
+struct fileheadstruct
+{
+	uint8_t magic[20];
+	uint8_t version;
+	uint8_t gameMode;
+	uint8_t aiInGame;
+	uint8_t darkPlayerisAI;
+	uint8_t darkPlayerTurn;
+	uint8_t boardHeight;
+	uint8_t boardWidth;
+	uint8_t colours;
+	uint8_t timerEnabled;
+	uint8_t boardColour;
+	uint8_t unusedReserved;
+	uint32_t lightPlayerTime;
+	uint32_t darkPlayerTime;
+}__attribute__((packed));
+
+//intel is a plague
+//POWER & ultrasparc master race
+uint32_t makeEndianStupidForX86CPUS(uint32_t x)
+{
+	return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)     \
+		| (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+}
+
+int main(int argc, char *argv[])
+{
+	FILE *fp=NULL;
+	long int fps;
+	unsigned char *file=NULL;
+	unsigned char x, y;
+	struct fileheadstruct * filehead;
+	//rows columns
+	uint8_t *gameboard;
+	uint8_t magic[]={'c','m','p','t','3','7','0','c','h','e','c','k','e','r','s','c','h','e','s','s'};
+	unsigned char retcode = 0;
+
+	if (argc != 2)
+	{
+		printf("specify file\n");
+		return 1;
+	}
+
+	fp = fopen(argv[1],"rb");
+
+	if (fp==NULL)
+	{
+		printf("can't open file\n");
+		return 1;
+	}
+
+	fseek(fp,0,SEEK_END);
+	fps = ftell(fp);
+	fseek(fp,0,SEEK_SET);
+
+	if (fps!=FILE_VER_ZERO_HEADER_SIZE+(8*8))
+	{
+		printf("size of file is incorrect, expected %i got %li\n", FILE_VER_ZERO_HEADER_SIZE+(8*8), fps);
+		return 1;
+	}
+
+	file = malloc(FILE_VER_ZERO_HEADER_SIZE+(8*8));
+
+	if (file==NULL)
+	{
+		printf("Download more ram m8\n");
+	}
+
+	fread(file, FILE_VER_ZERO_HEADER_SIZE+(8*8), 1, fp);
+	fclose(fp);
+
+	filehead = file;
+
+	if (memcmp(magic, file, 20))
+	{
+		printf("Magic:  \tBAD\n");
+	}
+	else
+	{
+		printf("Magic:  \tOK ;-)\n");
+	}
+
+	printf("Version:\t%i\n",filehead->version);
+	printf("GameMode:\t%i\n",filehead->gameMode);
+	printf("aiInGame:\t%i\n",filehead->aiInGame);
+	printf("darkisai:\t%i\n",filehead->darkPlayerisAI);
+	printf("darkPlayerTurn:\t%i\n",filehead->darkPlayerTurn);
+	printf("height: \t%i\n",filehead->boardHeight);
+	printf("width:  \t%i\n",filehead->boardWidth);
+	printf("Version:\t%i\n",filehead->version);
+	printf("pcolour:\t%i\n",filehead->colours);
+	printf("timer:  \t%i\n",filehead->timerEnabled);
+	printf("bcolour:\t%i\n",filehead->boardColour);
+	printf("unused: \t%i\n",filehead->unusedReserved);
+	printf("player: \t%i\n",filehead->colours);
+	#ifdef __ORDER_LITTLE_ENDIAN__
+	printf("ltime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->lightPlayerTime));
+	printf("dtime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->darkPlayerTime));
+	#else
+	printf("ltime:  \t%f\n",(float)filehead->lightPlayerTime);
+	printf("dtime:  \t%f\n",(float)filehead->darkPlayerTime);
+	#endif
+	gameboard = &file[FILE_VER_ZERO_HEADER_SIZE];
+	y=0;
+	while (y!=8)
+	{
+		x=0;
+		while (x!=8)
+		{
+			printf("|%hu|",gameboard[y*8+x]);
+			x++;
+		}
+		printf("\n");
+		y++;
+	}
+	free(file);
+	return 0;
+}
