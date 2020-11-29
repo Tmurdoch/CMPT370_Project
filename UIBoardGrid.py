@@ -370,7 +370,7 @@ class BoardGrid(Gtk.Grid):
 
             # check if making a move
             if cur_location in self.possible_moves_for_cur_piece:
-                print("The destination square chosen was confimred to be in the list of possible moves.")
+                print("The destination square chosen was confirmed to be in the list of possible moves.")
                 # move the piece
                 print(self.current_selected_location)
                 print(cur_location)
@@ -419,6 +419,11 @@ class BoardGrid(Gtk.Grid):
 
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
+                    print("#################### Determining Game Status #########################")
+                    game_status = self.__game_obj.check_for_game_over()
+                    print("#################### ----------------------- #########################")
+                    print(game_status)
+
                 # reset attributes
                 self.current_selected_location = None
                 self.possible_moves_for_cur_piece = []
