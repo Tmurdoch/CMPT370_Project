@@ -70,7 +70,7 @@ class PieceSet:
                 self.__livePieces.pop(piece_id_index)
                 self.__capturedPieces.append(captured_piece)
                 print("Capture successful, now here is the list of all the live ids: ")
-                print(live_ids)
+                print(self.get_live_piece_ids())
                 return True
 
         print("The piece you are trying to capture has id: " + str(captured_piece.get_piece_id()) +

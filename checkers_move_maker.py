@@ -125,4 +125,4 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
     # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
     if dest_square.get_row() == 0:
         print("The destination row is 0, so the checkers coin will now be promoted.")
-        origin_square.get_occupying_piece().promote()
+        dest_square.get_occupying_piece().promote()
