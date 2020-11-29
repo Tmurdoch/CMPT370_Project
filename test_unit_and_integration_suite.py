@@ -1159,7 +1159,7 @@ def test_integration_3():
     player1_pieceset = player1.get_piece_set()
     assert player1_pieceset.get_colour() is p1_colour
     assert player1.get_name() is p1_name
-    assert player1.get_player_type() is 1
+    assert player1.get_player_type().value is 1
     assert player1.get_timer() is timer
     assert player1_pieceset.get_number_of_live_pieces() == 16
     assert player1_pieceset.get_number_of_captured_pieces() == 0
@@ -1173,7 +1173,7 @@ def test_integration_3():
     player2_pieceset = player2.get_piece_set()
     assert player2_pieceset.get_colour() is p2_colour
     assert player2.get_name() is p2_name
-    assert player2.get_player_type() is 0
+    assert player2.get_player_type().value is 0
     assert player2.get_timer() is timer
     assert player2_pieceset.get_number_of_live_pieces() == 16
     assert player2_pieceset.get_number_of_captured_pieces() == 0
@@ -1187,7 +1187,7 @@ def test_integration_3():
     player1_pieceset = player1.get_piece_set()
     assert player1_pieceset.get_colour() is p1_colour
     assert player1.get_name() is p1_name
-    assert player1.get_player_type() is 1
+    assert player1.get_player_type().value is 1
     assert player1.get_timer() is timer
     assert player1_pieceset.get_number_of_live_pieces() == 12
     assert player1_pieceset.get_number_of_captured_pieces() == 0
@@ -1200,7 +1200,7 @@ def test_integration_3():
     player2_pieceset = player2.get_piece_set()
     assert player2_pieceset.get_colour() is p2_colour
     assert player2.get_name() is p2_name
-    assert player2.get_player_type() is 0
+    assert player2.get_player_type().value is 0
     assert player2.get_timer() is timer
     assert player2_pieceset.get_number_of_live_pieces() == 12
     assert player2_pieceset.get_number_of_captured_pieces() == 0
@@ -1287,7 +1287,7 @@ def test_integration_4():
 
     # --- player light human testing
     assert pl_chess.get_name() is "Light HU"
-    assert pl_chess.get_player_type() is 1
+    assert pl_chess.get_player_type().value is 1
     assert pl_chess.get_timer() is timer
     assert pl_chess.get_piece_set().get_number_of_live_pieces() == 16
     assert pl_chess.get_piece_set().get_number_of_captured_pieces() == 0
@@ -1298,7 +1298,7 @@ def test_integration_4():
 
     # --- player dark ai testing
     assert pd_chess.get_name() is "Dark AI"
-    assert pd_chess.get_player_type() is 0
+    assert pd_chess.get_player_type().value is 0
     assert pd_chess.get_timer() is timer
     assert pd_chess.get_piece_set().get_number_of_live_pieces() == 16
     assert pd_chess.get_piece_set().get_number_of_captured_pieces() == 0
@@ -1309,7 +1309,7 @@ def test_integration_4():
 
     # --- current player
     assert pc_chess.get_name() is "Light HU"
-    assert pc_chess.get_player_type() is 1
+    assert pc_chess.get_player_type().value is 1
     assert pc_chess.get_timer() is timer
     assert pc_chess.get_piece_set().get_number_of_live_pieces() == 16
     assert pc_chess.get_piece_set().get_number_of_captured_pieces() == 0
@@ -1330,7 +1330,7 @@ def test_integration_4():
 
     # --- player light ai testing
     assert pl_checkers.get_name() is "Light AI"
-    assert pl_checkers.get_player_type() is 0
+    assert pl_checkers.get_player_type().value is 0
     assert pl_checkers.get_timer() is timer
     assert pl_checkers.get_piece_set().get_number_of_live_pieces() == 12
     assert pl_checkers.get_piece_set().get_number_of_captured_pieces() == 0
@@ -1340,7 +1340,7 @@ def test_integration_4():
 
     # --- player dark human testing
     assert pd_checkers.get_name() is "Dark HU"
-    assert pd_checkers.get_player_type() is 1
+    assert pd_checkers.get_player_type().value is 1
     assert pd_checkers.get_timer() is timer
     assert pd_checkers.get_piece_set().get_number_of_live_pieces() == 12
     assert pd_checkers.get_piece_set().get_number_of_captured_pieces() == 0
@@ -1350,7 +1350,7 @@ def test_integration_4():
 
     # --- current player testing
     assert pc_checkers.get_name() is "Light AI"
-    assert pc_checkers.get_player_type() is 0
+    assert pc_checkers.get_player_type().value is 0
     assert pc_checkers.get_timer() is timer
     assert pc_checkers.get_piece_set().get_number_of_live_pieces() == 12
     assert pc_checkers.get_piece_set().get_number_of_captured_pieces() == 0
