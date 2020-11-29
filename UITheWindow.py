@@ -29,6 +29,7 @@ class TheWindow(Gtk.Window):
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.set_default_size(852,627)
         self.modify_bg(Gtk.StateType.NORMAL, col)
         self.directory = directory
 
