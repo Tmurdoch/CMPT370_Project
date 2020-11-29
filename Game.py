@@ -332,49 +332,49 @@ class Game:
                         elif chr(board_data[board_data_index]).lower() == "n":
                             if (is_dark):
                                 assert (found_dark_knight != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[6+found_knight])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[6+found_dark_knight])
                                 found_dark_knight += 1
                             else:
                                 assert (found_light_knight != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[6+found_knight])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[6+found_light_knight])
                                 found_light_knight += 1
                         elif chr(board_data[board_data_index]).lower() == "b":
                             if (is_dark):
                                 assert (found_dark_bishop != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[4+found_bishop])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[4+found_dark_bishop])
                                 found_dark_bishop += 1
                             else:
                                 assert (found_light_bishop != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[4+found_bishop])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[4+found_light_bishop])
                                 found_light_bishop += 1
                         elif chr(board_data[board_data_index]).lower() == "r":
                             if (is_dark):
                                 assert (found_dark_rook != 2)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_rook])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_dark_rook])
                                 found_dark_rook += 1
                             else:
                                 assert (found_light_rook != 2)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_rook])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
                                 found_light_rook += 1
                         elif chr(board_data[board_data_index]).lower() == "p":
                             # The pawn is an unmoved pawn
                             if (is_dark):
                                 assert (found_dark_pawn != 8)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_pawn])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
                                 found_dark_pawn += 1
                             else:
                                 assert (found_light_pawn != 8)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_pawn])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_light_pawn])
                                 found_light_pawn += 1
                         elif chr(board_data[board_data_index]).lower() == "m":
                             # The pawn is an moved pawn
                             if (is_dark):
                                 assert (found_dark_pawn != 8)
-                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_pawn])
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
                                 found_dark_pawn += 1
                             else:
                                 assert (found_light_pawn != 8)
-                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_pawn])
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_lightpawn])
                                 found_light_pawn += 1
                             cur_square.get_occupying_piece().move()
                         else:
@@ -433,7 +433,7 @@ class Game:
                     self.__light_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_live_pieces()[1])
                 #rook
-                while (found_dark_rooks != 0):
+                while (found_dark_rook != 0):
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_live_pieces()[1+found_dark_rook])
                     found_dark_rook -= 1
@@ -445,7 +445,7 @@ class Game:
                 while (found_dark_bishop != 0):
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__dark_player.get_piece_set().get_live_pieces()[3+found_dark_bishop])
-                    found_dark_bishops -= 1
+                    found_dark_bishop -= 1
                 while (found_light_bishop != 0):
                     self.__dark_player.get_piece_set().capture_piece(
                         self.__light_player.get_piece_set().get_live_pieces()[3+found_light_bishop])
