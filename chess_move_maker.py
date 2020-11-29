@@ -31,10 +31,10 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
     if not isinstance(other_player_piece_set, PieceSet):
         raise Exception("The piece set passed to the chess_move_maker() was not a PieceSet object.")
 
-    if type(player).__class__.__name__ != "Player":
+    if type(player).__name__ != "Player":
         raise Exception("The player (current player) passed to the chess_move_maker() was not a Player object.")
 
-    if type(game).__class__.__name__ != "Game":
+    if type(game).__name__ != "Game":
         raise Exception("The game passed to the chess_move_maker() was not a game object.")
 
     castle_move = False

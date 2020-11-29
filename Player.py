@@ -80,13 +80,15 @@ class Player(object):
         :param dest_square: GameSquare: Where we are moving to
         :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
-        if type(origin_square).__class__.__name__ != "GameSquare":
-            raise Exception("The origin square passed to make_move() is not a Game Square object.")
+        if type(origin_square).__name__ != "GameSquare":
 
-        if type(dest_square).__class__.__name__ != "GameSquare":
+            raise Exception("The origin square passed to make_move() is not a Game Square object." +
+                            type(origin_square).__name__)
+
+        if type(dest_square).__name__ != "GameSquare":
             raise Exception("The destination square passed to make_move() is not a Game Square object.")
 
-        if type(game).__class__.__name__ != "Game":
+        if type(game).__name__ != "Game":
             raise Exception("The game square passed to make_move() is not a Game Square object.")
 
         board = game.get_board()
