@@ -203,14 +203,14 @@ class BoardGrid(Gtk.Grid):
         """
 
         if self.__game_obj.get_game_type() == 0:
-            print("is Chess")
+            print("Chess is now starting...")
             pcs_player1 = self.__game_obj.get_light_player().get_piece_set()
             pcs_player2 = self.__game_obj.get_dark_player().get_piece_set()
             self.__game_obj.get_board().build_chess_board(
                 pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
         if self.__game_obj.get_game_type() == 1:
-            print("is Checkers")
+            print("Checkers is now starting...")
             pcs_player1 = self.__game_obj.get_light_player().get_piece_set()
             pcs_player2 = self.__game_obj.get_dark_player().get_piece_set()
             self.__game_obj.get_board().build_checkers_board(
@@ -361,20 +361,24 @@ class BoardGrid(Gtk.Grid):
             cur_location = current_selected_piece = self.__game_obj.get_board(
             ).get_game_square(int(event.y // 50), int(event.x // 50))
 
-            if cur_piece is not None:
-                print(cur_piece.get_colour())
-            print(self.__game_obj.get_light_player().get_piece_set().get_colour())
+            # Print out colour information
+            # if cur_piece is not None:
+            #    print(cur_piece.get_colour())
+            # print(self.__game_obj.get_light_player().get_piece_set().get_colour())
 
-            print(self.__game_obj.get_dark_player().get_piece_set().get_colour())
+            # print(self.__game_obj.get_dark_player().get_piece_set().get_colour())
+
             # check if making a move
             if cur_location in self.possible_moves_for_cur_piece:
+                print("The destination square chosen was confimred to be in the list of possible moves.")
                 # move the piece
                 print(self.current_selected_location)
                 print(cur_location)
+                print("Make move is now going to be called... ")
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
 
-                print("Made Move")
+                print("...We have returned from make move and are now continuing \n")
 
                 checkerboard_area.queue_draw()
                 # switch players, flip board
@@ -390,15 +394,29 @@ class BoardGrid(Gtk.Grid):
 
                 # execute AI code if necessary
                 if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
+                    print("The AI is now going to compute and pick it's move...")
                     AI = self.__game_obj.get_current_player()
                     moves_for_ai = AI.build_possible_moves_for_all_pieces(
                         self.__game_obj)
+
                     # execute a random move
                     #rand_move = random.choice(moves_for_ai)
                     rand_move = select_best(moves_for_ai)
+
+                    if type(rand_move[0]).__name__ != "GameSquare":
+                        raise Exception("Origin square is not a game square, so it won't be passed to make_move()")
+                    if type(rand_move[1]).__name__ != "GameSquare":
+                        raise Exception("Destination square is not a game square, so it won't be passed to make_move()")
+
+                    print("Here is the move that was chosen:")
+                    print("From " + str(rand_move[0].get_row_and_column()) + " to "
+                          + str(rand_move[1].get_row_and_column()))
+
                     #print(rand_move[0], rand_move[1], len(rand_move[1]))
                     #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
                     AI.make_move(rand_move[0], rand_move[1], self.__game_obj)
+                    print("...AI move made, now switching current player and switching back sides... \n")
+
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
                 # reset attributes
@@ -407,12 +425,15 @@ class BoardGrid(Gtk.Grid):
 
             # not making a move, so set attributes and build possible moves for next click
             else:
+                # print("Not yet making a move, so we will set attributes and build possible moves for next click.")
                 if cur_piece is None:
                     return
                 self.current_selected_location = cur_location
                 # build the possible pieces for a game square
                 self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
                     cur_location, self.__game_obj)
+                print(str(len(self.possible_moves_for_cur_piece)) +
+                      " possible moves have been identified for this piece")
                 checkerboard_area.queue_draw()
 
     def display_timer(self):

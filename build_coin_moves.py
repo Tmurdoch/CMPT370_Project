@@ -49,6 +49,9 @@ def build_coin_moves(input_game_square, input_game):
 
     # Check for possible jumps moves
     checkers_jump_helper(input_board, input_piece, input_game_square, list_of_candidate_game_squares)
+    print("Here is the list of destination game squares that build_coin_moves() has come up with:")
+    for square in list_of_candidate_game_squares:
+        print(square.get_row_and_column())
 
     return list_of_candidate_game_squares
 

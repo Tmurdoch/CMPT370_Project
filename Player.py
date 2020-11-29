@@ -51,26 +51,26 @@ class Player(object):
     def build_possible_moves_for_all_pieces(self, game):
         """
         Generates and returns all possible moves for all current player's pieces on the board.
-        :param: Game: The current game, need to get the player and board.
+        :param: game: The current game, need to get the player and board.
         :return: 2D List of GameSquares for all the current player's pieces.
-                first element is orgin square
+                first element is origin square
         """
         game_squares_movable_to = []
+
+        # Look thorough the whole board and look for this players pieces
         for row in range(game.get_board().get_size()):
             for col in range(game.get_board().get_size()):
                 square_here = game.get_board().get_game_square(row, col)
                 if (square_here.get_occupying_piece() is not None) and \
-                        (square_here.get_occupying_piece().get_colour() is self.get_piece_set().get_colour()):
-                    game_squares_movable_to.append([square_here,
-                                                    build_list_of_moves(square_here, game)])
+                        (square_here.get_occupying_piece().get_colour() == self.get_piece_set().get_colour()):
+                    # Then this is one of the current players pieces and we need to compute a list of moves for it
+                    list_of_moves_for_this_square = build_list_of_moves(square_here, game)
+                    if len(list_of_moves_for_this_square) > 0:
+                        for dest_square in list_of_moves_for_this_square:
+                            game_squares_movable_to.append([square_here, dest_square])
 
-        # add pieces that have atleast one possible move
-        return_list = []
-        for potential_move in game_squares_movable_to:
-            if len(potential_move[1]) != 0:
-                return_list.append(potential_move)
-
-        return return_list
+        print("The AI has " + str(len(game_squares_movable_to)) + " moves available to it.")
+        return game_squares_movable_to
 
     def make_move(self, origin_square, dest_square, game):
         """
@@ -80,6 +80,17 @@ class Player(object):
         :param dest_square: GameSquare: Where we are moving to
         :param game: Game: Needed to look at the squares we are jumping to for checkers and for castling in chess
         """
+        if type(origin_square).__name__ != "GameSquare":
+
+            raise Exception("The origin square passed to make_move() is not a Game Square object." +
+                            type(origin_square).__name__)
+
+        if type(dest_square).__name__ != "GameSquare":
+            raise Exception("The destination square passed to make_move() is not a Game Square object.")
+
+        if type(game).__name__ != "Game":
+            raise Exception("The game square passed to make_move() is not a Game Square object.")
+
         board = game.get_board()
         if self is game.get_light_player():
             other_player = game.get_dark_player()
