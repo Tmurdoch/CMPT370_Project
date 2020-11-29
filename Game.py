@@ -64,7 +64,7 @@ class Game:
         if board_colour_mode >= len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__board_colour_mode = board_colour_mode
-        #if board_colour_mode == colour_mode:
+        # if board_colour_mode == colour_mode:
         #    #hard to see checkers pieces, perfect camoflage
         #    assert(0)
         self.__board = Board(8)  # TODO: Should this board size be hard coded?
@@ -279,6 +279,18 @@ class Game:
             board_data_index = 0
             found_dark_checkers_pieces = 0
             found_light_checkers_pieces = 0
+            found_light_king = 0
+            found_light_queen = 0
+            found_light_rook = 0
+            found_light_bishop = 0
+            found_light_knight = 0
+            found_light_pawn = 0
+            found_dark_king = 0
+            found_dark_queen = 0
+            found_dark_rook = 0
+            found_dark_bishop = 0
+            found_dark_knight = 0
+            found_dark_pawn = 0
             row = 0
             while row != board_height:
                 col = 0
@@ -300,28 +312,70 @@ class Game:
                     # decode object to char
                     if self.__game_type == GameType.CHESS:
                         if chr(board_data[board_data_index]).lower() == "k":
-                            cur_square.put_piece_here(
-                                King(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert found_dark_king != 1
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[0])
+                                found_dark_king += 1
+                            else:
+                                assert found_light_king != 1
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[0])
+                                found_light_king += 1
                         elif chr(board_data[board_data_index]).lower() == "q":
-                            cur_square.put_piece_here(
-                                Queen(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert found_dark_queen != 1
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[1])
+                                found_dark_queen += 1
+                            else:
+                                assert found_light_queen != 1
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[1])
+                                found_light_queen += 1
                         elif chr(board_data[board_data_index]).lower() == "n":
-                            cur_square.put_piece_here(
-                                Knight(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert (found_dark_knight != 2)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[6+found_dark_knight])
+                                found_dark_knight += 1
+                            else:
+                                assert (found_light_knight != 2)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[6+found_light_knight])
+                                found_light_knight += 1
                         elif chr(board_data[board_data_index]).lower() == "b":
-                            cur_square.put_piece_here(
-                                Bishop(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert (found_dark_bishop != 2)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[4+found_dark_bishop])
+                                found_dark_bishop += 1
+                            else:
+                                assert (found_light_bishop != 2)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[4+found_light_bishop])
+                                found_light_bishop += 1
                         elif chr(board_data[board_data_index]).lower() == "r":
-                            cur_square.put_piece_here(
-                                Rook(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert (found_dark_rook != 2)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[2+found_dark_rook])
+                                found_dark_rook += 1
+                            else:
+                                assert (found_light_rook != 2)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[2+found_light_rook])
+                                found_light_rook += 1
                         elif chr(board_data[board_data_index]).lower() == "p":
                             # The pawn is an unmoved pawn
-                            cur_square.put_piece_here(
-                                Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert (found_dark_pawn != 8)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
+                                found_dark_pawn += 1
+                            else:
+                                assert (found_light_pawn != 8)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_light_pawn])
+                                found_light_pawn += 1
                         elif chr(board_data[board_data_index]).lower() == "m":
                             # The pawn is an moved pawn
-                            cur_square.put_piece_here(
-                                Pawn(COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][is_dark]))
+                            if is_dark:
+                                assert (found_dark_pawn != 8)
+                                cur_square.put_piece_here(self.__dark_player.get_piece_set().get_live_pieces()[8+found_dark_pawn])
+                                found_dark_pawn += 1
+                            else:
+                                assert (found_light_pawn != 8)
+                                cur_square.put_piece_here(self.__light_player.get_piece_set().get_live_pieces()[8+found_light_pawn])
+                                found_light_pawn += 1
                             cur_square.get_occupying_piece().move()
                         else:
                             # unidentified piece, shouldn't be possible
@@ -358,8 +412,62 @@ class Game:
                         self.__dark_player.get_piece_set().get_live_pieces()[
                             15-i]
                     )
+                for i in range(16-found_light_checkers_pieces):
+                    self.__light_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[
+                            15-i]
+                    )
             elif self.__game_type == GameType.CHESS:
-                pass
+                #king
+                if not found_dark_king:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[0])
+                if not found_light_king:
+                    self.__light_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[0])
+                #queen
+                if not found_dark_queen:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[1])
+                if not found_light_queen:
+                    self.__light_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[1])
+                #rook
+                while found_dark_rook != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[1+found_dark_rook])
+                    found_dark_rook -= 1
+                while found_light_rook != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[1+found_light_rook])
+                    found_light_rook -= 1
+                #bishop
+                while found_dark_bishop != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[3+found_dark_bishop])
+                    found_dark_bishop -= 1
+                while found_light_bishop != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[3+found_light_bishop])
+                    found_light_bishop -= 1
+                #knight
+                while found_dark_knight != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[5+found_dark_knight])
+                    found_dark_knight -= 1
+                while found_light_knight != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[5+found_light_knight])
+                    found_light_knight -= 1
+                #pawn
+                while found_dark_pawn != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__dark_player.get_piece_set().get_live_pieces()[7+found_dark_pawn])
+                    found_dark_pawn -= 1
+                while found_light_pawn != 0:
+                    self.__dark_player.get_piece_set().capture_piece(
+                        self.__light_player.get_piece_set().get_live_pieces()[7+found_light_pawn])
+                    found_light_pawn -= 1
             # delete the file after loading
             os.remove(path+"/save-game.370" +
                       GAME_TYPE_STRING_LOOK_UP_TABLE[self.__game_type])
@@ -412,7 +520,6 @@ class Game:
         :return: IntEnum of the current player colour
         """
         return self.__colour_mode
-
 
     def get_board_colour_mode(self):
         """
