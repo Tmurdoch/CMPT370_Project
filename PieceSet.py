@@ -70,9 +70,9 @@ class PieceSet:
                 self.__livePieces.pop(piece_id_index)
                 self.__capturedPieces.append(captured_piece)
                 return True
-            else:
-                print("The piece you are trying to capture has id: " + str(captured_piece.get_piece_id()) +
-                      ", but that was not found in the list of ids :(")
+
+        print("The piece you are trying to capture has id: " + str(captured_piece.get_piece_id()) +
+              ", but that was not found in the list of ids :(")
         return False
 
     def get_captured_pieces(self):

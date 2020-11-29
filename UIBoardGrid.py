@@ -379,6 +379,7 @@ class BoardGrid(Gtk.Grid):
                     self.current_selected_location, cur_location, self.__game_obj)
 
                 print("...We have returned from make move and are now continuing")
+                print("")
 
                 checkerboard_area.queue_draw()
                 # switch players, flip board
@@ -394,15 +395,26 @@ class BoardGrid(Gtk.Grid):
 
                 # execute AI code if necessary
                 if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
+                    print("The AI is now going to compute and pick it's move")
                     AI = self.__game_obj.get_current_player()
                     moves_for_ai = AI.build_possible_moves_for_all_pieces(
                         self.__game_obj)
+
                     # execute a random move
                     #rand_move = random.choice(moves_for_ai)
                     rand_move = select_best(moves_for_ai)
+                    print("Here is the move that was chosen:")
+                    print(rand_move)
+
+                    if type(rand_move[0]).__name__ != "GameSquare":
+                        raise Exception("Origin square is not a game square, so it won't be passed to make_move()")
+                    if type(rand_move[1]).__name__ != "GameSquare":
+                        raise Exception("Destination square is not a game square, so it won't be passed to make_move()")
+
                     #print(rand_move[0], rand_move[1], len(rand_move[1]))
                     #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
                     AI.make_move(rand_move[0], rand_move[1], self.__game_obj)
+                    print("AI move made, now switching current player and switching back sides...")
                     self.__game_obj.change_current_player()
                     self.__game_obj.get_board().switch_sides()
                 # reset attributes
@@ -411,14 +423,15 @@ class BoardGrid(Gtk.Grid):
 
             # not making a move, so set attributes and build possible moves for next click
             else:
-                print("That destination square is not in the list of possible moves for that piece, we are setting "
-                      "attributes and building possible moves for the next click. ")
+                # print("Not yet making a move, so we will set attributes and build possible moves for next click.")
                 if cur_piece is None:
                     return
                 self.current_selected_location = cur_location
                 # build the possible pieces for a game square
                 self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
                     cur_location, self.__game_obj)
+                print(str(len(self.possible_moves_for_cur_piece)) +
+                      " possible moves have been identified for this piece")
                 checkerboard_area.queue_draw()
 
     def display_timer(self):
