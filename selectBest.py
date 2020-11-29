@@ -11,7 +11,6 @@ def select_best(candidate_game_squares):
     :param: GameSquare[[origin_square][destSquare], [][], ...]: List of GameSquares to choose from.
     :return: GameSquare[][]: [origin_square][square_moving_to]. Returns None if there are no moves for that square.
     """
-    # random_move = random.choice(candidate_game_squares)
     if len(candidate_game_squares) == 0:
         # List of moves is empty
         print("Can't select best, the AI has no moves available")
@@ -23,6 +22,5 @@ def select_best(candidate_game_squares):
         # TODO: Some AI code to evaluate the list of moves to choose the best one, in the mean time we are just
         #  returning the first one in the list
         # Right now we will just return a random candidate
-        # random_index = (random.randrange(0, len(random_move[1]), 1))
-        # Right now just return the first move available
-        return [candidate_game_squares[0][0], candidate_game_squares[0][1]]
+        random_move = random.randrange(0, len(candidate_game_squares), 1)
+        return [candidate_game_squares[random_move][0], candidate_game_squares[random_move][1]]
