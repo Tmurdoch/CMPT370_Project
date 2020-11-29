@@ -129,7 +129,7 @@ class Player(object):
 
     def get_player_type(self):
         """" :return: type of PlayerType object for a Player, AI(0) or Human(1) """
-        return self.__player_type.value
+        return self.__player_type
 
     def get_timer(self):
         """ :return: Timer object of a Player """

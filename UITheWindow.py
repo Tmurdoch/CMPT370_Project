@@ -7,7 +7,7 @@ import gi
 from UIMainMenuBox import MainMenuBox
 from PlayerType import PlayerType
 from Game import Game
-from ResumeChoiceBox import ResumeChoiceBox
+from UIResumeChoiceBox import ResumeChoiceBox
 from Timer import Timer
 from Colours import ColourCodes
 from UIBoardGrid import BoardGrid
@@ -30,6 +30,7 @@ class TheWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
         self.modify_bg(Gtk.StateType.NORMAL, col)
+        self.directory = directory
 
         self.has_chess_save = 0
         self.has_checkers_save = 0
@@ -38,9 +39,9 @@ class TheWindow(Gtk.Window):
         self.singleplayer = 0
         self.multiplayer = 0
 
-        if os.path.exists(directory + "/savedGame.cmpt370chess"):
+        if os.path.exists(directory + "/save-game.cmpt370Chess"):
             self.has_chess_save = 1
-        if os.path.exists(directory + "/savedGame.cmpt370checkrs"):
+        if os.path.exists(directory + "/save-game.cmpt370Checkers"):
             self.has_checkers_save = 1
         self.main_box = MainMenuBox(
             self.has_chess_save, self.has_checkers_save)
@@ -65,7 +66,7 @@ class TheWindow(Gtk.Window):
                 "clicked", self.resume_choice_chess_clicked)
         if self.has_checkers_save:
             self.resume_choice_box.checkers_button.connect(
-                "clicked", self.esume_choice_checkers_clicked)
+                "clicked", self.resume_choice_checkers_clicked)
         self.resume_choice_box.back_button.connect(
             "clicked", self.resume_choice_back_clicked)
 
@@ -86,6 +87,7 @@ class TheWindow(Gtk.Window):
         self.grid = Gtk.Grid()
         self.grid.attach(self.main_box, 0, 0, 1, 1)
         self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
+        self.grid.attach(self.resume_choice_box, 0, 0, 1, 1)
         self.grid.attach(self.player_type, 0, 0, 1, 1)
         self.grid.attach(self.customization, 0, 0, 1, 1)
 
@@ -139,17 +141,25 @@ class TheWindow(Gtk.Window):
         print('Resume chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.resume_choice_box.hide()
-        print("SEE TODO STUFF NERE THIS LINE")
-        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
-        # BUTTON BEFORE STARTING THE LOADED GAME
+
+        temp_game = Game(self.game_type, 0, 0)
+        temp_game.load_from_file(self.directory)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
+        self.grid.attach(self.board, 0, 0, 1, 1)
+        self.board.show()
+
 
     def resume_choice_checkers_clicked(self, button):
         print('Resume checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
         self.resume_choice_box.hide()
-        print("SEE TODO STUFF NERE THIS LINE")
-        # TODO CREATE AN ARE YOU SURE SCREEN AND A "PLAY"
-        # BUTTON BEFORE STARTING THE LOADED GAME
+
+        temp_game = Game(self.game_type, 0, 0)
+        temp_game.load_from_file(self.directory)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
+        self.grid.attach(self.board, 0, 0, 1, 1)
+        self.board.show()
+
 
     def resume_choice_back_clicked(self, button):
         print("This should go back to Main Menu Window")
@@ -195,9 +205,8 @@ class TheWindow(Gtk.Window):
         
         temp_game = Game(self.game_type, piece_colour, board_colour)
 
-        t1 = Timer(70, True)
-        t2 = Timer(70, True)
-
+        t1 = Timer(900, True)
+        t2 = Timer(900, True)
 
         if self.multiplayer == 1:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
@@ -210,6 +219,6 @@ class TheWindow(Gtk.Window):
         #                                                   \/ should it?
         # TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
         # TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
-        self.board = BoardGrid("Test", "multiplayer", temp_game)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()

@@ -38,5 +38,3 @@ class ResumeChoiceBox(Gtk.Box):
         self.back_button = Gtk.Button.new_with_label("Back")
         self.pack_start(self.back_button, True, True, 0)
 
-        # fixed the exit stalling problem
-        self.connect("destroy", Gtk.main_quit)
