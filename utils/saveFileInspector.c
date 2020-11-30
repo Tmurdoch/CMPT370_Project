@@ -19,8 +19,8 @@ struct fileheadstruct
 	uint8_t timerEnabled;
 	uint8_t boardColour;
 	uint8_t unusedReserved;
-	uint32_t lightPlayerTime;
-	uint32_t darkPlayerTime;
+	float lightPlayerTime;
+	float darkPlayerTime;
 }__attribute__((packed));
 
 char *gameType[] = {"Chess", "Checkers"};
@@ -29,10 +29,11 @@ char *bcolours[] = {"WHITE_BLACK", "RED_GREEN", "YELLOW_BLUE"};
 
 //intel is a plague
 //POWER & ultrasparc master race
-uint32_t makeEndianStupidForX86CPUS(uint32_t x)
+void makeEndianStupidForX86CPUS(uint32_t *x)
 {
-	return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)     \
-		| (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+	*x = ((((*x) & 0xff000000u) >> 24) | (((*x) & 0x00ff0000u) >> 8)     \
+		| (((*x) & 0x0000ff00u) << 8) | (((*x) & 0x000000ffu) << 24));
+	return;
 }
 
 int main(int argc, char *argv[])
@@ -146,12 +147,11 @@ int main(int argc, char *argv[])
 	}
 	printf("unused: \t%i\n",filehead->unusedReserved);
 	#ifdef __ORDER_LITTLE_ENDIAN__
-	printf("ltime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->lightPlayerTime));
-	printf("dtime:  \t%f\n",(float)makeEndianStupidForX86CPUS(filehead->darkPlayerTime));
-	#else
-	printf("ltime:  \t%f\n",(float)filehead->lightPlayerTime);
-	printf("dtime:  \t%f\n",(float)filehead->darkPlayerTime);
+	makeEndianStupidForX86CPUS(&(filehead->lightPlayerTime));
+	makeEndianStupidForX86CPUS(&(filehead->darkPlayerTime));
 	#endif
+	printf("ltime:  \t%f\n",filehead->lightPlayerTime);
+	printf("dtime:  \t%f\n",filehead->darkPlayerTime);
 	gameboard = &file[FILE_VER_ZERO_HEADER_SIZE];
 	y=0;
 	while (y!=8)
