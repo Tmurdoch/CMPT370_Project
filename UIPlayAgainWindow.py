@@ -12,6 +12,16 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
 
 class PlayAgainWindow(Gtk.Window):
+    """
+       The PlayAgainWindow initializes a Gtk Window to hold Gtk buttons that allow a user to choose if they want to
+       play again and restart the current game, go back to the main menu or exit the program.
+       Attributes:
+           main_box: A Gtk Box that holds the Gtk buttons.
+           play_again_button: A Gtk button with the label "Play Again" that restarts the current game from the
+           beginning.
+           main_menu_button: A Gtk button with the label "Main Menu" that sends the user back to the main menu.
+           exit_button: A Gtk button with the label "Exit" that exits the program.
+    """
     def __init__(self):
         Gtk.Window.__init__(self, title="Play Again?")
         self.set_border_width(70)
@@ -19,24 +29,24 @@ class PlayAgainWindow(Gtk.Window):
         col = Gdk.Color(2000, 6000, 200)
         self.modify_bg(Gtk.StateType.NORMAL, col)
         # b = Button()
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.add(main_box)
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(self.main_box)
         # self.add(b)
-        chess_button = Gtk.Button.new_with_label("Play Again")
-        chess_button.connect("clicked", self.play_clicked)
-        chess_button.set_property("width-request", 300)
-        chess_button.set_property("height-request", 100)
-        main_box.pack_start(chess_button, True, True, 0)
+        self.play_again_button = Gtk.Button.new_with_label("Play Again")
+        self.play_again_button.connect("clicked", self.play_clicked)
+        self.play_again_button.set_property("width-request", 300)
+        self.play_again_button.set_property("height-request", 100)
+        self.main_box.pack_start(self.play_again_button, True, True, 0)
 
-        chess_button = Gtk.Button.new_with_label("Main Menu")
-        chess_button.connect("clicked", self.main_menu_clicked)
-        chess_button.set_property("width-request", 300)
-        chess_button.set_property("height-request", 100)
-        main_box.pack_start(chess_button, True, True, 0)
+        self.main_menu_button = Gtk.Button.new_with_label("Main Menu")
+        self.main_menu_button.connect("clicked", self.main_menu_clicked)
+        self.main_menu_button.set_property("width-request", 300)
+        self.main_menu_button.set_property("height-request", 100)
+        self.main_box.pack_start(self.main_menu_button, True, True, 0)
 
-        back_button = Gtk.Button.new_with_mnemonic("_Exit")
-        back_button.connect("clicked", self.exit_clicked)
-        main_box.pack_start(back_button, True, True, 0)
+        self.exit_button = Gtk.Button.new_with_mnemonic("_Exit")
+        self.exit_button.connect("clicked", self.exit_clicked)
+        self.main_box.pack_start(self.exit_button, True, True, 0)
 
         # fixed the exit stalling problem
         self.connect("destroy", Gtk.main_quit)

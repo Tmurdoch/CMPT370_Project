@@ -10,6 +10,14 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
 
 class MainMenuBox(Gtk.Box):
+    """
+       The MainMenuBox initializes a Gtk Box to hold Gtk buttons that allow a user to choose if they want to play a
+       game, resume a saved game if a save file is available or exit the program.
+       Attributes:
+           play_button: A Gtk button with the label "Play" that starts the sequence to play a game of chess or checkers.
+           resume_button: A Gtk button with the label "Resume" that, if a save file exists, will resume a game of chess
+           or checkers based on the saved game a user wants to play. If no save file was found, this button is hidden.
+    """
     def __init__(self, has_chess_save, has_checkers_save):
         Gtk.Box.__init__(
             self, orientation=Gtk.Orientation.VERTICAL, spacing=10)

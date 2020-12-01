@@ -19,6 +19,14 @@ resume = True
 
 
 class ResumeChoiceBox(Gtk.Box):
+    """
+       The ResumeChoice initializes a Gtk Box to hold Gtk buttons that, if a save file exists, will allow the user to
+       choose between resuming a chess or checkers game based on if they have previously played either game.
+       Attributes:
+           chess_button: A Gtk button with the label "Chess" that resumes the chess saved file.
+           checkers_button: A Gtk button with the label "Checkers" that resume the checkers saved file.
+           back_button: A Gtk button that allows the user to go back to the previous menu.
+    """
     def __init__(self, has_chess_save, has_checkers_save):
         Gtk.Box.__init__(
             self, orientation=Gtk.Orientation.VERTICAL, spacing=10)

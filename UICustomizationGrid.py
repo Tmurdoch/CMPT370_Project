@@ -13,9 +13,18 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
 
 class CustomizationGrid(Gtk.Grid):
+    """
+       The CustomizationGrid initializes a Gtk Grid to hold Gtk radio buttons to customize the players pieces and board,
+       a Gtk button to go back to the previous menu and a Gtk button start the game that was chosen.
+       Attributes:
+           piece_radio_buttons: List: A List to store the radio buttons for piece colour choices.
+           board_radio_buttons: List: A List to store the radio buttons for board colour choices.
+           back_button: A Gtk button with a label of "Back" that allows the user to go back to the previous menu.
+           start_button: A Gtk button with a label of "Start" that initializes the chosen game, game type, piece
+           colours, and board colours and shows the UIBoardGrid box.
+
+       """
     def __init__(self):
-
-
         Gtk.Grid.__init__(self)
         self.set_column_spacing(10)
         self.set_row_spacing(20)
