@@ -28,7 +28,7 @@ class PlayerTypeBox(Gtk.Box):
         self.single_button.set_property("height-request", 100)
         self.pack_start(self.single_button, True, True, 0)
 
-        self.multi_player_button = Gtk.Button.new_with_label("Multi-Player")
+        self.multiplayer_button = Gtk.Button.new_with_label("Multi-Player")
         self.multiplayer_button.set_property("width-request", 300)
         self.multiplayer_button.set_property("height-request", 100)
         self.pack_start(self.multiplayer_button, True, True, 0)
