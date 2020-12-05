@@ -156,7 +156,7 @@ class Game:
                 return GameStatus.IN_PROGRESS
 
         elif self.__game_type == GameType.CHESS:
-            # TODO: Just checks for stalemate, expand to also check for checkmate
+            # TODO: Just checks for stalemate
             if len(light_player_moves) == 0:
                 return GameStatus.DARK_VICTORIOUS
             elif len(dark_player_moves) == 0:
