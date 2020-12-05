@@ -459,7 +459,7 @@ class BoardGrid(Gtk.Grid):
                     # fileter the built move
                     game_square_moves_filtered = filter_check_moves(cur_location, self.__game_obj, game_square_moves)
                     self.possible_moves_for_cur_piece = game_square_moves_filtered
-                elif self.__game_obj.get_game_type == GameType.CHECKERS:
+                elif self.__game_obj.get_game_type() == GameType.CHECKERS:
                     # build the possible pieces for a game square
                     game_square_moves = build_list_of_moves.build_list_of_moves(cur_location, self.__game_obj)
                     self.possible_moves_for_cur_piece = game_square_moves
