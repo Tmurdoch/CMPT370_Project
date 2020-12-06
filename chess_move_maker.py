@@ -63,7 +63,7 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
                     castle_move = True
-                    rook_dest_square.get_occupying_piece.move()  # Update that our rook has moved
+                    rook_dest_square.get_occupying_piece().move()  # Update that our rook has moved
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
                                     "in the way, King-side error")
@@ -139,7 +139,7 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
                     origin_square.remove_occupying_piece()
                     dest_square.remove_occupying_piece()
                     castle_move = True
-                    rook_dest_square.get_occupying_piece.move()  # Update that our rook has moved
+                    rook_dest_square.get_occupying_piece().move()  # Update that our rook has moved
                 else:
                     raise Exception("The castle move should not have been generated because there are pieces "
                                     "in the way, Queen-side error")

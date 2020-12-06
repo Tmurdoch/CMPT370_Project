@@ -7,6 +7,8 @@ from build_list_of_moves import build_list_of_moves
 from GameType import GameType
 from checkers_move_maker import checkers_move_maker
 from chess_move_maker import chess_move_maker
+from GameType import GameType
+from filter_moves import filter_check_moves
 
 
 class Player(object):
@@ -57,17 +59,37 @@ class Player(object):
         """
         game_squares_movable_to = []
 
-        # Look thorough the whole board and look for this players pieces
-        for row in range(game.get_board().get_size()):
-            for col in range(game.get_board().get_size()):
-                square_here = game.get_board().get_game_square(row, col)
-                if (square_here.get_occupying_piece() is not None) and \
-                        (square_here.get_occupying_piece().get_colour() == self.get_piece_set().get_colour()):
-                    # Then this is one of the current players pieces and we need to compute a list of moves for it
-                    list_of_moves_for_this_square = build_list_of_moves(square_here, game)
-                    if len(list_of_moves_for_this_square) > 0:
-                        for dest_square in list_of_moves_for_this_square:
-                            game_squares_movable_to.append([square_here, dest_square])
+        # if game is chess need to filter moves for check
+        if game.get_game_type() == GameType.CHESS:
+            # Look thorough the whole board and look for this players pieces
+            for row in range(game.get_board().get_size()):
+                for col in range(game.get_board().get_size()):
+                    square_here = game.get_board().get_game_square(row, col)
+                    if (square_here.get_occupying_piece() is not None) and \
+                            (square_here.get_occupying_piece().get_colour() == self.get_piece_set().get_colour()):
+                        # Then this is one of the current players pieces and we need to compute a list of moves for it
+                        list_of_moves_for_this_square = build_list_of_moves(square_here, game)
+                        # filter moves that cause a check
+                        list_of_moves_filtered = filter_check_moves(square_here, game, list_of_moves_for_this_square)
+                        if len(list_of_moves_filtered) > 0:
+                            for dest_square in list_of_moves_filtered:
+                                game_squares_movable_to.append([square_here, dest_square])
+        # checkers does not need to be filtered
+        elif game.get_game_type() == GameType.CHECKERS:
+            # Look thorough the whole board and look for this players pieces
+            for row in range(game.get_board().get_size()):
+                for col in range(game.get_board().get_size()):
+                    square_here = game.get_board().get_game_square(row, col)
+                    if (square_here.get_occupying_piece() is not None) and \
+                            (square_here.get_occupying_piece().get_colour() == self.get_piece_set().get_colour()):
+                        # Then this is one of the current players pieces and we need to compute a list of moves for it
+                        list_of_moves_for_this_square = build_list_of_moves(square_here, game)
+                        if len(list_of_moves_for_this_square) > 0:
+                            for dest_square in list_of_moves_for_this_square:
+                                game_squares_movable_to.append([square_here, dest_square])
+
+        else:
+            raise Exception("Game mode " + game.get_game_type().lower() + " is neither chess nor checkers")
 
         print("The AI has " + str(len(game_squares_movable_to)) + " moves available to it.")
         return game_squares_movable_to
