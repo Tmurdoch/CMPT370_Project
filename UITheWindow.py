@@ -110,7 +110,7 @@ class TheWindow(Gtk.Window):
         if going is self.main_box:
             self.set_title("370CC Main Menu")
         elif going is self.game_choice_box:
-            self.set_title("370CC - Chose Game Type")
+            self.set_title("370CC - Choose Game Type")
         elif going is self.resume_choice_box:
             self.set_title("370CC - Choose What Game To Load")
         elif going is self.player_type:
@@ -181,7 +181,7 @@ class TheWindow(Gtk.Window):
     def player_type_multi_clicked(self, button):
         print('Multi Player was chosen')  # put next window here
         self.change_state(self.player_type, self.customization)
-        self.set_title("370CC - Chose Colours")
+        self.set_title("370CC - Choose Colours")
         self.multiplayer = 1
 
     def player_type_back_clicked(self, button):
@@ -194,9 +194,7 @@ class TheWindow(Gtk.Window):
 
     def customization_start_clicked(self, button):
         print("This should go to Board Window")
-        # TODO: allow for users to set game type, right now hard coded as checkers
         self.customization.hide()
-        # board = BoardWindow(self.__game, self.__game_type)
 
         piece_colour=0
         while (piece_colour!=len(self.customization.piece_radio_buttons)):
@@ -224,10 +222,6 @@ class TheWindow(Gtk.Window):
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
             temp_game.build_dark_player("dark player", PlayerType.AI, t2)
 
-        # temp_game.get_light_player().__piece_set.__colour = "White"
-        #                                                   \/ should it?
-        # TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
-        # TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
