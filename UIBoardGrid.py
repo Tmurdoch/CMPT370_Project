@@ -6,7 +6,7 @@ import gi
 
 from GameStatus import GameStatus
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
-
+import time
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 from UIHowToPlayWindow import HowToPlayWindow
 gi.require_version("Gtk", "3.0")
@@ -400,6 +400,7 @@ class BoardGrid(Gtk.Grid):
                 else:
                     self.__game_obj.get_light_player().get_timer().start()
                     self.__game_obj.get_dark_player().get_timer().stop()
+                time.sleep(0.2)
                 self.__game_obj.get_board().switch_sides()
                 print("#################### Checking Game Status #########################")
                 game_status = self.__game_obj.check_for_game_over()
