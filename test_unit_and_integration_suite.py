@@ -641,9 +641,6 @@ def test_timer():
     time.sleep(1)  # Should not have changed here
     assert 88.9 < timer1_that_is_enabled.get_time_remaining_s() < 89.1
 
-    timer2_that_is_enabled = Timer(59, True)
-    assert timer2_that_is_enabled.little_time_left()
-
     timer3_that_is_disabled = Timer(90, False)
     assert not timer3_that_is_disabled.get_enabled()
 
