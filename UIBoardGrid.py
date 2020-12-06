@@ -451,8 +451,10 @@ class BoardGrid(Gtk.Grid):
 
             # not making a move, so set attributes and build possible moves for next click
             else:
-                # print("Not yet making a move, so we will set attributes and build possible moves for next click.")
                 if cur_piece is None:
+                    return
+                #check if not your piece
+                if cur_piece.get_colour() not in self.__game_obj.get_current_player().get_piece_set().get_colour():
                     return
                 self.current_selected_location = cur_location
                 if self.__game_obj.get_game_type() == GameType.CHESS:
