@@ -6,7 +6,7 @@ import gi
 
 from GameStatus import GameStatus
 from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
-
+import time
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 from UIHowToPlayWindow import HowToPlayWindow
 gi.require_version("Gtk", "3.0")
@@ -30,8 +30,11 @@ class BoardGrid(Gtk.Grid):
         @param game_obj: actual game object, initialize by Game()
         @attribute current_selected_piece: Piece obejct, last clicked on piece
         @attribute possible_moves_for_cur_piece: list
+        @attribute first_move: boolean, represents if first move has been done
+        or not, false initially
         """
         Gtk.Grid.__init__(self)
+        self.__first_move = False
         self.__game = game
         self.__game_obj = game_obj
         self.home = home
@@ -93,7 +96,7 @@ class BoardGrid(Gtk.Grid):
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
         self.attach(self.save_quit_button, 2, 5, 1, 1)
 
-        self.start_clock_timer()  # start the Timer
+
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
 
@@ -382,7 +385,9 @@ class BoardGrid(Gtk.Grid):
                 print("Make move is now going to be called... ")
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
-
+                #start timer on first move        
+                if not self.__first_move:
+                    self.start_clock_timer()  # start the Timer
                 print("...We have returned from make move and are now continuing \n")
 
                 checkerboard_area.queue_draw()
@@ -395,6 +400,7 @@ class BoardGrid(Gtk.Grid):
                 else:
                     self.__game_obj.get_light_player().get_timer().start()
                     self.__game_obj.get_dark_player().get_timer().stop()
+                time.sleep(0.2)
                 self.__game_obj.get_board().switch_sides()
                 print("#################### Checking Game Status #########################")
                 game_status = self.__game_obj.check_for_game_over()
