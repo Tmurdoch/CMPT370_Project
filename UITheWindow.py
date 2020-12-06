@@ -29,6 +29,7 @@ class TheWindow(Gtk.Window):
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
+        self.set_default_size(852,627)
         self.modify_bg(Gtk.StateType.NORMAL, col)
         self.directory = directory
 
@@ -84,6 +85,12 @@ class TheWindow(Gtk.Window):
         self.customization.start_button.connect(
             "clicked", self.customization_start_clicked)
 
+        self.main_box.set_hexpand(True)
+        self.game_choice_box.set_hexpand(True)
+        self.resume_choice_box.set_hexpand(True)
+        self.player_type.set_hexpand(True)
+        self.customization.set_hexpand(True)
+        
         self.grid = Gtk.Grid()
         self.grid.attach(self.main_box, 0, 0, 1, 1)
         self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
@@ -103,7 +110,7 @@ class TheWindow(Gtk.Window):
         if going is self.main_box:
             self.set_title("370CC Main Menu")
         elif going is self.game_choice_box:
-            self.set_title("370CC - Chose Game Type")
+            self.set_title("370CC - Choose Game Type")
         elif going is self.resume_choice_box:
             self.set_title("370CC - Choose What Game To Load")
         elif going is self.player_type:
@@ -174,7 +181,7 @@ class TheWindow(Gtk.Window):
     def player_type_multi_clicked(self, button):
         print('Multi Player was chosen')  # put next window here
         self.change_state(self.player_type, self.customization)
-        self.set_title("370CC - Chose Colours")
+        self.set_title("370CC - Choose Colours")
         self.multiplayer = 1
 
     def player_type_back_clicked(self, button):
@@ -187,9 +194,7 @@ class TheWindow(Gtk.Window):
 
     def customization_start_clicked(self, button):
         print("This should go to Board Window")
-        # TODO: allow for users to set game type, right now hard coded as checkers
         self.customization.hide()
-        # board = BoardWindow(self.__game, self.__game_type)
 
         piece_colour=0
         while (piece_colour!=len(self.customization.piece_radio_buttons)):
@@ -205,8 +210,10 @@ class TheWindow(Gtk.Window):
         
         temp_game = Game(self.game_type, piece_colour, board_colour)
 
-        t1 = Timer(900, True)
-        t2 = Timer(900, True)
+        timer_active = self.customization.timer_radio_buttons[1].get_active()
+
+        t1 = Timer(900, timer_active)
+        t2 = Timer(900, timer_active)
 
         if self.multiplayer == 1:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
@@ -215,10 +222,6 @@ class TheWindow(Gtk.Window):
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
             temp_game.build_dark_player("dark player", PlayerType.AI, t2)
 
-        # temp_game.get_light_player().__piece_set.__colour = "White"
-        #                                                   \/ should it?
-        # TODO: the game should be setup way earlier in the UI, this is jsut a placeholder
-        # TODO: MOVE THIS WHEN THE OTHER UI WINDOWS ARE FUNCTIONAL
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
