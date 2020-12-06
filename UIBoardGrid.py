@@ -499,13 +499,20 @@ class BoardGrid(Gtk.Grid):
         p2_time = "{:2d}:{:02d}".format(
             player2_time, player2_time_sec)  # normal clock looking
 
+        little_time_left = 1    # for when the time remaining is low
+
         # bold the times and set them to be white
         self.timer_area.set_markup("<b>" + p1_time + "</b>")
-        self.timer_area.override_color(
-            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        if player1_time < little_time_left:
+            self.timer_area.override_color(
+                Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
+        else:
+            self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
-        self.timer_area_2.override_color(
-            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        if player2_time < little_time_left:
+            self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
+        else:
+            self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         return True
 
         # Initialize Timer

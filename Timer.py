@@ -39,16 +39,6 @@ class Timer(object):
         else:
             return False
 
-    def little_time_left(self):
-        """
-        Used to check if the player has little time left.
-        :return: bool: True if the player has little time left, False otherwise.
-        """
-        if self.__enabled:
-            return self.__time_remaining_ns < (60 * (10 ** 9))  # 1 minute
-        else:
-            return False
-
     def start(self):
         """ Starts the timer. """
         if self.__enabled and not self.__running:
