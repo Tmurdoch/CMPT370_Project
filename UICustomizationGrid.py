@@ -33,7 +33,8 @@ class CustomizationGrid(Gtk.Grid):
         title.set_justify(Gtk.Justification.RIGHT)
         title.override_color(Gtk.StateFlags.NORMAL,
                              Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach(title, 1, 0, 1, 1)
+        title.set_hexpand(True)
+        self.attach(title, 3, 0, 1, 1)
 
         # Pieces choices label
         label_piece = Gtk.Label()

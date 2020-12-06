@@ -17,6 +17,8 @@ from PlayerType import PlayerType
 import cairo
 import build_list_of_moves
 from selectBest import select_best
+from filter_moves import filter_check_moves
+
 SEEK_SET = 0
 SEEK_CUR = 1
 SEEK_END = 2
@@ -451,9 +453,18 @@ class BoardGrid(Gtk.Grid):
                 if cur_piece is None:
                     return
                 self.current_selected_location = cur_location
-                # build the possible pieces for a game square
-                self.possible_moves_for_cur_piece = build_list_of_moves.build_list_of_moves(
-                    cur_location, self.__game_obj)
+                if self.__game_obj.get_game_type() == GameType.CHESS:
+                    # build the possible pieces for a game square
+                    game_square_moves = build_list_of_moves.build_list_of_moves(cur_location, self.__game_obj)
+                    # fileter the built move
+                    game_square_moves_filtered = filter_check_moves(cur_location, self.__game_obj, game_square_moves)
+                    self.possible_moves_for_cur_piece = game_square_moves_filtered
+                elif self.__game_obj.get_game_type() == GameType.CHECKERS:
+                    # build the possible pieces for a game square
+                    game_square_moves = build_list_of_moves.build_list_of_moves(cur_location, self.__game_obj)
+                    self.possible_moves_for_cur_piece = game_square_moves
+                else:
+                    raise Exception("Game mode " + game.get_game_type().lower() + " is neither chess nor checkers")
                 print(str(len(self.possible_moves_for_cur_piece)) +
                       " possible moves have been identified for this piece")
                 checkerboard_area.queue_draw()
