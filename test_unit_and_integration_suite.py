@@ -760,7 +760,6 @@ def test_game():
     """
     Unit testing of the Game class
     """
-    # TODO: Finish up Game Saving and Loading one or the other does not work properly
 
     # game types chess = 0 checkers = 1
     gt_chess = 0
@@ -835,23 +834,6 @@ def test_game():
         my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
         my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
 
-    # test saving
-    # chess
-    # my_chess_game.save_to_file()
-
-    # test loading
-    # load_chess_game = Game(gt_chess, gc_wb)
-    # load_chess_game.load_from_file()
-
-    # test saving
-    # checkers
-    # my_checkers_game.save_to_file()
-
-    # test loading
-    # load_checkers_game = Game(gt_checkers, gc_rb)
-    # load_checkers_game.load_from_file()
-
-    # do assert testing from above to check if files are the same
 
 
 def test_player():
