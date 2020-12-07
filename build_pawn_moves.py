@@ -1,7 +1,6 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
-# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
-# Michael Luciuk, Thomas Murdoch
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 
 def build_pawn_moves(input_game_square, input_game):
@@ -81,7 +80,7 @@ def build_pawn_moves(input_game_square, input_game):
                     list_of_candidate_game_squares.append(input_board.get_game_square(input_row - 1,
                                                                                       input_col + 1))
 
-    # checks if an en passant move can be executed
+    # We will now check it an en passant move can be made.
     # In order for a en passant move to happen following conditions needs to be met
     # - the capturing pawn must be on its fifth rank
     # - the captured pawn must be on an adjacent file and must have just move 2 squares in a single move
