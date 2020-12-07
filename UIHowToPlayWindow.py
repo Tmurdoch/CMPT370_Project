@@ -3,6 +3,7 @@
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 import gi
+
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
@@ -17,6 +18,7 @@ class HowToPlayWindow(Gtk.Window):
            help_box: A Gtk Box used to hold a Gtk Scrolled Window.
            scrolled: A Gtk Scrolled Window that displays the txt files for the rules of chess and checkers.
     """
+
     def __init__(self, game):
         Gtk.Window.__init__(self, title="How to Play " + GAME_TYPE_STRING_LOOK_UP_TABLE[game])
         self.set_border_width(50)
@@ -26,14 +28,13 @@ class HowToPlayWindow(Gtk.Window):
         self.modify_bg(Gtk.StateType.NORMAL, col)
         self.help_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self.help_box)
-        # if we want there to be text in the window
 
         self.scrolled = Gtk.ScrolledWindow(vexpand=True)
         self.scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         label = Gtk.Label()
         if game == GameType.CHESS:
             try:
-                fp = open("chessrules.txt","r",encoding="utf8")
+                fp = open("chessrules.txt", "r", encoding="utf8")
                 chess_rules = fp.read()
                 fp.close()
                 label.set_markup(chess_rules)
@@ -41,7 +42,7 @@ class HowToPlayWindow(Gtk.Window):
                 label.set_markup("Something went wrong reading How to Play")
         elif game == GameType.CHECKERS:
             try:
-                fp = open("checkersrules.txt","r",encoding="utf8")
+                fp = open("checkersrules.txt", "r", encoding="utf8")
                 checkers_rules = fp.read()
                 fp.close()
                 label.set_markup(checkers_rules)

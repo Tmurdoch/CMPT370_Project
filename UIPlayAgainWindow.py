@@ -28,10 +28,8 @@ class PlayAgainWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)
         self.modify_bg(Gtk.StateType.NORMAL, col)
-        # b = Button()
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.main_box)
-        # self.add(b)
         self.play_again_button = Gtk.Button.new_with_label("Play Again")
         self.play_again_button.connect("clicked", self.play_clicked)
         self.play_again_button.set_property("width-request", 300)
@@ -48,20 +46,16 @@ class PlayAgainWindow(Gtk.Window):
         self.exit_button.connect("clicked", self.exit_clicked)
         self.main_box.pack_start(self.exit_button, True, True, 0)
 
-        # fixed the exit stalling problem
         self.connect("destroy", Gtk.main_quit)
 
     def play_clicked(self, button):
         print('Play was chosen')
-        # do we want it to go back to the board or back through menus?
         game_type = GameChoiceBox()
         game_type.show_all()
         self.hide()
 
     def main_menu_clicked(self, button):
         print('This should go to resumed game')
-        # main_menu = MainMenuBox()
-        # main_menu.show_all()
         self.hide()
 
     @staticmethod
