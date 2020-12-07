@@ -44,10 +44,10 @@ class BoardGrid(Gtk.Grid):
             self.place_pieces()
 
         self.surface = None
-        # save the selected piece so we can check if they click on a possible
-        # moves for that piece
+        # save the selected piece so we can check if they click on a possible moves for that piece
         self.current_selected_location = None
         self.possible_moves_for_cur_piece = []
+
         # create checkerboard area
         board_frame = Gtk.Frame()
         board_frame.set_shadow_type(Gtk.ShadowType.IN)
@@ -94,15 +94,9 @@ class BoardGrid(Gtk.Grid):
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
         self.attach(self.save_quit_button, 2, 5, 1, 1)
 
-        #self.save_quit_button = Gtk.Button.new_with_label("Main Menu")
-        #self.save_quit_button.connect("clicked", self.main_menu_clicked)
-        #self.attach(self.save_quit_button, 2, 4, 1, 1)
-
         self.__game_status = self.__game_obj.check_for_game_over()
-        # main menu is only allowed to be seen if a game
-        # is complete because then the illusion
-        # that the resumes reflect the current state
-        # of the disk instead of the state of the disk when the
+        # main menu is only allowed to be seen if a game is complete because then the illusion
+        # that the resumes reflect the current state of the disk instead of the state of the disk when the
         # game opened would be broken
         self.main_menu_button = Gtk.Button.new_with_label("Main Menu")
         self.main_menu_button.set_hexpand(True)
@@ -260,15 +254,13 @@ class BoardGrid(Gtk.Grid):
 
         cairo_ctx.save()
 
-        
-
         while i < width:
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if ((self.__game_status == 0) and ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50))))):
+                if (self.__game_status == 0) and ((self.current_selected_location is not None) and ((self.current_selected_location.get_row() == (j // 50)) and (self.current_selected_location.get_col() == (i // 50)))):
                     cairo_ctx.set_source_rgb(1, .5, 0)
-                elif ((self.__game_status == 0) and ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece))):
+                elif (self.__game_status == 0) and ((self.possible_moves_for_cur_piece is not None) and (self.__game_obj.get_board().get_game_square(j // 50, i // 50) in self.possible_moves_for_cur_piece)):
                     cairo_ctx.set_source_rgb(.5, 0, .5)
 
                 elif ycount % 2:
