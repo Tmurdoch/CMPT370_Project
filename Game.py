@@ -140,18 +140,30 @@ class Game:
             self.get_board().switch_sides()
 
         if self.__game_type == GameType.CHECKERS:
-            if len(light_player_moves) == 0:
+            if len(light_player_moves) == 0 or self.__light_player.get_timer(
+            ).timed_out():
+                self.__light_player.get_timer().stop()
+                self.__dark_player.get_timer().stop()
                 return GameStatus.DARK_VICTORIOUS
-            elif len(dark_player_moves) == 0:
+            elif len(dark_player_moves) == 0 or self.__dark_player.get_timer(
+            ).timed_out():
+                self.__light_player.get_timer().stop()
+                self.__dark_player.get_timer().stop()
                 return GameStatus.LIGHT_VICTORIOUS
             else:
                 return GameStatus.IN_PROGRESS
 
         elif self.__game_type == GameType.CHESS:
-            # TODO: This just checks for chess stalemate, update to check for checkmate too
-            if len(light_player_moves) == 0:
+            # TODO: Just checks for stalemate
+            if len(light_player_moves) == 0 or self.__light_player.get_timer(
+            ).timed_out():
+                self.__light_player.get_timer().stop()
+                self.__dark_player.get_timer().stop()
                 return GameStatus.DARK_VICTORIOUS
-            elif len(dark_player_moves) == 0:
+            elif len(dark_player_moves) == 0  or self.__dark_player.get_timer(
+            ).timed_out():
+                self.__light_player.get_timer().stop()
+                self.__dark_player.get_timer().stop()
                 return GameStatus.LIGHT_VICTORIOUS
             else:
                 return GameStatus.IN_PROGRESS

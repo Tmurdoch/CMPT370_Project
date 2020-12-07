@@ -63,6 +63,7 @@ class BoardGrid(Gtk.Grid):
         checkerboard_area.set_events(checkerboard_area.get_events()
                                      #| Gdk.EventMask.LEAVE_NOTIFY_MASK
                                      | Gdk.EventMask.BUTTON_PRESS_MASK)
+        checkerboard_area.set_hexpand(False)
 
         self.timer_area = Gtk.Label()  # Player 1 time
         self.add(self.timer_area)
@@ -99,13 +100,12 @@ class BoardGrid(Gtk.Grid):
         # that the resumes reflect the current state of the disk instead of the state of the disk when the
         # game opened would be broken
         self.main_menu_button = Gtk.Button.new_with_label("Main Menu")
-        self.main_menu_button.set_hexpand(True)
         self.main_menu_button.connect("clicked", self.main_menu_clicked)
         self.results = Gtk.Label.new("Potato")
         self.results.override_color(
             Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach(self.results,0,1,1,1)
-        self.attach(self.main_menu_button,0,2,1,1)
+        self.attach(self.results,1,1,2,1)
+        self.attach(self.main_menu_button,1,2,2,1)
 
 
         self.show_all()
@@ -366,6 +366,7 @@ class BoardGrid(Gtk.Grid):
         return True
 
     def somebody_won(self):
+        self.__game_status  = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.DARK_VICTORIOUS:
             self.results.set_label("Dark has won!")
         elif self.__game_status == GameStatus.LIGHT_VICTORIOUS:
@@ -500,32 +501,39 @@ class BoardGrid(Gtk.Grid):
         # needs to have True or it only runs once
 
         # get the minutes from Players' time remaining
-        player1_time = int(self.__game_obj.get_light_player(
-        ).get_timer().get_time_remaining_s() // 60)
-        player2_time = int(self.__game_obj.get_dark_player(
-        ).get_timer().get_time_remaining_s() // 60)
+        player1_timer = self.__game_obj.get_light_player(
+        ).get_timer()
+        player2_timer = self.__game_obj.get_dark_player(
+        ).get_timer()
+        if player1_timer.timed_out() or player2_timer.timed_out():
+            print("Game over Man")
+            self.__game_obj.check_for_game_over()
+            self.somebody_won()
+            return
+        player1_time = player1_timer.get_time_remaining_s()
+        player2_time = player2_timer.get_time_remaining_s()
+        player1_time_min = int(player1_time // 60)
+        player2_time_min = int(player2_time // 60)
         # get the seconds from Player's time remaining
-        player1_time_sec = int(self.__game_obj.get_light_player(
-        ).get_timer().get_time_remaining_s() % 60)
-        player2_time_sec = int(self.__game_obj.get_dark_player(
-        ).get_timer().get_time_remaining_s() % 60)
+        player1_time_sec = int(player1_time % 60)
+        player2_time_sec = int(player2_time % 60)
 
         # format the minutes and seconds to be
-        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)
+        p1_time = "{:2d}:{:02d}".format(player1_time_min, player1_time_sec)
         p2_time = "{:2d}:{:02d}".format(
-            player2_time, player2_time_sec)  # normal clock looking
+            player2_time_min, player2_time_sec)  # normal clock looking
 
         little_time_left = 1  # for when the time remaining is low
 
         # bold the times and set them to be white
         self.timer_area.set_markup("<b>" + p1_time + "</b>")
-        if player1_time < little_time_left:
+        if player1_time_min < little_time_left:
             self.timer_area.override_color(
                 Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
         else:
             self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
-        if player2_time < little_time_left:
+        if player2_time_min < little_time_left:
             self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
         else:
             self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
