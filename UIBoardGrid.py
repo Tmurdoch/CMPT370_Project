@@ -238,12 +238,16 @@ class BoardGrid(Gtk.Grid):
                 pcs_player1.get_live_pieces(), pcs_player2.get_live_pieces())
 
     def checkerboard_draw_event(self, checkerboard_area, cairo_ctx):
+        """
+        Draw handler for the checkerboard
 
-        # At the start of a draw handler, a clip region has been set on
-        # the Cairo context, and the contents have been cleared to the
-        # widget's background color. The docs for
-        # gdk_window_begin_paint_region() give more details on how this
-        # works.
+        params handled by api
+
+        Will use cairo to draw the board, first creating a checkerboard
+        then drawing the pieces
+
+        Called whenever OS repaints window
+        """
         check_size = 50
         spacing = 0
 
@@ -355,6 +359,7 @@ class BoardGrid(Gtk.Grid):
 
     def click_configure_event(self, checkerboard_area, event):
 
+
         allocation = checkerboard_area.get_allocation()
         self.surface = checkerboard_area.get_window().create_similar_surface(cairo.CONTENT_COLOR,
                                                                              allocation.width,
@@ -366,6 +371,11 @@ class BoardGrid(Gtk.Grid):
         return True
 
     def somebody_won(self):
+        """
+        This function gets called when a gameover state has been detected
+        it will update the hidden results widget with the results then show it
+        and show a main menu button
+        """
         self.__game_status  = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.DARK_VICTORIOUS:
             self.results.set_label("Dark has won!")
@@ -377,6 +387,11 @@ class BoardGrid(Gtk.Grid):
     def mouse_press_event(self, checkerboard_area, event):
         """
         handles mouse press events on the board grid
+
+        A lot of the magic for the game logic takes place in this method
+
+        If the current game is not in progress nothing will be done
+        
         returns False on Failure
         """
 
@@ -489,7 +504,9 @@ class BoardGrid(Gtk.Grid):
                 checkerboard_area.queue_draw()
 
     def switch_timer(self):
-        # change the timer to other player
+        """
+        change the timer to other player
+        """
         if self.__game_obj.get_current_player() is self.__game_obj.get_dark_player():
             self.__game_obj.get_light_player().get_timer().stop()
             self.__game_obj.get_dark_player().get_timer().start()
@@ -498,9 +515,13 @@ class BoardGrid(Gtk.Grid):
             self.__game_obj.get_dark_player().get_timer().stop()
 
     def display_timer(self):
-        # needs to have True or it only runs once
+        """
+        callback to update the timer labels to
+        show user timer status
 
-        # get the minutes from Players' time remaining
+        needs to have True or it only runs once
+        """
+
         player1_timer = self.__game_obj.get_light_player(
         ).get_timer()
         player2_timer = self.__game_obj.get_dark_player(
@@ -512,6 +533,7 @@ class BoardGrid(Gtk.Grid):
             return
         player1_time = player1_timer.get_time_remaining_s()
         player2_time = player2_timer.get_time_remaining_s()
+        # get the minutes from Players' time remaining
         player1_time_min = int(player1_time // 60)
         player2_time_min = int(player2_time // 60)
         # get the seconds from Player's time remaining
@@ -539,9 +561,11 @@ class BoardGrid(Gtk.Grid):
             self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         return True
 
-        # Initialize Timer
 
     def start_clock_timer(self):
+        """
+        Setup the polling of the timer to update screen
+        """
         if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
             GLib.timeout_add(1000, self.display_timer)
@@ -550,11 +574,20 @@ class BoardGrid(Gtk.Grid):
             GLib.timeout_add(1000, self.display_timer)
 
     def help_clicked(self, button):
+        """
+        callback handler for when play button is clicked
+        this will show a how to play window for the
+        current game type
+        """
         print("This should go to HowToPlay Window")
         board = HowToPlayWindow(self.__game_obj.get_game_type())
         board.show_all()
 
     def promote_clicked(self, button):
+        """
+        TODO unimplemented functionality, doesn't do anything/is
+        never called
+        """
         print("This should go to PromotePawn Window")
         self.__game_obj.get_light_player().get_timer().stop()
         self.__game_obj.get_dark_player().get_timer().stop()
@@ -562,6 +595,10 @@ class BoardGrid(Gtk.Grid):
         board.show_all()
 
     def main_menu_clicked(self, button):
+        """
+        if the main menu button is clicked we save the game and
+        call the return_to_main method for UITheWindow
+        """
         self.__game_status = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.IN_PROGRESS:
             try:
@@ -574,6 +611,10 @@ class BoardGrid(Gtk.Grid):
         return
 
     def save_quit_clicked(self, button):
+        """
+        callback handler for the save/quit button
+        try to save the game and if it fails exit anyway
+        """
         print("This should exit")
         self.__game_status = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.IN_PROGRESS:
@@ -582,5 +623,5 @@ class BoardGrid(Gtk.Grid):
             except:
                 # TODO show message dialog here with error
                 print("save failed")
-                # yolo quit out even if save failed
+        # yolo quit out even if save failed
         Gtk.main_quit()

@@ -23,7 +23,23 @@ import os
 
 
 class TheWindow(Gtk.Window):
+    """
+    TheWindow is a GTK Window object that represents the window that
+    almost all of the UI is drawn in
+
+    Consists of one Gtk Grid that has all of it's children
+    overlapping. shows and hides as necessary to change
+    state
+    
+    Attributes:
+    All of the windows child widgets are public attributes of this class
+    """
     def __init__(self, directory):
+        """
+        Initialize TheWindow
+
+        :param directory: the user data directory that is for save games
+        """
         Gtk.Window.__init__(self, title="370CC Main Menu")
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -36,7 +52,6 @@ class TheWindow(Gtk.Window):
         self.has_checkers_save = 0
 
         # Flags for UI
-        self.single_player = 0
         self.multiplayer = 0
 
         # To be defined later
@@ -95,6 +110,12 @@ class TheWindow(Gtk.Window):
         self.connect("destroy", Gtk.main_quit)
 
     def change_state(self, leaving, going):
+        """
+        Changes what is currently being shown
+
+        :param leaving: the gtk widget chicld of TheWindow that is going to b hidden
+        :param going: the gtk widget chicld of TheWindow that is going to b shown
+        """
         leaving.hide()
         going.show()
         if going is self.main_box:
@@ -109,34 +130,52 @@ class TheWindow(Gtk.Window):
             self.set_title("370CC - Choose Colours")
 
     def main_play_clicked(self, button):
+        """
+        Callback event handler main menu play button clicked
+        """
         print('Play was chosen')
         self.change_state(self.main_box, self.game_choice_box)
 
     def main_resume_clicked(self, button):
+        """
+        Callback event handler main menu resume button clicked
+        """
         print('This should go to resumed game')
         self.change_state(self.main_box, self.resume_choice_box)
 
     def main_exit_clicked(self, button):
-        print('This should go to resumed game')
+        """
+        Callback event handler main menu exit clicked
+        """
         Gtk.main_quit()
 
     def game_choice_chess_clicked(self, button):
+        """
+        Callback event handler game choice chess clicked
+        """
         print('Chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.change_state(self.game_choice_box, self.player_type)
 
     def game_choice_checkers_clicked(self, button):
+        """
+        Callback event handler game choice checkers clicked
+        """
         print('Checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
         self.change_state(self.game_choice_box, self.player_type)
 
     def game_choice_back_clicked(self, button):
+        """
+        Callback event handler game choice back clicked
+        """
         print("This should go back to Main Menu Window")
-        self.game_choice_box.hide()
-        self.main_box.show()
         self.change_state(self.game_choice_box, self.main_box)
 
     def resume_choice_chess_clicked(self, button):
+        """
+        Callback event handler resume chess game
+        """
         print('Resume chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.resume_choice_box.hide()
@@ -145,9 +184,13 @@ class TheWindow(Gtk.Window):
         temp_game.load_from_file(self.directory)
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file=1)
         self.grid.attach(self.board, 0, 0, 1, 1)
+        self.set_title("370CC - In Game")
         self.board.show()
 
     def resume_choice_checkers_clicked(self, button):
+        """
+        Callback event handler resume checkers game
+        """
         print('Resume checkers was chosen')  # put next window here
         self.game_type = GameType.CHECKERS
         self.resume_choice_box.hide()
@@ -156,33 +199,51 @@ class TheWindow(Gtk.Window):
         temp_game.load_from_file(self.directory)
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file=1)
         self.grid.attach(self.board, 0, 0, 1, 1)
+        self.set_title("370CC - In Game")
         self.board.show()
 
     def resume_choice_back_clicked(self, button):
+        """
+        Callback event handler back to main from resume screen
+        """
         print("This should go back to Main Menu Window")
-        self.resume_choice_box.hide()
-        self.main_box.show()
+        self.change_state(self.resume_choice_box, self.main_box)
 
     def player_type_single_clicked(self, button):
+        """
+        Callback event handler single player selected
+        """
         print('Single Player was chosen')  # put next window here
         self.change_state(self.player_type, self.customization)
-        self.single_player = 1
+        self.multiplayer = 0
 
     def player_type_multi_clicked(self, button):
+        """
+        Callback event handler multi player selected
+        """
         print('Multi Player was chosen')  # put next window here
         self.change_state(self.player_type, self.customization)
         self.set_title("370CC - Choose Colours")
         self.multiplayer = 1
 
     def player_type_back_clicked(self, button):
+        """
+        Callback event handler back selected on single/multiplayer screen
+        """
         print("This should go back to Game Choice Window")
         self.change_state(self.player_type, self.game_choice_box)
 
     def customization_back_clicked(self, button):
+        """
+        Callback event handler back selected on customization screen
+        """
         print("This should go back to Game Choice Window")
         self.change_state(self.customization, self.player_type)
 
     def customization_start_clicked(self, button):
+        """
+        Callback event handler start new game clicked
+        """
         print("This should go to Board Window")
         self.customization.hide()
 
@@ -214,8 +275,12 @@ class TheWindow(Gtk.Window):
 
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
+        self.set_title("370CC - In Game")
         self.board.show()
 
     def return_to_main(self):
+        """
+        This is called from UIBoardGrid when the main menu is to be shown
+        """
         self.board.destroy()
         self.main_box.show()
