@@ -32,11 +32,5 @@ class MainMenuBox(Gtk.Box):
             self.resume_button.set_property("height-request", 100)
             self.pack_start(self.resume_button, True, True, 0)
 
-        back_button = Gtk.Button.new_with_mnemonic("_Exit")
-        back_button.connect("clicked", self.exit_clicked)
-        self.pack_start(back_button, True, True, 0)
-
-    @staticmethod
-    def exit_clicked(self, button):
-        print("This should exit")
-        Gtk.main_quit()
+        self.exit_button = Gtk.Button.new_with_label("Exit")
+        self.pack_start(self.exit_button, True, True, 0)
