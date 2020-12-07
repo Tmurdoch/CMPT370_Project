@@ -48,7 +48,6 @@ class PromotePawnWindow(Gtk.Window):
         self.promote_box.add(self.rook_button)
         self.connect("destroy", self.hide)
 
-    # CHANGE THIS WHEN GAME OBJECT IS FIGURED OUT
     def queen_clicked(self, button):
         print('Queen was chosen')
         if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():

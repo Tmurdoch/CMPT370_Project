@@ -1,6 +1,7 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
+
 from Board import Board
 from GameSquare import GameSquare
 from PieceSet import PieceSet
@@ -18,7 +19,6 @@ def chess_move_maker(origin_square, dest_square, board, other_player_piece_set, 
     :param game: The game to know what player is currently at the bottom of the board
     """
 
-    print("The chess_move_maker has been called.")
     if not isinstance(origin_square, GameSquare):
         raise Exception("The origin square passed to the chess_move_maker() was not of type GameSquare object.")
 

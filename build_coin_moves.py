@@ -139,8 +139,8 @@ def checkers_jump_helper(input_board, input_piece, input_game_square, list_moves
                                            input_game_square.get_col() - 1).get_occupying_piece() is not None:
                 # There is a coin there, check if its an enemy piece
                 if input_board.get_game_square(input_game_square.get_row() + 1,
-                                               input_game_square.get_col() - 1).get_occupying_piece().get_colour() is not \
-                        input_piece.get_colour():
+                                               input_game_square.get_col() - 1).get_occupying_piece().get_colour() \
+                        is not input_piece.get_colour():
                     # It is an enemy piece, check if the jump spot is clear
                     if input_board.get_game_square(input_game_square.get_row() + 2,
                                                    input_game_square.get_col() - 2).get_occupying_piece() is None:
@@ -173,7 +173,7 @@ def checkers_jump_helper(input_board, input_piece, input_game_square, list_moves
                                            input_game_square.get_col() + 1).get_occupying_piece() is not None:
                 # There is a coin there, check if its an enemy piece
                 if input_board.get_game_square(input_game_square.get_row() + 1,
-                                                input_game_square.get_col() + 1).get_occupying_piece().get_colour() \
+                                               input_game_square.get_col() + 1).get_occupying_piece().get_colour() \
                         is not input_piece.get_colour():
                     # It is an enemy piece, check if the jump spot is clear
                     if input_board.get_game_square(input_game_square.get_row() + 2,
@@ -197,5 +197,4 @@ def checkers_jump_helper(input_board, input_piece, input_game_square, list_moves
                         # put back the coin removed
                         input_board.get_game_square(input_game_square.get_row() + 1,
                                                     input_game_square.get_col() + 1).put_piece_here(coin_removed)
-
     return

@@ -8,9 +8,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
 
-# make c-stdlib style definitions so
-# the code is readable and without
-# magic numbers
+# Make c-stdlib style definitions
 SEEK_SET = 0
 SEEK_CUR = 1
 SEEK_END = 2
@@ -28,16 +26,15 @@ class ResumeChoiceBox(Gtk.Box):
            back_button: A Gtk button that allows the user to go back to the previous menu.
     """
     def __init__(self, has_chess_save, has_checkers_save):
-        Gtk.Box.__init__(
-            self, orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
-        if (has_chess_save):
+        if has_chess_save:
             self.chess_button = Gtk.Button.new_with_label("Chess")
             self.chess_button.set_property("width-request", 300)
             self.chess_button.set_property("height-request", 100)
             self.pack_start(self.chess_button, True, True, 0)
 
-        if (has_checkers_save):
+        if has_checkers_save:
             self.checkers_button = Gtk.Button.new_with_label("Checkers")
             self.checkers_button.set_property("width-request", 300)
             self.checkers_button.set_property("height-request", 100)

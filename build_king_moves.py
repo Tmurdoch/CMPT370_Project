@@ -110,6 +110,4 @@ def build_king_moves(input_game_square, input_game):
                             candidate_game_squares.append(
                                 input_board.get_game_square(7, 7))
 
-    # TODO: Review the list of candidate squares, and filter out any that would place the king in check
-
     return candidate_game_squares

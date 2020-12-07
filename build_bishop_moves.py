@@ -1,7 +1,6 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
-# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
-# Michael Luciuk, Thomas Murdoch
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from build_rook_moves import rook_move_adder
 
@@ -9,6 +8,7 @@ from build_rook_moves import rook_move_adder
 def build_bishop_moves(input_game_square, input_game):
     """
     Build the list of possible moves for a Bishop
+    TODO: Factor out duplicate code fragments
     :param input_game_square: GameSquare: The origin game square that you want to build a list of moves for.
     :param input_game: The input game, required to get the game board and game type
     :return list_of_candidate_game_squares: GameSquare[]: List of destination squares the bishop can legally move to

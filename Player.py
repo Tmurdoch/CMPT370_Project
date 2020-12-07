@@ -4,7 +4,6 @@
 
 from PieceSet import PieceSet
 from build_list_of_moves import build_list_of_moves
-from GameType import GameType
 from checkers_move_maker import checkers_move_maker
 from chess_move_maker import chess_move_maker
 from GameType import GameType
@@ -59,7 +58,7 @@ class Player(object):
         """
         game_squares_movable_to = []
 
-        # if game is chess need to filter moves for check
+        # Chess moves need to be filtered for check
         if game.get_game_type() == GameType.CHESS:
             # Look thorough the whole board and look for this players pieces
             for row in range(game.get_board().get_size()):
@@ -74,6 +73,7 @@ class Player(object):
                         if len(list_of_moves_filtered) > 0:
                             for dest_square in list_of_moves_filtered:
                                 game_squares_movable_to.append([square_here, dest_square])
+
         # checkers does not need to be filtered
         elif game.get_game_type() == GameType.CHECKERS:
             # Look thorough the whole board and look for this players pieces
@@ -133,9 +133,7 @@ class Player(object):
                              other_player.get_piece_set(), self, game)
 
         else:
-            # Couldn't identify the type of game
-            raise Exception(
-                "The player's piece set is neither of type checkers or type chess")
+            raise Exception("The player's piece set is neither of type checkers or type chess")
 
     def get_piece_set(self):
         """ :return: PieceSet: The player's piece set """

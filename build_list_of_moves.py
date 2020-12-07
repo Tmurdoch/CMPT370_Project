@@ -1,7 +1,6 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
-# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere,
-# Michael Luciuk, Thomas Murdoch
+# Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
 
 from GameType import GameType
 from build_bishop_moves import build_bishop_moves
@@ -46,7 +45,6 @@ def build_list_of_moves(input_game_square, input_game):
 
         elif type(input_piece).__name__ == "Pawn":
             list_of_candidate_game_squares = build_pawn_moves(input_game_square, input_game)
-
         else:
             # Could not identify the type of piece
             raise Exception("Could not identify the type of piece")

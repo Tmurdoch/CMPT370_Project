@@ -13,9 +13,8 @@ CURRENT_FILE_VERSION = 0
 FILENAME = "test_save.bin"
 FILE_VER_ZERO_HEADER_SIZE = 39
 GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess", "Checkers"]
-# make the c-stdlib style definitions so
-# the code is readable and not full
-# of magic numbers
+
+# c-stdlib style definitions
 SEEK_SET = 0
 SEEK_CUR = 1
 SEEK_END = 2
@@ -31,12 +30,10 @@ def load_from_file(game, path):
     :param path: string describing file path to save too
     :return: None
     """
-    fp = open(path+"/save-game.cmpt370" +
-              GAME_TYPE_STRING_LOOK_UP_TABLE[game.get_game_type()], "rb")
+    fp = open(path + "/save-game.cmpt370" + GAME_TYPE_STRING_LOOK_UP_TABLE[game.get_game_type()], "rb")
     read_magic = fp.read(20)
     if read_magic != MAGIC:
-        raise Exception(
-            "ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
+        raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
 
     file_version = int.from_bytes(
         fp.read(1), byteorder="big", signed=False)
@@ -51,16 +48,16 @@ def load_from_file(game, path):
             raise Exception(
                 "ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
         fp.seek(20, SEEK_SET)
-        f = fp.read(FILE_VER_ZERO_HEADER_SIZE-20)
+        f = fp.read(FILE_VER_ZERO_HEADER_SIZE - 20)
         CURRENT_FILE_VERSION, game_mode, ai_in_game, dark_player_is_ai, dark_player_turn, board_height, \
-            board_width, colours, timer_enabled, board_colour, unused_reserved, light_player_time, \
-            dark_player_time = struct.unpack(">BBBBBBBBBBBff", f)
+        board_width, colours, timer_enabled, board_colour, unused_reserved, light_player_time, \
+        dark_player_time = struct.unpack(">BBBBBBBBBBBff", f)
 
         if file_size < (FILE_VER_ZERO_HEADER_SIZE + (board_width * board_height)):
             # file too small
             fp.close()
             raise Exception("something")
-        board_data = fp.read(board_height*board_width)
+        board_data = fp.read(board_height * board_width)
         fp.close()
 
         if game.get_game_type() != game_mode:
@@ -152,59 +149,71 @@ def load_from_file(game, path):
                     elif chr(board_data[board_data_index]).lower() == "n":
                         if is_dark:
                             assert (found_dark_knight != 2)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[6+found_dark_knight])
+                            cur_square.put_piece_here(game.get_dark_player().get_piece_set()
+                                                      .get_all_pieces()[6 + found_dark_knight])
                             found_dark_knight += 1
                         else:
                             assert (found_light_knight != 2)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[6+found_light_knight])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[6 + found_light_knight])
                             found_light_knight += 1
                     elif chr(board_data[board_data_index]).lower() == "b":
                         if is_dark:
                             assert (found_dark_bishop != 2)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[4+found_dark_bishop])
+                            cur_square.put_piece_here(
+                                game.get_dark_player().get_piece_set().get_all_pieces()[4 + found_dark_bishop])
                             found_dark_bishop += 1
                         else:
                             assert (found_light_bishop != 2)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[4+found_light_bishop])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[4 + found_light_bishop])
                             found_light_bishop += 1
                     elif chr(board_data[board_data_index]).lower() == "r":
                         if is_dark:
                             assert (found_dark_rook != 2)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[2+found_dark_rook])
+                            cur_square.put_piece_here(
+                                game.get_dark_player().get_piece_set().get_all_pieces()[2 + found_dark_rook])
                             found_dark_rook += 1
                         else:
                             assert (found_light_rook != 2)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[2+found_light_rook])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[2 + found_light_rook])
                             found_light_rook += 1
                     elif chr(board_data[board_data_index]).lower() == "s":
                         if is_dark:
                             assert (found_dark_rook != 2)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[2+found_dark_rook])
+                            cur_square.put_piece_here(
+                                game.get_dark_player().get_piece_set().get_all_pieces()[2 + found_dark_rook])
                             found_dark_rook += 1
                         else:
                             assert (found_light_rook != 2)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[2+found_light_rook])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[2 + found_light_rook])
                             found_light_rook += 1
                         cur_square.get_occupying_piece().move()
                     elif chr(board_data[board_data_index]).lower() == "p":
                         # The pawn is an unmoved pawn
                         if is_dark:
                             assert (found_dark_pawn != 8)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[8+found_dark_pawn])
+                            cur_square.put_piece_here(
+                                game.get_dark_player().get_piece_set().get_all_pieces()[8 + found_dark_pawn])
                             found_dark_pawn += 1
                         else:
                             assert (found_light_pawn != 8)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[8+found_light_pawn])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[8 + found_light_pawn])
                             found_light_pawn += 1
                     elif chr(board_data[board_data_index]).lower() == "m":
                         # The pawn is an moved pawn
                         if is_dark:
                             assert (found_dark_pawn != 8)
-                            cur_square.put_piece_here(game.get_dark_player().get_piece_set().get_all_pieces()[8+found_dark_pawn])
+                            cur_square.put_piece_here(
+                                game.get_dark_player().get_piece_set().get_all_pieces()[8 + found_dark_pawn])
                             found_dark_pawn += 1
                         else:
                             assert (found_light_pawn != 8)
-                            cur_square.put_piece_here(game.get_light_player().get_piece_set().get_all_pieces()[8+found_light_pawn])
+                            cur_square.put_piece_here(
+                                game.get_light_player().get_piece_set().get_all_pieces()[8 + found_light_pawn])
                             found_light_pawn += 1
                         cur_square.get_occupying_piece().move()
                     else:
@@ -229,27 +238,27 @@ def load_from_file(game, path):
                     if board_data[board_data_index] & 0b10:
                         cur_square.get_occupying_piece().promote()
                 else:
-                    # unidentified game, shouldn't be possible
+                    # Unidentified game, shouldn't be possible
                     assert 0
                 board_data_index += 1
                 col += 1
             row += 1
 
-        # put all the pieces that were not placed on the board into the captured lists
+        # Put all the pieces that were not placed on the board into the captured lists
         if game.get_game_type() == GameType.CHECKERS:
             # Start at the back of the list of live pieces not placed on the board and capture them
             i = 0
-            while i != (12-found_dark_checkers_pieces):
+            while i != (12 - found_dark_checkers_pieces):
                 game.get_dark_player().get_piece_set().capture_piece(
                     game.get_dark_player().get_piece_set().get_live_pieces()[
-                        11-i]
+                        11 - i]
                 )
                 i += 1
             i = 0
-            while i != (12-found_light_checkers_pieces):
+            while i != (12 - found_light_checkers_pieces):
                 game.get_light_player().get_piece_set().capture_piece(
                     game.get_light_player().get_piece_set().get_live_pieces()[
-                        11-i]
+                        11 - i]
                 )
                 i += 1
         elif game.get_game_type() == GameType.CHESS:
@@ -270,44 +279,43 @@ def load_from_file(game, path):
             # rook
             while found_dark_rook != 2:
                 game.get_dark_player().get_piece_set().capture_piece(
-                    game.get_dark_player().get_piece_set().get_all_pieces()[1+found_dark_rook])
+                    game.get_dark_player().get_piece_set().get_all_pieces()[1 + found_dark_rook])
                 found_dark_rook += 1
             while found_light_rook != 2:
                 game.get_light_player().get_piece_set().capture_piece(
-                    game.get_light_player().get_piece_set().get_all_pieces()[1+found_light_rook])
+                    game.get_light_player().get_piece_set().get_all_pieces()[1 + found_light_rook])
                 found_light_rook += 1
             # bishop
             while found_dark_bishop != 2:
                 game.get_dark_player().get_piece_set().capture_piece(
-                    game.get_dark_player().get_piece_set().get_all_pieces()[3+found_dark_bishop])
+                    game.get_dark_player().get_piece_set().get_all_pieces()[3 + found_dark_bishop])
                 found_dark_bishop += 1
             while found_light_bishop != 2:
                 game.get_light_player().get_piece_set().capture_piece(
-                    game.get_light_player().get_piece_set().get_all_pieces()[3+found_light_bishop])
+                    game.get_light_player().get_piece_set().get_all_pieces()[3 + found_light_bishop])
                 found_light_bishop += 1
             # knight
             while found_dark_knight != 2:
                 game.get_dark_player().get_piece_set().capture_piece(
-                    game.get_dark_player().get_piece_set().get_all_pieces()[5+found_dark_knight])
+                    game.get_dark_player().get_piece_set().get_all_pieces()[5 + found_dark_knight])
                 found_dark_knight += 1
             while found_light_knight != 2:
                 game.get_light_player().get_piece_set().capture_piece(
-                    game.get_light_player().get_piece_set().get_all_pieces()[5+found_light_knight])
+                    game.get_light_player().get_piece_set().get_all_pieces()[5 + found_light_knight])
                 found_light_knight += 1
             # pawn
             while found_dark_pawn != 8:
                 game.get_dark_player().get_piece_set().capture_piece(
-                    game.get_dark_player().get_piece_set().get_all_pieces()[7+found_dark_pawn])
+                    game.get_dark_player().get_piece_set().get_all_pieces()[7 + found_dark_pawn])
                 found_dark_pawn += 1
             while found_light_pawn != 8:
                 game.get_light_player().get_piece_set().capture_piece(
-                    game.get_light_player().get_piece_set().get_all_pieces()[7+found_light_pawn])
+                    game.get_light_player().get_piece_set().get_all_pieces()[7 + found_light_pawn])
                 found_light_pawn += 1
         # delete the file after loading
-        os.remove(path+"/save-game.cmpt370" + GAME_TYPE_STRING_LOOK_UP_TABLE[game.get_game_type()])
+        os.remove(path + "/save-game.cmpt370" + GAME_TYPE_STRING_LOOK_UP_TABLE[game.get_game_type()])
         return
 
     else:
         fp.close()
-        # ui.showError("File version " + str(file_version) + " unsupported in this version, update the game")
-        raise Exception("ChessFileErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
+        raise Exception("Chess File Error")
