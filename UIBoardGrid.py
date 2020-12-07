@@ -486,9 +486,9 @@ class BoardGrid(Gtk.Grid):
         # needs to have True or it only runs once
 
         # get the minutes from Players' time remaining
-        player1_time = int(self.__game_obj.get_light_player(
+        player1_time_min = int(self.__game_obj.get_light_player(
         ).get_timer().get_time_remaining_s() // 60)
-        player2_time = int(self.__game_obj.get_dark_player(
+        player2_time_min = int(self.__game_obj.get_dark_player(
         ).get_timer().get_time_remaining_s() // 60)
         # get the seconds from Player's time remaining
         player1_time_sec = int(self.__game_obj.get_light_player(
@@ -497,21 +497,21 @@ class BoardGrid(Gtk.Grid):
         ).get_timer().get_time_remaining_s() % 60)
 
         # format the minutes and seconds to be
-        p1_time = "{:2d}:{:02d}".format(player1_time, player1_time_sec)
+        p1_time = "{:2d}:{:02d}".format(player1_time_min, player1_time_sec)
         p2_time = "{:2d}:{:02d}".format(
-            player2_time, player2_time_sec)  # normal clock looking
+            player2_time_min, player2_time_sec)  # normal clock looking
 
         little_time_left = 1    # for when the time remaining is low
 
         # bold the times and set them to be white
         self.timer_area.set_markup("<b>" + p1_time + "</b>")
-        if player1_time < little_time_left:
+        if player1_time_min < little_time_left:
             self.timer_area.override_color(
                 Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
         else:
             self.timer_area.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
         self.timer_area_2.set_markup("<b>" + p2_time + "</b>")
-        if player2_time < little_time_left:
+        if player2_time_min < little_time_left:
             self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 0, 0, 1.0))
         else:
             self.timer_area_2.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
