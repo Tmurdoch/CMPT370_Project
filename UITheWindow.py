@@ -212,8 +212,8 @@ class TheWindow(Gtk.Window):
 
         timer_active = self.customization.timer_radio_buttons[1].get_active()
 
-        t1 = Timer(900, timer_active)
-        t2 = Timer(900, timer_active)
+        t1 = Timer(7, timer_active)
+        t2 = Timer(7, timer_active)
 
         if self.multiplayer == 1:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)

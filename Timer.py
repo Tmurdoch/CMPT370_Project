@@ -35,7 +35,7 @@ class Timer(object):
         :return: Bool: True if the player is out of time, False otherwise.
         """
         if self.__enabled:
-            return self.__time_remaining_ns < 0
+            return self.get_time_remaining_ns() < 0
         else:
             return False
 

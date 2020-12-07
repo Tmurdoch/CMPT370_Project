@@ -520,7 +520,12 @@ class BoardGrid(Gtk.Grid):
         player1_timer = self.__game_obj.get_light_player(
         ).get_timer()
         player2_timer = self.__game_obj.get_dark_player(
-        ).get_timer() 
+        ).get_timer()
+        if player1_timer.timed_out() or player2_timer.timed_out():
+            print("Game over Man")
+            self.__game_obj.check_for_game_over()
+            self.somebody_won()
+            return
         player1_time = player1_timer.get_time_remaining_s()
         player2_time = player2_timer.get_time_remaining_s()
         player1_time_min = int(player1_time // 60)
