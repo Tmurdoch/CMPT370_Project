@@ -9,6 +9,7 @@ from Pieces import King, Queen, Knight, Bishop, Rook, Pawn
 import time
 from Colours import ColourOffset, COLOUR_STRING_LOOK_UP_TABLE, COLOUR_BOARD_STRING_LOOK_UP_TABLE
 from UIHowToPlayWindow import HowToPlayWindow
+
 gi.require_version("Gtk", "3.0")
 gi.require_version("Rsvg", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Rsvg, GLib
@@ -28,7 +29,7 @@ class BoardGrid(Gtk.Grid):
     def __init__(self, game, game_type, game_obj, home, load_from_file=False):
         """
         @param game_obj: actual game object, initialize by Game()
-        @attribute current_selected_piece: Piece obejct, last clicked on piece
+        @attribute current_selected_piece: Piece object, last clicked on piece
         @attribute possible_moves_for_cur_piece: list
         @attribute first_move: boolean, represents if first move has been done
         or not, false initially
@@ -38,8 +39,10 @@ class BoardGrid(Gtk.Grid):
         self.__game = game
         self.__game_obj = game_obj
         self.home = home
-        if (not load_from_file):
+
+        if not load_from_file:
             self.place_pieces()
+
         self.surface = None
         # save the selected piece so we can check if they click on a possible
         # moves for that piece
@@ -83,11 +86,6 @@ class BoardGrid(Gtk.Grid):
         self.attach_next_to(player2_label, player1_label,
                             Gtk.PositionType.RIGHT, 1, 1)
 
-        # just to see if promotion works
-        # promote_button = Gtk.Button.new_with_label("promote?")
-        # promote_button.connect("clicked", self.promote_clicked)
-        # board_box.attach_next_to(promote_button, help_button, Gtk.PositionType.RIGHT, 1, 1)
-
         self.help_button = Gtk.Button.new_with_label("Help?")
         self.help_button.connect("clicked", self.help_clicked)
         self.attach(self.help_button, 1, 4, 1, 1)
@@ -95,7 +93,6 @@ class BoardGrid(Gtk.Grid):
         self.save_quit_button = Gtk.Button.new_with_label("Save and Quit")
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
         self.attach(self.save_quit_button, 2, 5, 1, 1)
-
 
         self.show_all()
         self.connect('destroy', Gtk.main_quit)
@@ -135,13 +132,13 @@ class BoardGrid(Gtk.Grid):
 
         # replace the colours
         svglc = 0
-        while (svglc != len(chess_svg_light_data_array)):
+        while svglc != len(chess_svg_light_data_array):
             chess_svg_light_data_array[svglc] = chess_svg_light_data_array[svglc].replace(
                 b"f9f9f9",
                 COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
             svglc += 1
         svglc = 0
-        while (svglc != len(chess_svg_dark_data_array)):
+        while svglc != len(chess_svg_dark_data_array):
             chess_svg_dark_data_array[svglc] = chess_svg_dark_data_array[svglc].replace(
                 b"f9f9f9", COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_DARK_HEX])
             svglc += 1
@@ -169,7 +166,7 @@ class BoardGrid(Gtk.Grid):
                        "media/gfx/checkers/bc.svg",
                        "media/gfx/checkers/bd.svg"]
         svglc = 0
-        while (svglc != len(svg_targets)):
+        while svglc != len(svg_targets):
             # read binary to ensure no nonsense on windows
             fp = open(svg_targets[svglc], "rb")
             fp.seek(0, SEEK_END)
@@ -180,7 +177,7 @@ class BoardGrid(Gtk.Grid):
             svglc += 1
         # replace the colours
         svglc = 0
-        while (svglc != len(checkers_svg_data_array)):
+        while svglc != len(checkers_svg_data_array):
             checkers_svg_data_array[svglc] = checkers_svg_data_array[svglc].replace(
                 b"f9f9f9",
                 COLOUR_STRING_LOOK_UP_TABLE[self.__game_obj.get_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX])
@@ -194,15 +191,16 @@ class BoardGrid(Gtk.Grid):
         self.bd = Rsvg.Handle.new_from_data(checkers_svg_data_array[3])
 
         # Setup board colour
-        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_LIGHT_HEX]
-        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][ColourOffset.OFFSET_DARK_HEX]
-        self.lbhr = int(b"0x"+light_board_colour_hex[0:2],0)/255
-        self.lbhg = int(b"0x"+light_board_colour_hex[2:4],0)/255
-        self.lbhb = int(b"0x"+light_board_colour_hex[4:6],0)/255
-        self.dbhr = int(b"0x"+dark_board_colour_hex[0:2],0)/255
-        self.dbhg = int(b"0x"+dark_board_colour_hex[2:4],0)/255
-        self.dbhb = int(b"0x"+dark_board_colour_hex[4:6],0)/255
-
+        light_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][
+            ColourOffset.OFFSET_LIGHT_HEX]
+        dark_board_colour_hex = COLOUR_BOARD_STRING_LOOK_UP_TABLE[self.__game_obj.get_board_colour_mode()][
+            ColourOffset.OFFSET_DARK_HEX]
+        self.lbhr = int(b"0x" + light_board_colour_hex[0:2], 0) / 255
+        self.lbhg = int(b"0x" + light_board_colour_hex[2:4], 0) / 255
+        self.lbhb = int(b"0x" + light_board_colour_hex[4:6], 0) / 255
+        self.dbhr = int(b"0x" + dark_board_colour_hex[0:2], 0) / 255
+        self.dbhg = int(b"0x" + dark_board_colour_hex[2:4], 0) / 255
+        self.dbhb = int(b"0x" + dark_board_colour_hex[4:6], 0) / 255
 
     def place_pieces(self):
         """
@@ -245,14 +243,22 @@ class BoardGrid(Gtk.Grid):
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50)))):
+                if (self.current_selected_location is not None) \
+                        and ((self.current_selected_location.get_row() == (j // 50))
+                             and (self.current_selected_location.get_col() == (i // 50))):
                     cairo_ctx.set_source_rgb(1, .5, 0)
-                elif ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece)):
+
+                elif (self.possible_moves_for_cur_piece is not None) \
+                        and (self.__game_obj.get_board().get_game_square(j // 50, i // 50)
+                             in self.possible_moves_for_cur_piece):
                     cairo_ctx.set_source_rgb(.5, 0, .5)
+
                 elif ycount % 2:
                     cairo_ctx.set_source_rgb(self.lbhr, self.lbhg, self.lbhb)
+
                 else:
                     cairo_ctx.set_source_rgb(self.dbhr, self.dbhg, self.dbhb)
+
                 # If we're outside the clip this will do nothing.
                 cairo_ctx.rectangle(i, j,
                                     check_size,
@@ -269,60 +275,60 @@ class BoardGrid(Gtk.Grid):
 
         cairo_ctx.restore()
         row = 0
-        while (row != self.__game_obj.get_board().get_size()):
+        while row != self.__game_obj.get_board().get_size():
             col = 0
-            while (col != self.__game_obj.get_board().get_size()):
+            while col != self.__game_obj.get_board().get_size():
                 cur_piece = self.__game_obj.get_board().get_game_square(
                     row, col).get_occupying_piece()
 
-                if (not (cur_piece is None)):
-                    if (game_type == GameType.CHESS):
+                if not (cur_piece is None):
+                    if game_type == GameType.CHESS:
                         if isinstance(cur_piece, King):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wk
                             else:
                                 piece_to_draw = self.bk
                         elif isinstance(cur_piece, Queen):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wq
                             else:
                                 piece_to_draw = self.bq
                         elif isinstance(cur_piece, Knight):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wn
                             else:
                                 piece_to_draw = self.bn
                         elif isinstance(cur_piece, Bishop):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wb
                             else:
                                 piece_to_draw = self.bb
-                        elif (isinstance(cur_piece, Rook)):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                        elif isinstance(cur_piece, Rook):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wr
                             else:
                                 piece_to_draw = self.br
-                        elif (isinstance(cur_piece, Pawn)):
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                        elif isinstance(cur_piece, Pawn):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wp
                             else:
                                 piece_to_draw = self.bp
-                    elif (game_type == GameType.CHECKERS):
-                        if (cur_piece.is_promoted()):  # 1 is king
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                    elif game_type == GameType.CHECKERS:
+                        if cur_piece.is_promoted():  # 1 is king
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wd
                             else:
                                 piece_to_draw = self.bd
                         else:
-                            if (cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour()):
+                            if cur_piece.get_colour() == self.__game_obj.get_light_player().get_colour():
                                 piece_to_draw = self.wc
                             else:
                                 piece_to_draw = self.bc
 
                     else:
-                        assert (0)
+                        assert 0
                     cairo_ctx.save()
-                    # scale piece to size of square
+                    # Scale piece to size of square
                     cairo_ctx.scale(50 / piece_to_draw.get_dimensions().width,
                                     50 / piece_to_draw.get_dimensions().height)
                     cairo_ctx.translate(piece_to_draw.get_dimensions(
@@ -335,7 +341,6 @@ class BoardGrid(Gtk.Grid):
         return True
 
     def mouse_pointer(self, widget, x, y):
-        # this might need to be used since it cant work without this but it works with nothing in it
         pass
 
     def click_configure_event(self, checkerboard_area, event):
@@ -344,7 +349,6 @@ class BoardGrid(Gtk.Grid):
         self.surface = checkerboard_area.get_window().create_similar_surface(cairo.CONTENT_COLOR,
                                                                              allocation.width,
                                                                              allocation.height)
-
         cairo_ctx = cairo.Context(self.surface)
         cairo_ctx.set_source_rgb(1, 1, 1)
         cairo_ctx.paint()
@@ -369,13 +373,6 @@ class BoardGrid(Gtk.Grid):
             cur_location = current_selected_piece = self.__game_obj.get_board(
             ).get_game_square(int(event.y // 50), int(event.x // 50))
 
-            # Print out colour information
-            # if cur_piece is not None:
-            #    print(cur_piece.get_colour())
-            # print(self.__game_obj.get_light_player().get_piece_set().get_colour())
-
-            # print(self.__game_obj.get_dark_player().get_piece_set().get_colour())
-
             # check if making a move
             if cur_location in self.possible_moves_for_cur_piece:
                 print("The destination square chosen was confirmed to be in the list of possible moves.")
@@ -385,7 +382,7 @@ class BoardGrid(Gtk.Grid):
                 print("Make move is now going to be called... ")
                 self.__game_obj.get_current_player().make_move(
                     self.current_selected_location, cur_location, self.__game_obj)
-                #start timer on first move        
+
                 if not self.__first_move:
                     self.start_clock_timer()  # start the Timer
                 print("...We have returned from make move and are now continuing \n")
@@ -407,15 +404,14 @@ class BoardGrid(Gtk.Grid):
                 else:
                     print("Game still in progress, no winner yet\n")
 
-                # execute AI code if necessary
-                if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
+                if self.__game_obj.get_current_player().get_player_type() == PlayerType.AI:
+                    # Execute AI code if necessary
                     print("The AI is now going to compute and pick it's move...")
                     AI = self.__game_obj.get_current_player()
                     moves_for_ai = AI.build_possible_moves_for_all_pieces(
                         self.__game_obj)
 
-                    # execute a random move
-                    #rand_move = random.choice(moves_for_ai)
+                    # Execute a random move
                     rand_move = select_best(moves_for_ai)
 
                     if type(rand_move[0]).__name__ != "GameSquare":
@@ -427,17 +423,17 @@ class BoardGrid(Gtk.Grid):
                     print("From " + str(rand_move[0].get_row_and_column()) + " to "
                           + str(rand_move[1].get_row_and_column()))
 
-                    #print(rand_move[0], rand_move[1], len(rand_move[1]))
-                    #AI.make_move(rand_move[0], rand_move[1][random.randint(0, len(rand_move[1])-1)], self.__game_obj)
                     AI.make_move(rand_move[0], rand_move[1], self.__game_obj)
                     print("...AI move made, now switching current player and switching back sides... \n")
 
                     self.__game_obj.change_current_player()
                     self.switch_timer()
                     self.__game_obj.get_board().switch_sides()
+
                     print("#################### Checking Game Status #########################")
                     game_status = self.__game_obj.check_for_game_over()
                     print("#################### ----------------------- #######################")
+
                     if game_status == GameStatus.DARK_VICTORIOUS:
                         raise Exception("Dark has won!")
                     elif game_status == GameStatus.LIGHT_VICTORIOUS:
@@ -453,7 +449,7 @@ class BoardGrid(Gtk.Grid):
             else:
                 if cur_piece is None:
                     return
-                #check if not your piece
+                # Check if not your piece
                 if cur_piece.get_colour() not in self.__game_obj.get_current_player().get_piece_set().get_colour():
                     return
                 self.current_selected_location = cur_location
@@ -472,7 +468,7 @@ class BoardGrid(Gtk.Grid):
                 print(str(len(self.possible_moves_for_cur_piece)) +
                       " possible moves have been identified for this piece")
                 checkerboard_area.queue_draw()
-    
+
     def switch_timer(self):
         # change the timer to other player
         if self.__game_obj.get_current_player() is self.__game_obj.get_dark_player():
@@ -501,7 +497,7 @@ class BoardGrid(Gtk.Grid):
         p2_time = "{:2d}:{:02d}".format(
             player2_time, player2_time_sec)  # normal clock looking
 
-        little_time_left = 1    # for when the time remaining is low
+        little_time_left = 1  # for when the time remaining is low
 
         # bold the times and set them to be white
         self.timer_area.set_markup("<b>" + p1_time + "</b>")
@@ -518,6 +514,7 @@ class BoardGrid(Gtk.Grid):
         return True
 
         # Initialize Timer
+
     def start_clock_timer(self):
         if self.__game_obj.get_current_player() is self.__game_obj.get_light_player():
             self.__game_obj.get_light_player().get_timer().start()
@@ -528,11 +525,8 @@ class BoardGrid(Gtk.Grid):
 
     def help_clicked(self, button):
         print("This should go to HowToPlay Window")
-        # self.__game_obj.get_light_player().get_timer().stop()
-        # self.__game_obj.get_dark_player().get_timer().stop()
         board = HowToPlayWindow(self.__game_obj.get_game_type())
         board.show_all()
-        # self.hide()
 
     def promote_clicked(self, button):
         print("This should go to PromotePawn Window")
@@ -540,15 +534,8 @@ class BoardGrid(Gtk.Grid):
         self.__game_obj.get_dark_player().get_timer().stop()
         board = PromotePawnWindow()
         board.show_all()
-        # self.hide()
 
     def save_quit_clicked(self, button):
         print("This should exit")
         self.__game_obj.save_to_file(self.home)
-        #try:
-        #    self.__game_obj.save_to_file(self.home)
-        #except:
-        #    # TODO show message dialog here with error
-        #    print("save failed")
-        # yolo quit out even if save failed
         Gtk.main_quit()
