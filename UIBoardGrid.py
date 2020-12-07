@@ -60,6 +60,7 @@ class BoardGrid(Gtk.Grid):
         checkerboard_area.set_events(checkerboard_area.get_events()
                                      #| Gdk.EventMask.LEAVE_NOTIFY_MASK
                                      | Gdk.EventMask.BUTTON_PRESS_MASK)
+        checkerboard_area.set_hexpand(False)
 
         self.timer_area = Gtk.Label()  # Player 1 time
         self.add(self.timer_area)
@@ -107,13 +108,12 @@ class BoardGrid(Gtk.Grid):
         # of the disk instead of the state of the disk when the
         # game opened would be broken
         self.main_menu_button = Gtk.Button.new_with_label("Main Menu")
-        self.main_menu_button.set_hexpand(True)
         self.main_menu_button.connect("clicked", self.main_menu_clicked)
         self.results = Gtk.Label.new("Potato")
         self.results.override_color(
             Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.attach(self.results,0,1,1,1)
-        self.attach(self.main_menu_button,0,2,1,1)
+        self.attach(self.results,1,1,2,1)
+        self.attach(self.main_menu_button,1,2,2,1)
 
 
         self.show_all()
@@ -374,6 +374,7 @@ class BoardGrid(Gtk.Grid):
         return True
 
     def somebody_won(self):
+        self.__game_status  = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.DARK_VICTORIOUS:
             self.results.set_label("Dark has won!")
         elif self.__game_status == GameStatus.LIGHT_VICTORIOUS:
