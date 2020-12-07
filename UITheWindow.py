@@ -53,6 +53,7 @@ class TheWindow(Gtk.Window):
             self.main_box.resume_button.connect("clicked", self.main_resume_clicked)
 
         self.main_box.play_button.connect("clicked", self.main_play_clicked)
+        self.main_box.exit_button.connect("clicked", self.main_exit_clicked)
 
         self.game_choice_box = GameChoiceBox()
         self.game_choice_box.chess_button.connect("clicked", self.game_choice_chess_clicked)
@@ -114,6 +115,10 @@ class TheWindow(Gtk.Window):
     def main_resume_clicked(self, button):
         print('This should go to resumed game')
         self.change_state(self.main_box, self.resume_choice_box)
+
+    def main_exit_clicked(self, button):
+        print('This should go to resumed game')
+        Gtk.main_quit()
 
     def game_choice_chess_clicked(self, button):
         print('Chess was chosen')  # put next window here
