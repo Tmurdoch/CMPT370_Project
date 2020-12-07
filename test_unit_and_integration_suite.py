@@ -294,7 +294,7 @@ def test_possible_moves():
                                                         index_piece_test[test_tuple][1]),
                     my_game)
 
-                assert sorted([x.get_row_and_column()for x in pm_gs]) == pc_moves_bishop[test_tuple]
+                assert sorted([x.get_row_and_column() for x in pm_gs]) == pc_moves_bishop[test_tuple]
 
             if type(my_game.get_board().get_game_square(
                     index_piece_test[test_tuple][0],
@@ -671,7 +671,6 @@ def test_board():
         assert my_board.get_game_square(row, col).get_occupying_piece() is None
 
 
-
 def test_game_square():
     """
     Initial testing for 8by8 board of game squares
@@ -830,7 +829,6 @@ def test_game():
     my_checkers_game.get_board().build_checkers_board(
         my_checkers_game.get_light_player().get_piece_set().get_live_pieces(),
         my_checkers_game.get_dark_player().get_piece_set().get_live_pieces())
-
 
 
 def test_player():
@@ -1599,12 +1597,13 @@ def test_integration_5():
 
 def test_integration_6():
     """
-    Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, Game.py, build_list_of_moves.py
+    Testing the integration of GameSquare.py, Boards.py, Pieces.py, PieceSet.py, Player.py, Game.py,
+    build_list_of_moves.py
     Note: Does not follow the test plan
     """
-    # game types chess = 0 checkers = 1
-    gt_chess = 0
-    gt_checkers = 1
+    gt_chess = GameType.CHESS
+    gt_checkers = GameType.CHECKERS
+
     # Piece Set colours for players
     gc_wb = ColourCodes.BROWN_GREY
     gc_rb = ColourCodes.PINK_BLUE
@@ -1853,8 +1852,8 @@ def test_integration_6():
         for col in range(8):
             # move piece from (prev_row, col) to (row, col))
             my_chess_game.get_board().get_game_square(row, col).put_piece_here(my_chess_game.get_board().
-                                                                               get_game_square(prev_row,
-                                                                                               col).get_occupying_piece())
+                                                                               get_game_square(prev_row, col).
+                                                                               get_occupying_piece())
             # remove piece from (prev_row, col)
             my_chess_game.get_board().get_game_square(
                 prev_row, col).remove_occupying_piece()
@@ -1896,8 +1895,7 @@ def test_integration_6():
         if coin.get_occupying_piece() is not None:
             my_checkers_game.get_board(). \
                 get_game_square(2, coin.get_col() + 1). \
-                put_piece_here(my_checkers_game.get_board().get_game_square(
-                1, coin.get_col()).get_occupying_piece())
+                put_piece_here(my_checkers_game.get_board().get_game_square(1, coin.get_col()).get_occupying_piece())
             my_checkers_game.get_board().get_game_square(
                 1, coin.get_col()).remove_occupying_piece()
 
@@ -2083,9 +2081,6 @@ def test_integration_6():
     assert origin.get_occupying_piece() is None
 
 
-# ---------------------------------------------------------------------------
-
-
 def test_check():
     gt_chess = 0
     # Piece Set colours for players
@@ -2117,9 +2112,8 @@ def test_check():
     # test filter moves using old tests
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(7, 4),
                                                        my_chess_game)
-    filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4),
-                                                            my_chess_game,
-                                                            my_moves)
+    filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(7, 4), my_chess_game,
+                                                     my_moves)
 
     assert sorted([x.get_row_and_column() for x in filtered_moves]) == []
 
@@ -2222,8 +2216,8 @@ def test_check():
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                        my_chess_game)
     filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
-                                                            my_chess_game,
-                                                            my_moves)
+                                                     my_chess_game,
+                                                     my_moves)
     assert sorted([x.get_row_and_column()
                    for x in filtered_moves]) == sorted([])
 
@@ -2241,8 +2235,8 @@ def test_check():
     my_moves = build_list_of_moves.build_list_of_moves(my_chess_game.get_board().get_game_square(6, 4),
                                                        my_chess_game)
     filtered_moves = filter_moves.filter_check_moves(my_chess_game.get_board().get_game_square(6, 4),
-                                                            my_chess_game,
-                                                            my_moves)
+                                                     my_chess_game,
+                                                     my_moves)
     assert sorted([x.get_row_and_column()
                    for x in filtered_moves]) == sorted([(5, 4), (4, 4)])
 
@@ -2393,13 +2387,8 @@ def test_checkers_integ6():
     gt_chess = 0
     gt_checkers = 1
     # Piece Set colours for players
-    gc_wb = ColourCodes.BROWN_GREY
     gc_rb = ColourCodes.PINK_BLUE
     bc_wb = ColourBoardCodes.WHITE_BLACK
-    bc_rb = ColourBoardCodes.RED_GREEN
-
-    # create a chess and checkers game
-    my_checkers_game = Game(gt_checkers, gc_rb, bc_wb)
 
     # pl - player light pd player dark
     pt_human = PlayerType.HUMAN
@@ -2496,6 +2485,3 @@ def test_checkers_integ6():
     assert type(my_checkers_game.get_dark_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
     assert type(my_checkers_game.get_light_player().get_piece_set().get_captured_pieces()[0]).__name__ == "CheckersCoin"
     assert type(my_checkers_game.get_light_player().get_piece_set().get_captured_pieces()[1]).__name__ == "CheckersCoin"
-
-    # print("\n", [x.get_row_and_column() for x in my_move])
-    # my_checkers_game.get_board().print_game_board()

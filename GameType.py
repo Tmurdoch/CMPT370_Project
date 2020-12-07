@@ -13,7 +13,9 @@ class GameType(IntEnum):
     CHESS = 0
     CHECKERS = 1
 
+
 GAME_TYPE_STRING_LOOK_UP_TABLE = ["Chess", "Checkers"]
+
 
 class GamePlayerMode(IntEnum):
     """

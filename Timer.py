@@ -8,7 +8,7 @@ import time
 class Timer(object):
     """
     Timer is an object that keeps and updates the time remaining for a Player.
-    Time is in nanoseconds (integer).
+    Time is in internally stored as nanoseconds (integer).
 
     Attributes:
         __time_remaining_ns: Int: The remaining time on the timer in nanoseconds.

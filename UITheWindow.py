@@ -9,7 +9,6 @@ from PlayerType import PlayerType
 from Game import Game
 from UIResumeChoiceBox import ResumeChoiceBox
 from Timer import Timer
-from Colours import ColourCodes
 from UIBoardGrid import BoardGrid
 from UICustomizationGrid import CustomizationGrid
 from UIGameChoiceBox import GameChoiceBox
@@ -29,16 +28,20 @@ class TheWindow(Gtk.Window):
         self.set_border_width(70)
         self.set_position(Gtk.WindowPosition.CENTER)
         col = Gdk.Color(2000, 6000, 200)  # dark green
-        self.set_default_size(852,627)
+        self.set_default_size(852, 627)
         self.modify_bg(Gtk.StateType.NORMAL, col)
         self.directory = directory
 
         self.has_chess_save = 0
         self.has_checkers_save = 0
 
-        #flags for UI
-        self.singleplayer = 0
+        # Flags for UI
+        self.single_player = 0
         self.multiplayer = 0
+
+        # To be defined later
+        self.game_type = None
+        self.board = None
 
         if os.path.exists(directory + "/save-game.cmpt370Chess"):
             self.has_chess_save = 1
@@ -47,50 +50,37 @@ class TheWindow(Gtk.Window):
         self.main_box = MainMenuBox(
             self.has_chess_save, self.has_checkers_save)
         if self.has_chess_save or self.has_checkers_save:
-            self.main_box.resume_button.connect(
-                "clicked", self.main_resume_clicked)
+            self.main_box.resume_button.connect("clicked", self.main_resume_clicked)
 
         self.main_box.play_button.connect("clicked", self.main_play_clicked)
 
         self.game_choice_box = GameChoiceBox()
-        self.game_choice_box.chess_button.connect(
-            "clicked", self.game_choice_chess_clicked)
-        self.game_choice_box.checkers_button.connect(
-            "clicked", self.game_choice_checkers_clicked)
-        self.game_choice_box.back_button.connect(
-            "clicked", self.game_choice_back_clicked)
+        self.game_choice_box.chess_button.connect("clicked", self.game_choice_chess_clicked)
+        self.game_choice_box.checkers_button.connect("clicked", self.game_choice_checkers_clicked)
+        self.game_choice_box.back_button.connect("clicked", self.game_choice_back_clicked)
 
-        self.resume_choice_box = ResumeChoiceBox(
-            self.has_chess_save, self.has_checkers_save)
+        self.resume_choice_box = ResumeChoiceBox(self.has_chess_save, self.has_checkers_save)
         if self.has_chess_save:
-            self.resume_choice_box.chess_button.connect(
-                "clicked", self.resume_choice_chess_clicked)
+            self.resume_choice_box.chess_button.connect("clicked", self.resume_choice_chess_clicked)
         if self.has_checkers_save:
-            self.resume_choice_box.checkers_button.connect(
-                "clicked", self.resume_choice_checkers_clicked)
-        self.resume_choice_box.back_button.connect(
-            "clicked", self.resume_choice_back_clicked)
+            self.resume_choice_box.checkers_button.connect("clicked", self.resume_choice_checkers_clicked)
+        self.resume_choice_box.back_button.connect("clicked", self.resume_choice_back_clicked)
 
         self.player_type = PlayerTypeBox()
-        self.player_type.single_button.connect(
-            "clicked", self.player_type_single_clicked)
-        self.player_type.multiplayer_button.connect(
-            "clicked", self.player_type_multi_clicked)
-        self.player_type.back_button.connect(
-            "clicked", self.player_type_back_clicked)
+        self.player_type.single_button.connect("clicked", self.player_type_single_clicked)
+        self.player_type.multiplayer_button.connect("clicked", self.player_type_multi_clicked)
+        self.player_type.back_button.connect("clicked", self.player_type_back_clicked)
 
         self.customization = CustomizationGrid()
-        self.customization.back_button.connect(
-            "clicked", self.customization_back_clicked)
-        self.customization.start_button.connect(
-            "clicked", self.customization_start_clicked)
+        self.customization.back_button.connect("clicked", self.customization_back_clicked)
+        self.customization.start_button.connect("clicked", self.customization_start_clicked)
 
         self.main_box.set_hexpand(True)
         self.game_choice_box.set_hexpand(True)
         self.resume_choice_box.set_hexpand(True)
         self.player_type.set_hexpand(True)
         self.customization.set_hexpand(True)
-        
+
         self.grid = Gtk.Grid()
         self.grid.attach(self.main_box, 0, 0, 1, 1)
         self.grid.attach(self.game_choice_box, 0, 0, 1, 1)
@@ -101,7 +91,6 @@ class TheWindow(Gtk.Window):
         self.add(self.grid)
         self.main_box.show()
 
-        # fixed the exit stalling problem
         self.connect("destroy", Gtk.main_quit)
 
     def change_state(self, leaving, going):
@@ -121,7 +110,6 @@ class TheWindow(Gtk.Window):
     def main_play_clicked(self, button):
         print('Play was chosen')
         self.change_state(self.main_box, self.game_choice_box)
-        
 
     def main_resume_clicked(self, button):
         print('This should go to resumed game')
@@ -131,7 +119,6 @@ class TheWindow(Gtk.Window):
         print('Chess was chosen')  # put next window here
         self.game_type = GameType.CHESS
         self.change_state(self.game_choice_box, self.player_type)
-
 
     def game_choice_checkers_clicked(self, button):
         print('Checkers was chosen')  # put next window here
@@ -151,10 +138,9 @@ class TheWindow(Gtk.Window):
 
         temp_game = Game(self.game_type, 0, 0)
         temp_game.load_from_file(self.directory)
-        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file=1)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
-
 
     def resume_choice_checkers_clicked(self, button):
         print('Resume checkers was chosen')  # put next window here
@@ -163,10 +149,9 @@ class TheWindow(Gtk.Window):
 
         temp_game = Game(self.game_type, 0, 0)
         temp_game.load_from_file(self.directory)
-        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file = 1)
+        self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory, load_from_file=1)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
-
 
     def resume_choice_back_clicked(self, button):
         print("This should go back to Main Menu Window")
@@ -176,7 +161,7 @@ class TheWindow(Gtk.Window):
     def player_type_single_clicked(self, button):
         print('Single Player was chosen')  # put next window here
         self.change_state(self.player_type, self.customization)
-        self.singleplayer = 1
+        self.single_player = 1
 
     def player_type_multi_clicked(self, button):
         print('Multi Player was chosen')  # put next window here
@@ -196,18 +181,18 @@ class TheWindow(Gtk.Window):
         print("This should go to Board Window")
         self.customization.hide()
 
-        piece_colour=0
-        while (piece_colour!=len(self.customization.piece_radio_buttons)):
-            if (self.customization.piece_radio_buttons[piece_colour].get_active()):
+        piece_colour = 0
+        while piece_colour != len(self.customization.piece_radio_buttons):
+            if self.customization.piece_radio_buttons[piece_colour].get_active():
                 break
             piece_colour += 1
 
-        board_colour=0
-        while (board_colour!=len(self.customization.board_radio_buttons)):
-            if (self.customization.board_radio_buttons[board_colour].get_active()):
+        board_colour = 0
+        while board_colour != len(self.customization.board_radio_buttons):
+            if self.customization.board_radio_buttons[board_colour].get_active():
                 break
             board_colour += 1
-        
+
         temp_game = Game(self.game_type, piece_colour, board_colour)
 
         timer_active = self.customization.timer_radio_buttons[1].get_active()
@@ -218,7 +203,7 @@ class TheWindow(Gtk.Window):
         if self.multiplayer == 1:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
             temp_game.build_dark_player("dark player", PlayerType.HUMAN, t2)
-        else: 
+        else:
             temp_game.build_light_player("light_player", PlayerType.HUMAN, t1)
             temp_game.build_dark_player("dark player", PlayerType.AI, t2)
 

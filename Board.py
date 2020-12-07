@@ -20,9 +20,9 @@ class Board:
         :param size: int: Board size, must be positive
         """
         if not isinstance(size, int):
-            raise TypeError("Size must be an Integer")
+            raise TypeError("Board size must be an Integer")
         if size <= 0:
-            raise TypeError("Size must be a Positive Integer")
+            raise TypeError("Board size must be a Positive Integer")
 
         self.__size = size
         self.__gameBoard = []
@@ -55,10 +55,6 @@ class Board:
         """ :return: GameBoard: The game board as a 2D list of game squares. """
         return self.__gameBoard
 
-    def get_board_theme(self):
-        """ :return: BoardTheme IntEnum: The boards current theme. """
-        return self.__boardTheme
-
     def get_size(self):
         """ :return: int: Board size """
         return self.__size
@@ -69,10 +65,9 @@ class Board:
         :param player1_pieces: Piece[]: A list of player 1's live pieces
         :param player2_pieces: Piece[]: A list of player 2's live pieces
         """
-        # indexes of pieces based on where they are on the board
-        spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]
+        spec_piece = [4, 3, 0, 7, 2, 5, 1, 6]  # indexes of pieces based on where they are on the board
 
-        # set up board player 1 pieces
+        # Put the first players pieces on the board
         i = 0
         for col in spec_piece:
             self.__gameBoard[7][col].put_piece_here(player1_pieces[i])
@@ -81,7 +76,7 @@ class Board:
             self.__gameBoard[6][col].put_piece_here(player1_pieces[i])
             i += 1
 
-        # set up board player 2 pieces
+        # Put the second players pieces on the board
         i = 0
         for col in spec_piece:
             self.__gameBoard[0][col].put_piece_here(player2_pieces[i])
@@ -150,7 +145,7 @@ class Board:
         and any game pieces currently on the board.
         """
 
-        # creates a 2d list of (row, col) of the board
+        # Creates a 2d list of (row, col) of the board
         board_row_col = []
         for r in self.__gameBoard:
             column = []
@@ -158,7 +153,7 @@ class Board:
                 column.append((c.get_row(), c.get_col()))
             board_row_col.append(column)
 
-        # creates a 2d list of pieces of the board
+        # Creates a 2d list of pieces of the board
         board_pieces = []
         empty_string = "E            "
         for r in self.__gameBoard:
@@ -191,7 +186,7 @@ class Board:
 
             board_pieces.append(column)
 
-        # creates a 2d list of colour of the pieces on the board
+        # Creates a 2d list of colour of the pieces on the board
         board_pieces_colour = []
         empty_string = "     "
         for r in self.__gameBoard:
@@ -213,4 +208,3 @@ class Board:
         [print(row) for row in board_pieces]
         print("\nBoard Pieces Colour")
         [print(row) for row in board_pieces_colour]
-

@@ -1,6 +1,7 @@
 # Board Game Simulator
 # CMPT 370 Group 4, Fall 2020
 # Authors: Antoni Jann Palazo, Brian Denton, Joel Berryere, Michael Luciuk, Thomas Murdoch
+
 from Board import Board
 from GameSquare import GameSquare
 from PieceSet import PieceSet
@@ -15,7 +16,6 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
     :param other_player_piece_set: The other player's piece set, we need it to capture their pieces
     """
 
-    print("The checkers_move_maker has been called.")
     if not isinstance(origin_square, GameSquare):
         raise Exception("The origin square passed to the checkers_move_maker() was not of type GameSquare object.")
 
@@ -81,8 +81,7 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
 
             if ((origin_square.get_row() - dest_square.get_row())
                     < 0 < (origin_square.get_col() - dest_square.get_col())):
-                # Piece we are trying to jump is in the immediate bottom left hand corner of the origin
-                # square
+                # Piece we are trying to jump is in the immediate bottom left hand corner of the origin square
                 square_of_capture = board.get_game_square(origin_square.get_row() + 1,
                                                           origin_square.get_col() - 1)
                 if (square_of_capture.get_occupying_piece().get_colour()
@@ -101,8 +100,7 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
 
             if ((origin_square.get_row() - dest_square.get_row()) < 0 and
                     (origin_square.get_col() - dest_square.get_col()) < 0):
-                # Piece we are trying to jump is in the immediate bottom right hand corner of the origin
-                # square
+                # Piece we are trying to jump is in the immediate bottom right hand corner of the origin square
                 square_of_capture = board.get_game_square(origin_square.get_row() + 1,
                                                           origin_square.get_col() + 1)
                 if (square_of_capture.get_occupying_piece().get_colour()
@@ -122,7 +120,7 @@ def checkers_move_maker(origin_square, dest_square, board, other_player_piece_se
             # There are more than one jumps needing to take place
             raise Exception("Cannot handle more than one jump right now")
 
-    # If the checkers coin has reached the far side of the board (and is not yet promoted) then promote
+    # If the checkers coin has reached the far side of the board then promote
     if dest_square.get_row() == 0:
         print("The destination row is 0, so the checkers coin will now be promoted.")
         dest_square.get_occupying_piece().promote()
