@@ -225,3 +225,7 @@ class TheWindow(Gtk.Window):
         self.board = BoardGrid("Test", "multiplayer", temp_game, self.directory)
         self.grid.attach(self.board, 0, 0, 1, 1)
         self.board.show()
+
+    def return_to_main(self):
+        self.board.destroy()
+        self.main_box.show()
