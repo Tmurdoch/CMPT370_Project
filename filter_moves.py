@@ -12,7 +12,7 @@ def temp_move(origin_square, destination_square):
     once used should use undo temp to undo the move
     :param origin_square: GameSquare: where the piece is coming from
     :param destination_square: GameSquare: where the piece is going
-    return: piece or None from the destination_square
+    :return: Piece: piece or None from the destination_square
     """
     previous_destination_piece = None
     # Make a copy of the piece on destination if there is one

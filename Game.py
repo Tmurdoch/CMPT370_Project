@@ -29,7 +29,7 @@ class Game:
     def __init__(self, game_type, colour_mode, board_colour_mode):
         """
         Initialize the game object, players are built later
-        :param game_type: GameType: The type of game (chess or checkes)
+        :param game_type: GameType: The type of game (chess or checkers)
         :param colour_mode: Colour: The game colour mode
         """
         self.__light_player = None  # Will be build later
@@ -37,23 +37,17 @@ class Game:
         self.__current_player = None
         self.__game_status = GameStatus.IN_PROGRESS
         if game_type >= 2:
-            # something went wrong here and it wasn't the users fault
-            # so don't show an error, whatever tried to create a game
-            # object will probably crash now
-            raise Exception(
-                "GameTypeErrorOrSomethingFigureOutHowPeopleWantThisTOWOrk")
+            raise Exception("Game Type Error in building the game object")
         self.__game_type = game_type
-        # common for both chess and checkers
+
+        # Common for both chess and checkers
         if colour_mode >= len(COLOUR_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__colour_mode = colour_mode
         if board_colour_mode >= len(COLOUR_BOARD_STRING_LOOK_UP_TABLE):
             raise Exception("wrongColourOrSomethingFigureOutLater")
         self.__board_colour_mode = board_colour_mode
-        # if board_colour_mode == colour_mode:
-        #    #hard to see checkers pieces, perfect camoflage
-        #    assert(0)
-        self.__board = Board(8)  # TODO: Should this board size be hard coded?
+        self.__board = Board(8)
         return
 
     def set_board(self, board):
@@ -77,7 +71,7 @@ class Game:
         """
         self.__light_player = Player(name, COLOUR_STRING_LOOK_UP_TABLE[self.__colour_mode][ColourOffset.OFFSET_LIGHT],
                                      self.__game_type, player_type, timer)
-        self.__current_player = self.__light_player  # Light colour goes first
+        self.__current_player = self.__light_player  # Light always goes first
 
     def build_dark_player(self, name, player_type, timer):
         """
@@ -116,15 +110,12 @@ class Game:
         """
         load_from_file(self, path)
 
-    def get_result(self):
-        # TODO: Not sure if this makes sense
-        return self.__current_player
-
     def get_game_type(self):
+        """ :return: GameType """
         return self.__game_type
 
     def change_current_player(self):
-        """Thought to be executed after a turn to switch to the other player"""
+        """ Change the current player """
         if self.__current_player is self.__dark_player:
             self.__current_player = self.__light_player
         else:
@@ -134,7 +125,8 @@ class Game:
     def check_for_game_over(self):
         """
         Checks to see if the game is over
-        :return: GameStatus: Current Game Status"""
+        :return: GameStatus: Current Game Status
+        """
 
         if self.__current_player is self.__light_player:
             light_player_moves = self.__light_player.build_possible_moves_for_all_pieces(self)
@@ -156,7 +148,7 @@ class Game:
                 return GameStatus.IN_PROGRESS
 
         elif self.__game_type == GameType.CHESS:
-            # TODO: Just checks for stalemate
+            # TODO: This just checks for chess stalemate, update to check for checkmate too
             if len(light_player_moves) == 0:
                 return GameStatus.DARK_VICTORIOUS
             elif len(dark_player_moves) == 0:
