@@ -32,7 +32,7 @@ class TheWindow(Gtk.Window):
     state
     
     Attributes:
-    All of the windows children are public attributes of this class
+    All of the windows child widgets are public attributes of this class
     """
     def __init__(self, directory):
         """

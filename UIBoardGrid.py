@@ -244,7 +244,7 @@ class BoardGrid(Gtk.Grid):
         params handled by api
 
         Will use cairo to draw the board, first creating a checkerboard
-        then the pieces
+        then drawing the pieces
 
         Called whenever OS repaints window
         """
@@ -358,9 +358,7 @@ class BoardGrid(Gtk.Grid):
         pass
 
     def click_configure_event(self, checkerboard_area, event):
-        """
-        Does something
-        """
+
 
         allocation = checkerboard_area.get_allocation()
         self.surface = checkerboard_area.get_window().create_similar_surface(cairo.CONTENT_COLOR,
@@ -375,7 +373,8 @@ class BoardGrid(Gtk.Grid):
     def somebody_won(self):
         """
         This function gets called when a gameover state has been detected
-        it will show the results, and show a main menu button
+        it will update the hidden results widget with the results then show it
+        and show a main menu button
         """
         self.__game_status  = self.__game_obj.check_for_game_over()
         if self.__game_status == GameStatus.DARK_VICTORIOUS:
@@ -388,6 +387,11 @@ class BoardGrid(Gtk.Grid):
     def mouse_press_event(self, checkerboard_area, event):
         """
         handles mouse press events on the board grid
+
+        A lot of the magic for the game logic takes place in this method
+
+        If the current game is not in progress nothing will be done
+        
         returns False on Failure
         """
 
