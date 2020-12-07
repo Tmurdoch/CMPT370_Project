@@ -58,7 +58,7 @@ class BoardGrid(Gtk.Grid):
             'configure-event', self.click_configure_event)
         checkerboard_area.connect('button-press-event', self.mouse_press_event)
         checkerboard_area.set_events(checkerboard_area.get_events()
-                                     | Gdk.EventMask.LEAVE_NOTIFY_MASK
+                                     #| Gdk.EventMask.LEAVE_NOTIFY_MASK
                                      | Gdk.EventMask.BUTTON_PRESS_MASK)
 
         self.timer_area = Gtk.Label()  # Player 1 time
@@ -96,10 +96,30 @@ class BoardGrid(Gtk.Grid):
         self.save_quit_button.connect("clicked", self.save_quit_clicked)
         self.attach(self.save_quit_button, 2, 5, 1, 1)
 
+        #self.save_quit_button = Gtk.Button.new_with_label("Main Menu")
+        #self.save_quit_button.connect("clicked", self.main_menu_clicked)
+        #self.attach(self.save_quit_button, 2, 4, 1, 1)
+
+        self.__game_status = self.__game_obj.check_for_game_over()
+        # main menu is only allowed to be seen if a game
+        # is complete because then the illusion
+        # that the resumes reflect the current state
+        # of the disk instead of the state of the disk when the
+        # game opened would be broken
+        self.main_menu_button = Gtk.Button.new_with_label("Main Menu")
+        self.main_menu_button.set_hexpand(True)
+        self.main_menu_button.connect("clicked", self.main_menu_clicked)
+        self.results = Gtk.Label.new("Potato")
+        self.results.override_color(
+            Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+        self.attach(self.results,0,1,1,1)
+        self.attach(self.main_menu_button,0,2,1,1)
+
 
         self.show_all()
-        self.connect('destroy', Gtk.main_quit)
-
+        self.results.hide()
+        self.main_menu_button.hide()
+        
         chess_svg_light_data_array = []
         chess_svg_dark_data_array = []
         svg_targets = ["media/gfx/regular/wk.svg",
@@ -241,13 +261,15 @@ class BoardGrid(Gtk.Grid):
 
         cairo_ctx.save()
 
+        
+
         while i < width:
             j = spacing
             ycount = xcount % 2  # start with even/odd depending on row
             while j < height:
-                if ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50)))):
+                if ((self.__game_status == 0) and ((self.current_selected_location!=None) and ((self.current_selected_location.get_row()==(j//50)) and (self.current_selected_location.get_col()==(i//50))))):
                     cairo_ctx.set_source_rgb(1, .5, 0)
-                elif ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece)):
+                elif ((self.__game_status == 0) and ((self.possible_moves_for_cur_piece!=None) and (self.__game_obj.get_board().get_game_square(j//50,i//50) in self.possible_moves_for_cur_piece))):
                     cairo_ctx.set_source_rgb(.5, 0, .5)
                 elif ycount % 2:
                     cairo_ctx.set_source_rgb(self.lbhr, self.lbhg, self.lbhb)
@@ -351,6 +373,14 @@ class BoardGrid(Gtk.Grid):
 
         return True
 
+    def somebody_won(self):
+        if self.__game_status == GameStatus.DARK_VICTORIOUS:
+            self.results.set_label("Dark has won!")
+        elif self.__game_status == GameStatus.LIGHT_VICTORIOUS:
+            self.results.set_label("Light has won!")
+        self.results.show()
+        self.main_menu_button.show()
+
     def mouse_press_event(self, checkerboard_area, event):
         """
         handles mouse press events on the board grid
@@ -359,6 +389,13 @@ class BoardGrid(Gtk.Grid):
 
         if self.surface is None:  # paranoia check, in case we haven't gotten a configure event
             return False
+
+        self.__game_status = self.__game_obj.check_for_game_over()
+        
+        if self.__game_status != GameStatus.IN_PROGRESS:
+            # just in case possible moves are still on screen
+            checkerboard_area.queue_draw()
+            return
 
         if event.button == 1:
             # click registered
@@ -398,14 +435,11 @@ class BoardGrid(Gtk.Grid):
                 time.sleep(0.2)
                 self.__game_obj.get_board().switch_sides()
                 print("#################### Checking Game Status #########################")
-                game_status = self.__game_obj.check_for_game_over()
+                self.__game_status = self.__game_obj.check_for_game_over()
                 print("#################### ----------------------- #######################")
-                if game_status == GameStatus.DARK_VICTORIOUS:
-                    raise Exception("Dark has won!")
-                elif game_status == GameStatus.LIGHT_VICTORIOUS:
-                    raise Exception("Light has won!")
-                else:
-                    print("Game still in progress, no winner yet\n")
+                if self.__game_status != GameStatus.IN_PROGRESS:
+                    self.somebody_won()
+                    return
 
                 # execute AI code if necessary
                 if (self.__game_obj.get_current_player().get_player_type() == PlayerType.AI):
@@ -436,14 +470,11 @@ class BoardGrid(Gtk.Grid):
                     self.switch_timer()
                     self.__game_obj.get_board().switch_sides()
                     print("#################### Checking Game Status #########################")
-                    game_status = self.__game_obj.check_for_game_over()
+                    self.__game_status = self.__game_obj.check_for_game_over()
                     print("#################### ----------------------- #######################")
-                    if game_status == GameStatus.DARK_VICTORIOUS:
-                        raise Exception("Dark has won!")
-                    elif game_status == GameStatus.LIGHT_VICTORIOUS:
-                        raise Exception("Light has won!")
-                    else:
-                        print("Game still in progress, no winner yet\n")
+                    if self.__game_status != GameStatus.IN_PROGRESS:
+                        self.somebody_won()
+                        return
 
                 # reset attributes
                 self.current_selected_location = None
@@ -542,13 +573,26 @@ class BoardGrid(Gtk.Grid):
         board.show_all()
         # self.hide()
 
+    def main_menu_clicked(self, button):
+        self.__game_status = self.__game_obj.check_for_game_over()
+        if self.__game_status == GameStatus.IN_PROGRESS:
+            try:
+                self.__game_obj.save_to_file(self.home)
+            except:
+                # TODO show message dialog here with error
+                print("save failed")
+                # yolo quit out even if save failed
+        self.get_parent().get_parent().return_to_main()
+        return
+
     def save_quit_clicked(self, button):
         print("This should exit")
-        self.__game_obj.save_to_file(self.home)
-        #try:
-        #    self.__game_obj.save_to_file(self.home)
-        #except:
-        #    # TODO show message dialog here with error
-        #    print("save failed")
-        # yolo quit out even if save failed
+        self.__game_status = self.__game_obj.check_for_game_over()
+        if self.__game_status == GameStatus.IN_PROGRESS:
+            try:
+                self.__game_obj.save_to_file(self.home)
+            except:
+                # TODO show message dialog here with error
+                print("save failed")
+                # yolo quit out even if save failed
         Gtk.main_quit()
