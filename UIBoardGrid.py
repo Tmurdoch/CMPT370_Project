@@ -486,15 +486,17 @@ class BoardGrid(Gtk.Grid):
         # needs to have True or it only runs once
 
         # get the minutes from Players' time remaining
-        player1_time_min = int(self.__game_obj.get_light_player(
-        ).get_timer().get_time_remaining_s() // 60)
-        player2_time_min = int(self.__game_obj.get_dark_player(
-        ).get_timer().get_time_remaining_s() // 60)
+        player1_timer = self.__game_obj.get_light_player(
+        ).get_timer()
+        player2_timer = self.__game_obj.get_dark_player(
+        ).get_timer() 
+        player1_time = player1_timer.get_time_remaining_s()
+        player2_time = player2_timer.get_time_remaining_s()
+        player1_time_min = int(player1_time // 60)
+        player2_time_min = int(player2_time // 60)
         # get the seconds from Player's time remaining
-        player1_time_sec = int(self.__game_obj.get_light_player(
-        ).get_timer().get_time_remaining_s() % 60)
-        player2_time_sec = int(self.__game_obj.get_dark_player(
-        ).get_timer().get_time_remaining_s() % 60)
+        player1_time_sec = int(player1_time % 60)
+        player2_time_sec = int(player2_time % 60)
 
         # format the minutes and seconds to be
         p1_time = "{:2d}:{:02d}".format(player1_time_min, player1_time_sec)
