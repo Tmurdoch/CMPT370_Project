@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define FILE_VER_ZERO_HEADER_SIZE 39
-
 struct fileheadstruct
 {
 	uint8_t magic[20];
@@ -79,9 +77,9 @@ int main(int argc, char *argv[])
 	fps = ftell(fp);
 	fseek(fp,0,SEEK_SET);
 
-	if (fps!=FILE_VER_ZERO_HEADER_SIZE+(8*8))
+	if (fps!=sizeof(struct fileheadstruct)+(8*8))
 	{
-		printf("size of file is incorrect, expected %i got %li\n", FILE_VER_ZERO_HEADER_SIZE+(8*8), fps);
+		printf("size of file is incorrect, expected %li got %li\n", sizeof(struct fileheadstruct)+(8*8), fps);
 		if (fps==20)
 		{
 			printf("it is likely the save system crashed while generating the file is exactly as long as the magic\n");
@@ -89,14 +87,14 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	file = malloc(FILE_VER_ZERO_HEADER_SIZE+(8*8));
+	file = malloc(sizeof(struct fileheadstruct)+(8*8));
 
 	if (file==NULL)
 	{
 		printf("Download more ram m8\n");
 	}
 
-	if (!fread(file, FILE_VER_ZERO_HEADER_SIZE+(8*8), 1, fp))
+	if (!fread(file, sizeof(struct fileheadstruct)+(8*8), 1, fp))
 	{
 		printf("couldn't read the whole file for some reason\n");
 		return 1;
@@ -159,7 +157,7 @@ int main(int argc, char *argv[])
 	#endif
 	printf("ltime:  \t%f\n",filehead->lightPlayerTime);
 	printf("dtime:  \t%f\n",filehead->darkPlayerTime);
-	gameboard = &file[FILE_VER_ZERO_HEADER_SIZE];
+	gameboard = &file[sizeof(struct fileheadstruct)];
 	y=0;
 	while (y!=8)
 	{
